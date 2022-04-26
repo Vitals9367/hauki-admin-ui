@@ -105,7 +105,78 @@ const OpeningHoursRangeTimeSpan = ({
   );
 };
 
+const OpeningHoursRangeSelections = ({
+  defaultIOpen,
+  defaultValues,
+  onDelete,
+  resourceStates,
+}: {
+  defaultValues?: DefaultValues;
+  defaultIOpen: boolean;
+  onDelete?: () => void;
+  resourceStates: OptionType[];
+}) => {
+  const [open, setOpen] = useState(defaultIOpen);
+  const [exceptions, setExceptions] = useState(0);
+  return (
+    <div>
+      <div className="opening-hours-range__selections">
+        <div className="opening-hours-ranges__switch-buttons">
+          <SwitchButtons
+            labels={{ on: 'Auki', off: 'Kiinni' }}
+            onChange={() => setOpen(!open)}
+            value={open}
+          />
+        </div>
+        <div className="opening-hours-range__time-spans">
+          <div className="opening-hours__time-span-container">
+            <OpeningHoursRangeTimeSpan
+              disabled={!open}
+              defaultValues={defaultValues}
+              resourceStates={resourceStates}
+            />
+            {onDelete && (
+              <Button variant="danger" onClick={onDelete}>
+                Poista
+              </Button>
+            )}
+          </div>
+          {open &&
+            Array.from(Array(exceptions).keys()).map(() => (
+              <div className="exception">
+                <OpeningHoursRangeTimeSpan
+                  defaultValues={defaultValues}
+                  resourceStates={resourceStates}
+                />
+                <Button
+                  variant="danger"
+                  onClick={() => setExceptions((i) => i - 1)}>
+                  Poista
+                </Button>
+              </div>
+            ))}
+          <div>
+            {open && (
+              <button
+                className="link-button"
+                onClick={() => setExceptions((i) => i + 1)}>
+                + Lisää tarkennus
+              </button>
+            )}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
 type OptionType = { value: string; label: string };
+
+type DefaultValues = {
+  startTime: string;
+  endTime: string;
+  state: ResourceState;
+};
 
 const OpeningHoursRange = ({
   label,
@@ -116,62 +187,50 @@ const OpeningHoursRange = ({
   label: string;
   defaultIOpen?: boolean;
   resourceStates: OptionType[];
-  defaultValues?: {
-    startTime: string;
-    endTime: string;
-    state: ResourceState;
-  };
+  defaultValues?: DefaultValues;
 }): JSX.Element => {
-  const [open, setOpen] = useState(defaultIOpen);
-  const [exceptions, setExceptions] = useState(0);
-
+  const [varyingOpeningHours, setVaryingOpeningHours] = useState<number>(0);
+  const options = [
+    { value: '0', label: 'Joka toinen viikko' },
+    { value: '1', label: 'Joka kolmas viikko' },
+    { value: '2', label: 'Joka neljäs viikko' },
+  ];
   return (
     <div>
       <div className="opening-hours-range">
         <div className="opening-hours-range__label">{label}</div>
-        <div>
-          <div className="opening-hours-range__selections">
-            <div className="opening-hours-ranges__switch-buttons">
-              <SwitchButtons
-                labels={{ on: 'Auki', off: 'Kiinni' }}
-                onChange={() => setOpen(!open)}
-                value={open}
-              />
-            </div>
-            <div className="opening-hours-range__time-spans">
-              <div className="opening-hours__time-span-container">
-                <OpeningHoursRangeTimeSpan
-                  disabled={!open}
-                  defaultValues={defaultValues}
-                  resourceStates={resourceStates}
-                />
-              </div>
-              {open &&
-                Array.from(Array(exceptions).keys()).map(() => (
-                  <div className="exception">
-                    <OpeningHoursRangeTimeSpan
-                      defaultValues={defaultValues}
-                      resourceStates={resourceStates}
-                    />
-                    <Button
-                      variant="danger"
-                      onClick={() => setExceptions((i) => i - 1)}>
-                      Poista
-                    </Button>
-                  </div>
-                ))}
-              <div>
-                {open && (
-                  <button
-                    className="link-button"
-                    onClick={() => setExceptions((i) => i + 1)}>
-                    + Lisää tarkennus
-                  </button>
-                )}
-              </div>
-            </div>
-          </div>
+        <OpeningHoursRangeSelections
+          defaultIOpen={defaultIOpen}
+          defaultValues={defaultValues}
+          resourceStates={resourceStates}
+        />
+      </div>
+      {Array.from(Array(varyingOpeningHours).keys()).map(() => (
+        <div className="opening-hours-range">
+          <Select<OptionType>
+            label="Sääntö"
+            options={options}
+            className="variable-opening-hours-select"
+            placeholder="Valitse"
+            required
+            defaultValue={options[0]}
+          />
+          <OpeningHoursRangeSelections
+            defaultIOpen={defaultIOpen}
+            defaultValues={defaultValues}
+            onDelete={() =>
+              setVaryingOpeningHours((prevState) => prevState - 1)
+            }
+            resourceStates={resourceStates}
+          />
         </div>
+      ))}
+      <div>
+        <button
+          className="link-button add-variable-opening-hours-button"
+          onClick={() => setVaryingOpeningHours((prevState) => prevState + 1)}>
+          + Lisää vaihteleva aukioloaika
+        </button>
       </div>
     </div>
   );
