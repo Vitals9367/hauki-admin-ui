@@ -33,7 +33,7 @@ export const options = {
     requestOpeningHours: {
       executor: 'constant-vus',
       exec: 'requestOpeningHours',
-      vus: 30,
+      vus: 100,
       duration: '1m',
     },
   },
@@ -65,6 +65,8 @@ export function requestOpeningHours({ resources }) {
   const resourceId = resources.results[random].id;
 
   group('Get opening hours', () => {
+    sleep(getRandomArbitrary(1, 5));
+
     const startDate = new Date();
     const endDate = new Date();
     endDate.setDate(startDate.getDate() + 365);
@@ -80,8 +82,6 @@ export function requestOpeningHours({ resources }) {
       }
     );
   });
-
-  sleep(getRandomArbitrary(1, 5));
 }
 
 export function teardown({ resourceId }) {
