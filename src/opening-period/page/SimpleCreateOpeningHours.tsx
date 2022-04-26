@@ -159,7 +159,8 @@ const OpeningHoursRangeSelections = ({
             {open && (
               <button
                 className="link-button"
-                onClick={() => setExceptions((i) => i + 1)}>
+                onClick={() => setExceptions((i) => i + 1)}
+                type="button">
                 + Lisää tarkennus
               </button>
             )}
@@ -228,7 +229,8 @@ const OpeningHoursRange = ({
       <div>
         <button
           className="link-button add-variable-opening-hours-button"
-          onClick={() => setVaryingOpeningHours((prevState) => prevState + 1)}>
+          onClick={() => setVaryingOpeningHours((prevState) => prevState + 1)}
+          type="button">
           + Lisää vaihteleva aukioloaika
         </button>
       </div>
