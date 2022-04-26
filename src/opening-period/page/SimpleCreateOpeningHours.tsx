@@ -7,10 +7,7 @@ import {
   UiDatePeriodConfig,
 } from '../../common/lib/types';
 import api from '../../common/utils/api/api';
-import {
-  SecondaryButton,
-  SupplementaryButton,
-} from '../../components/button/Button';
+import { SecondaryButton } from '../../components/button/Button';
 import './SimpleCreateOpeningHours.scss';
 
 const SwitchButton = ({
@@ -58,6 +55,7 @@ const SwitchButtons = ({
 
 const OpeningHoursRangeTimeSpan = ({
   defaultValues,
+  disabled = false,
   resourceStates,
 }: {
   defaultValues?: {
@@ -65,6 +63,7 @@ const OpeningHoursRangeTimeSpan = ({
     endTime: string;
     state: ResourceState;
   };
+  disabled?: boolean;
   resourceStates: OptionType[];
 }): JSX.Element => {
   const [state, setState] = useState(
@@ -77,6 +76,7 @@ const OpeningHoursRangeTimeSpan = ({
     <div className="opening-hours-range__time-span">
       <div className="opening-hours-range__time-span-inputs">
         <TimeInput
+          disabled={disabled}
           id="startDate"
           hoursLabel="tunnit"
           minutesLabel="minuutit"
@@ -84,6 +84,7 @@ const OpeningHoursRangeTimeSpan = ({
         />
         <div>-</div>
         <TimeInput
+          disabled={disabled}
           id="startDate"
           hoursLabel="tunnit"
           minutesLabel="minuutit"
@@ -91,6 +92,7 @@ const OpeningHoursRangeTimeSpan = ({
         />
       </div>
       <Select<OptionType>
+        disabled={disabled}
         label="Tila"
         options={resourceStates}
         className="opening-hours-range-select"
@@ -127,42 +129,48 @@ const OpeningHoursRange = ({
     <div>
       <div className="opening-hours-range">
         <div className="opening-hours-range__label">{label}</div>
-        <div className="opening-hours-range__selections">
-          <div className="opening-hours-ranges__switch-buttons">
-            <SwitchButtons
-              labels={{ on: 'Auki', off: 'Kiinni' }}
-              onChange={() => setOpen(!open)}
-              value={open}
-            />
-          </div>
-          {open && (
+        <div>
+          <div className="opening-hours-range__selections">
+            <div className="opening-hours-ranges__switch-buttons">
+              <SwitchButtons
+                labels={{ on: 'Auki', off: 'Kiinni' }}
+                onChange={() => setOpen(!open)}
+                value={open}
+              />
+            </div>
             <div className="opening-hours-range__time-spans">
               <div className="opening-hours__time-span-container">
                 <OpeningHoursRangeTimeSpan
+                  disabled={!open}
                   defaultValues={defaultValues}
                   resourceStates={resourceStates}
                 />
-                <SupplementaryButton
-                  className="add-exception-button"
-                  onClick={() => setExceptions((i) => i + 1)}>
-                  + Lisää tarkennus
-                </SupplementaryButton>
               </div>
-              {Array.from(Array(exceptions).keys()).map(() => (
-                <div className="exception">
-                  <OpeningHoursRangeTimeSpan
-                    defaultValues={defaultValues}
-                    resourceStates={resourceStates}
-                  />
-                  <Button
-                    variant="danger"
-                    onClick={() => setExceptions((i) => i - 1)}>
-                    Poista
-                  </Button>
-                </div>
-              ))}
+              {open &&
+                Array.from(Array(exceptions).keys()).map(() => (
+                  <div className="exception">
+                    <OpeningHoursRangeTimeSpan
+                      defaultValues={defaultValues}
+                      resourceStates={resourceStates}
+                    />
+                    <Button
+                      variant="danger"
+                      onClick={() => setExceptions((i) => i - 1)}>
+                      Poista
+                    </Button>
+                  </div>
+                ))}
+              <div>
+                {open && (
+                  <button
+                    className="link-button"
+                    onClick={() => setExceptions((i) => i + 1)}>
+                    + Lisää tarkennus
+                  </button>
+                )}
+              </div>
             </div>
-          )}
+          </div>
         </div>
       </div>
     </div>

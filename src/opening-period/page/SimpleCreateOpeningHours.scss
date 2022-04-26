@@ -132,3 +132,12 @@
   top: 2px;
   z-index: 100;
 }
+
+.link-button {
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+  margin-top: 1rem;
+  padding: 0.75rem 0;
+  text-decoration: underline;
+}
