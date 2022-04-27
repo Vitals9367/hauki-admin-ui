@@ -1,0 +1,27 @@
+.weekdays {
+  padding: 1rem 2rem;
+}
+
+.weekdays-and-is-open-selector {
+  align-items: center;
+  display: flex;
+  gap: 10px;
+}
+
+.container {
+  padding: 1rem 2rem;
+}
+
+.opening-hours-range-container {
+  border-bottom: 1px solid #cfcfcf;
+}
+
+.varying-opening-hour {
+  display: flex;
+  align-items: flex-end;
+  gap: 20px;
+}
+
+.fullday-checkbox-container {
+  padding-bottom: 1rem;
+}
