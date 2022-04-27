@@ -2,7 +2,7 @@
 # https://aka.ms/yaml
 
 trigger:
-- master
+- feature/add-simple-ui
 
 pr: none
 
@@ -28,17 +28,17 @@ steps:
     yarn install
   displayName: 'Yarn install'
 
-- script: |
-    yarn lint
-  displayName: 'Yarn lint'
+# - script: |
+#     yarn lint
+#   displayName: 'Yarn lint'
 
-- script: |
-    CI=true yarn test
-  displayName: 'Yarn run tests'
+# - script: |
+#     CI=true yarn test
+#   displayName: 'Yarn run tests'
 
-- script: |
-    CI=true yarn test-cypress-with-new-test-api
-  displayName: 'Yarn run cypress (e2e) tests'
+# - script: |
+#     CI=true yarn test-cypress-with-new-test-api
+#   displayName: 'Yarn run cypress (e2e) tests'
 
 - task: PublishBuildArtifacts@1
   inputs:
@@ -73,9 +73,9 @@ steps:
 
       sleep 50
 
-- script: |
-   CI=true yarn test-cypress-with-new-test-env
-  displayName: 'Yarn run cypress (e2e) tests against test environment'
+# - script: |
+#    CI=true yarn test-cypress-with-new-test-env
+#   displayName: 'Yarn run cypress (e2e) tests against test environment'
 
 - task: PublishBuildArtifacts@1
   inputs:
