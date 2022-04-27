@@ -297,11 +297,11 @@ export default function CreateNewOpeningPeriodPage({
   const returnToResourcePage = (): void =>
     history.push(`/resource/${resourceId}`);
 
-  const defaultWeekendValueValue = {
-    startTime: '09:00',
-    endTime: '15:00',
-    state: ResourceState.OPEN,
-  };
+  // const defaultWeekendValueValue = {
+  //   startTime: '09:00',
+  //   endTime: '15:00',
+  //   state: ResourceState.OPEN,
+  // };
 
   const resourceStates = datePeriodConfig
     ? datePeriodConfig.resourceState.options.map((translatedApiChoice) => ({
