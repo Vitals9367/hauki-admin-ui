@@ -103,7 +103,7 @@ const OpeningHoursRangeTimeSpan = ({
     <div className="opening-hours-range__time-span">
       <div className="opening-hours-range__time-span-inputs">
         <TimeInput
-          disabled={disabled}
+          disabled={disabled || fullDay}
           id="startDate"
           hoursLabel="tunnit"
           minutesLabel="minuutit"
@@ -111,7 +111,7 @@ const OpeningHoursRangeTimeSpan = ({
         />
         <div>-</div>
         <TimeInput
-          disabled={disabled}
+          disabled={disabled || fullDay}
           id="startDate"
           hoursLabel="tunnit"
           minutesLabel="minuutit"
