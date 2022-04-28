@@ -159,6 +159,7 @@ const OpeningHoursRangeTimeSpan = ({
           id="startDate"
           hoursLabel="tunnit"
           minutesLabel="minuutit"
+          label="Avataan"
           name={`${namePrefix}.start`}
           value={defaultValues?.startTime}
         />
@@ -169,6 +170,7 @@ const OpeningHoursRangeTimeSpan = ({
           id="endDate"
           hoursLabel="tunnit"
           minutesLabel="minuutit"
+          label="Suljetaan"
           name={`${namePrefix}.end`}
           value={defaultValues?.endTime}
         />
@@ -252,7 +254,7 @@ const OpeningHoursRangeSelections = ({
               className="link-button"
               onClick={() => append({})}
               type="button">
-              + Lisää tarkennus
+              + Lisää tila
             </button>
           </div>
         </div>
@@ -339,7 +341,7 @@ const OpeningHoursRange = ({
         <div key={field.id}>
           <div className="container varying-opening-hour">
             <Select<OptionType>
-              label="Sääntö"
+              label="Toistuvuus"
               options={options}
               className="variable-opening-hours-select"
               placeholder="Valitse"
@@ -364,7 +366,7 @@ const OpeningHoursRange = ({
           className="link-button"
           onClick={() => append({})}
           type="button">
-          + Lisää vaihteleva aukioloaika
+          + Lisää vuorotteleva aukioloaika
         </button>
       </div>
     </div>
