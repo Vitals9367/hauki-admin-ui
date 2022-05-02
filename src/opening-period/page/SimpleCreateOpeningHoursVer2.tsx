@@ -123,7 +123,7 @@ const OpeningHoursRangeTimeSpan = ({
     <div className="opening-hours-range__time-span">
       <div className="opening-hours-range__time-span-inputs">
         <TimeInput
-          ref={register}
+          ref={register()}
           disabled={disabled || fullDay}
           id="startDate"
           hoursLabel="tunnit"
@@ -134,7 +134,7 @@ const OpeningHoursRangeTimeSpan = ({
         />
         <div>-</div>
         <TimeInput
-          ref={register}
+          ref={register()}
           disabled={disabled || fullDay}
           id="endDate"
           hoursLabel="tunnit"
@@ -212,8 +212,8 @@ const OpeningHoursRangeSelections = ({
               namePrefix={`${namePrefix}.normal`}
             />
           </div>
-          {fields.map((a, i) => (
-            <div className="exception" key={a.id}>
+          {fields.map((field, i) => (
+            <div className="exception" key={field.id}>
               <OpeningHoursRangeTimeSpan
                 defaultValues={defaultValues}
                 resourceStates={resourceStates}

@@ -14,7 +14,7 @@ export type OpeningHoursTimeSpan = {
   start: string;
   end: string;
   fullDay: boolean;
-  state: OptionType;
+  state?: OptionType;
   description?: string;
 };
 
