@@ -11,15 +11,12 @@ function renderStartAndEndTimes(
   fullDay?: boolean,
   isClosed?: boolean
 ): string {
-  if (fullDay) {
-    if (isClosed) {
-      return '--:--';
-    }
-    return '24h';
-  }
-
   if (isClosed) {
     return '--:--  -  --:--';
+  }
+
+  if (fullDay) {
+    return '24h';
   }
 
   return `${startTime ?? ''} - ${endTime ?? ''}`;
