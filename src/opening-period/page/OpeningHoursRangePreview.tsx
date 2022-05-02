@@ -9,16 +9,16 @@ function renderStartAndEndTimes(
   startTime?: string | null,
   endTime?: string | null,
   fullDay?: boolean,
-  resourceState?: ResourceState
+  isClosed?: boolean
 ): string {
   if (fullDay) {
-    if (resourceState === ResourceState.CLOSED) {
+    if (isClosed) {
       return '--:--';
     }
     return '24h';
   }
 
-  if (resourceState === ResourceState.CLOSED) {
+  if (isClosed) {
     return '--:--  -  --:--';
   }
 
@@ -42,30 +42,32 @@ const PreviewRow = ({
 );
 
 const TimeSpanRow = ({
+  isOpen = true,
   label,
   timeSpan,
 }: {
+  isOpen?: boolean;
   label?: string;
   timeSpan?: OpeningHoursTimeSpan;
-}): JSX.Element => (
-  <PreviewRow
-    label={label}
-    time={
-      timeSpan &&
-      renderStartAndEndTimes(
-        timeSpan.start,
-        timeSpan.end,
-        timeSpan.fullDay,
-        timeSpan.state?.value as ResourceState
-      )
-    }
-    description={
-      timeSpan?.state?.value === ResourceState.OTHER
-        ? timeSpan.description
-        : timeSpan?.state?.label ?? ''
-    }
-  />
-);
+}): JSX.Element => {
+  return (
+    <PreviewRow
+      label={label}
+      time={renderStartAndEndTimes(
+        timeSpan?.start,
+        timeSpan?.end,
+        timeSpan?.fullDay,
+        !isOpen ||
+          (timeSpan?.state?.value as ResourceState) === ResourceState.CLOSED
+      )}
+      description={
+        timeSpan?.state?.value === ResourceState.OTHER
+          ? timeSpan.description
+          : timeSpan?.state?.label ?? 'Suljettu'
+      }
+    />
+  );
+};
 
 export default ({
   data: { openingHours },
@@ -78,6 +80,7 @@ export default ({
       <div key={`normal-${openingHourIdx}`}>
         <div>
           <TimeSpanRow
+            isOpen={openingHour.isOpen}
             label={createWeekdaysStringFromIndices(
               toWeekdays(openingHour.days),
               Language.FI
