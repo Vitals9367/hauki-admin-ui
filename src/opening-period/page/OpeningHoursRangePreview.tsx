@@ -60,7 +60,11 @@ const TimeSpanRow = ({
         timeSpan.state?.value as ResourceState
       )
     }
-    description={timeSpan?.state?.label ?? 'Suljettu'}
+    description={
+      timeSpan?.state?.value === ResourceState.OTHER
+        ? timeSpan.description
+        : timeSpan?.state.label ?? ''
+    }
   />
 );
 

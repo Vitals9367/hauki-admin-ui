@@ -1,4 +1,4 @@
-import { Button, Checkbox, Select, TimeInput } from 'hds-react';
+import { Button, Checkbox, Select, TextInput, TimeInput } from 'hds-react';
 import React, { useEffect, useState } from 'react';
 import {
   Controller,
@@ -117,6 +117,7 @@ const OpeningHoursRangeTimeSpan = ({
 }): JSX.Element => {
   const { control, register, watch } = useFormContext();
   const fullDay = watch(`${namePrefix}.fullDay`);
+  const state = watch(`${namePrefix}.state`);
 
   return (
     <div className="opening-hours-range__time-span">
@@ -178,6 +179,9 @@ const OpeningHoursRangeTimeSpan = ({
           />
         )}
       />
+      {state?.value === ResourceState.OTHER && (
+        <TextInput id="" ref={register()} name={`${namePrefix}.description`} />
+      )}
     </div>
   );
 };
@@ -360,12 +364,21 @@ export default ({ resourceId }: { resourceId: string }): JSX.Element => {
   const returnToResourcePage = (): void =>
     history.push(`/resource/${resourceId}`);
 
-  const resourceStates = datePeriodConfig
+  let resourceStates = datePeriodConfig
     ? datePeriodConfig.resourceState.options.map((translatedApiChoice) => ({
         value: translatedApiChoice.value,
         label: translatedApiChoice.label.fi,
       }))
     : [];
+
+  resourceStates = [
+    ...resourceStates,
+    // TODO: This needs to be returned from the server
+    {
+      label: 'Muu, mikä?',
+      value: ResourceState.OTHER,
+    },
+  ];
 
   useEffect((): void => {
     const fetchData = async (): Promise<void> => {
