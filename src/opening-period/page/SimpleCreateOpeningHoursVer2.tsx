@@ -48,8 +48,7 @@ type OpeningHoursRange = {
 };
 
 type State = {
-  group: OpeningHoursRange;
-  individualDays: OpeningHoursRange[];
+  openingHours: OpeningHoursRange[];
 };
 
 const DayCheckbox = ({
@@ -64,9 +63,11 @@ const DayCheckbox = ({
   checked: boolean;
 }): JSX.Element => {
   const id = `${namePrefix}.days.${children}`;
+  const { control } = useFormContext<State>();
 
   return (
     <Controller
+      control={control}
       defaultValue={checked}
       name={`${namePrefix}.days.${children}`}
       render={({ onChange, value }) => (
@@ -74,11 +75,9 @@ const DayCheckbox = ({
           <input
             id={id}
             type="checkbox"
-            onChange={(e) => {
-              if (value) {
-                onChange(e.target.checked);
-                onChangeOuter(e.target.checked);
-              }
+            onChange={() => {
+              onChange(!value);
+              onChangeOuter(!value);
             }}
             checked={value}
           />
@@ -177,6 +176,7 @@ const OpeningHoursRangeTimeSpan = ({
       </div>
       <div className="fullday-checkbox-container">
         <Controller
+          defaultValue={false}
           render={(field): JSX.Element => (
             <Checkbox
               id={`${namePrefix}.fullDay`}
@@ -193,9 +193,10 @@ const OpeningHoursRangeTimeSpan = ({
         />
       </div>
       <Controller
+        defaultValue={ResourceState.OPEN}
         name={`${namePrefix}.state`}
         control={control}
-        render={({ onChange }): JSX.Element => (
+        render={({ onChange, value }): JSX.Element => (
           <Select<OptionType>
             disabled={disabled}
             label="Tila"
@@ -204,6 +205,9 @@ const OpeningHoursRangeTimeSpan = ({
             onChange={onChange}
             placeholder="Placeholder"
             required
+            value={resourceStates.find(
+              (option: OptionType): boolean => option.value === value
+            )}
           />
         )}
       />
@@ -317,6 +321,7 @@ const OpeningHoursRange = ({
             </DayCheckbox>
           ))}
           <Controller
+            defaultValue
             name={`${namePrefix}.isOpen`}
             render={({ onChange, value }) => (
               <SwitchButtons
@@ -333,7 +338,7 @@ const OpeningHoursRange = ({
           <OpeningHoursRangeSelections
             defaultValues={defaultValues}
             resourceStates={resourceStates}
-            namePrefix={namePrefix}
+            namePrefix={`${namePrefix}.normal`}
           />
         </div>
       )}
@@ -356,7 +361,7 @@ const OpeningHoursRange = ({
             <OpeningHoursRangeSelections
               defaultValues={defaultValues}
               resourceStates={resourceStates}
-              namePrefix={namePrefix}
+              namePrefix={`${namePrefix}.variable[${i}]`}
             />
           </div>
         </div>
@@ -373,11 +378,28 @@ const OpeningHoursRange = ({
   );
 };
 
-export default function CreateNewOpeningPeriodPage({
-  resourceId,
-}: {
-  resourceId: string;
-}): JSX.Element {
+const defaultState = {
+  days: {
+    Ma: true,
+    Ti: true,
+    Ke: true,
+    To: true,
+    Pe: true,
+    La: true,
+    Su: true,
+  },
+  isOpen: true,
+  normal: {
+    normal: {
+      fullDay: false,
+      state: ResourceState.OPEN,
+    },
+    exceptions: [],
+  },
+  variable: [],
+};
+
+export default ({ resourceId }: { resourceId: string }): JSX.Element => {
   const [resource, setResource] = useState<Resource>();
   const [datePeriodConfig, setDatePeriodConfig] = useState<
     UiDatePeriodConfig
@@ -419,33 +441,20 @@ export default function CreateNewOpeningPeriodPage({
 
   const form = useForm<State>({
     defaultValues: {
-      group: {
-        days: {
-          Ma: true,
-          Ti: true,
-          Ke: true,
-          To: true,
-          Pe: true,
-          La: true,
-          Su: true,
-        },
-        isOpen: true,
-      },
-      individualDays: [],
+      openingHours: [defaultState],
     },
   });
-  const { control, setValue, watch } = form;
-  const values = watch();
+  const { control, getValues, setValue } = form;
   const { append, fields, remove } = useFieldArray({
     control,
-    name: 'individualDays',
+    name: 'openingHours',
   });
 
-  // https://github.com/react-hook-form/react-hook-form/discussions/4264
-  const indexes = fields.reduce(
-    (map, { id }, index) => ({ ...map, [id!]: index }),
-    {}
-  );
+  const allDayAreUncheckedForRow = (idx: number): boolean =>
+    daysOrder.every((day) => !getValues(`openingHours[${idx}].days.${day}`));
+
+  const setDay = (i: number, day: keyof Days, checked: boolean): void =>
+    setValue(`openingHours[${i}].days.${day}`, checked);
 
   return (
     (resource && datePeriodConfig && (
@@ -459,62 +468,65 @@ export default function CreateNewOpeningPeriodPage({
           </div>
           <div className="opening-hours-form">
             <section>
-              <OpeningHoursRange
-                key="group"
-                resourceStates={resourceStates}
-                namePrefix="group"
-                days={values.group.days}
-                onDayChange={(day, checked) => {
-                  if (!checked) {
-                    append({ days: { [day]: true } });
-                  }
-                }}
-                defaultValues={{
-                  startTime: '09:00',
-                  endTime: '20:00',
-                  state: ResourceState.OPEN,
-                }}
-              />
-              {fields
-                .sort((a, b) => {
-                  const findSelectedDate = (days: Days) =>
-                    (Object.entries(days).find((entry) => entry[1]) || [])[0];
+              {fields.map((field, i) => (
+                <OpeningHoursRange
+                  key={field.id}
+                  resourceStates={resourceStates}
+                  days={field.days}
+                  namePrefix={`openingHours[${i}]`}
+                  onDayChange={(day, checked): void => {
+                    if (checked) {
+                      const prevId = fields.findIndex(
+                        (item, idx) =>
+                          idx !== i &&
+                          getValues(`openingHours[${idx}].days.${day}`)
+                      );
+                      if (prevId >= 0) {
+                        setDay(prevId, day, false);
 
-                  const day1 = findSelectedDate(a.days);
-
-                  if (!day1) {
-                    throw new Error('Cannot find day for comparison');
-                  }
-
-                  const day2 = findSelectedDate(b.days);
-
-                  if (!day2) {
-                    throw new Error('Cannot find day for comparison');
-                  }
-
-                  return daysOrder.indexOf(day1) - daysOrder.indexOf(day2);
-                })
-                .map((field, i) => (
-                  <OpeningHoursRange
-                    key={field.id}
-                    resourceStates={resourceStates}
-                    days={field.days}
-                    namePrefix={`individualDays[${indexes[field.id!]}]`}
-                    onDayChange={(day, checked) => {
-                      if (checked) {
-                        setValue(`group.days.${day}`, false);
-                      } else {
-                        remove(i);
-                        setValue(`group.days.${day}`, true);
+                        if (allDayAreUncheckedForRow(prevId)) {
+                          remove(prevId);
+                        }
                       }
-                    }}
-                    defaultValues={{
-                      startTime: '09:00',
-                      endTime: '20:00',
-                      state: ResourceState.OPEN,
-                    }}
-                  />
-                ))}
+                      return;
+                    }
+
+                    if (allDayAreUncheckedForRow(i)) {
+                      if (i > 0) {
+                        setDay(i - 1, day, true);
+                      } else {
+                        setDay(i + 1, day, true);
+                      }
+                      remove(i);
+                      return;
+                    }
+
+                    if (fields.length - 1 === i) {
+                      append({
+                        ...defaultState,
+                        days: {
+                          Ma: false,
+                          Ti: false,
+                          Ke: false,
+                          To: false,
+                          Pe: false,
+                          La: false,
+                          Su: false,
+                          [day]: true,
+                        },
+                      });
+                      return;
+                    }
+
+                    setDay(i + 1, day, true);
+                  }}
+                  defaultValues={{
+                    startTime: '09:00',
+                    endTime: '20:00',
+                    state: ResourceState.OPEN,
+                  }}
+                />
+              ))}
             </section>
             <div className="opening-hours-form__buttons">
               <Button onClick={returnToResourcePage}>Tallenna</Button>
@@ -527,4 +539,4 @@ export default function CreateNewOpeningPeriodPage({
       </FormProvider>
     )) || <h1>Ladataan...</h1>
   );
-}
+};
