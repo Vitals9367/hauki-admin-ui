@@ -34,6 +34,6 @@ type OpeningHoursRange = {
   variable: VariableOpeningHours[];
 };
 
-export type State = {
+export type OpeningHoursFormState = {
   openingHours: OpeningHoursRange[];
 };

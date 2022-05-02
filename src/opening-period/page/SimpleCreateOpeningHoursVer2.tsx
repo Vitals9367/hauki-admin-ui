@@ -18,7 +18,7 @@ import { SecondaryButton } from '../../components/button/Button';
 import Preview from './OpeningHoursRangePreview';
 import './SimpleCreateOpeningHours.scss';
 import './SimpleCreateOpeningHours2.scss';
-import { Days, OptionType, State } from './types';
+import { Days, OptionType, OpeningHoursFormState } from './types';
 
 const DayCheckbox = ({
   children,
@@ -32,7 +32,7 @@ const DayCheckbox = ({
   checked: boolean;
 }): JSX.Element => {
   const id = `${namePrefix}.days.${children}`;
-  const { control } = useFormContext<State>();
+  const { control } = useFormContext<OpeningHoursFormState>();
 
   return (
     <Controller
@@ -172,7 +172,7 @@ const OpeningHoursRangeTimeSpan = ({
             options={resourceStates}
             className="opening-hours-range-select"
             onChange={onChange}
-            placeholder="Placeholder"
+            placeholder="Valitse"
             required
             value={value}
           />
@@ -191,7 +191,7 @@ const OpeningHoursRangeSelections = ({
   resourceStates: OptionType[];
   namePrefix: string;
 }): JSX.Element => {
-  const { control } = useFormContext<State>();
+  const { control } = useFormContext<OpeningHoursFormState>();
   const { fields, append, remove } = useFieldArray({
     control,
     name: 'exceptions',
@@ -215,7 +215,7 @@ const OpeningHoursRangeSelections = ({
                 resourceStates={resourceStates}
                 namePrefix={`${namePrefix}.exceptions[${i}]`}
               />
-              <Button variant="danger" onClick={() => remove(i)}>
+              <Button variant="danger" onClick={(): void => remove(i)}>
                 Poista
               </Button>
             </div>
@@ -223,7 +223,7 @@ const OpeningHoursRangeSelections = ({
           <div>
             <button
               className="link-button"
-              onClick={() => append({})}
+              onClick={(): void => append({})}
               type="button">
               + Lisää tarkennettu aukioloaika
             </button>
@@ -261,7 +261,7 @@ const OpeningHoursRange = ({
     { value: '1', label: 'Joka kolmas viikko' },
     { value: '2', label: 'Joka neljäs viikko' },
   ];
-  const { control, watch } = useFormContext<State>();
+  const { control, watch } = useFormContext<OpeningHoursFormState>();
   const open = watch(`${namePrefix}.isOpen`);
   const { append, fields, remove } = useFieldArray({
     control,
@@ -276,18 +276,18 @@ const OpeningHoursRange = ({
           {daysOrder.map((day) => (
             <DayCheckbox
               key={`${namePrefix}-${day}`}
-              // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
-              // @ts-ignore
-              checked={days[day]}
+              checked={days[day as keyof Days]}
               namePrefix={namePrefix}
-              onChange={(checked) => onDayChange(day as any, checked)}>
+              onChange={(checked): void =>
+                onDayChange(day as keyof Days, checked)
+              }>
               {day}
             </DayCheckbox>
           ))}
           <Controller
             defaultValue
             name={`${namePrefix}.isOpen`}
-            render={({ onChange, value }) => (
+            render={({ onChange, value }): JSX.Element => (
               <SwitchButtons
                 labels={{ on: 'Auki', off: 'Kiinni' }}
                 onChange={onChange}
@@ -360,12 +360,6 @@ export default ({ resourceId }: { resourceId: string }): JSX.Element => {
   const returnToResourcePage = (): void =>
     history.push(`/resource/${resourceId}`);
 
-  // const defaultWeekendValueValue = {
-  //   startTime: '09:00',
-  //   endTime: '15:00',
-  //   state: ResourceState.OPEN,
-  // };
-
   const resourceStates = datePeriodConfig
     ? datePeriodConfig.resourceState.options.map((translatedApiChoice) => ({
         value: translatedApiChoice.value,
@@ -412,7 +406,7 @@ export default ({ resourceId }: { resourceId: string }): JSX.Element => {
     ],
   };
 
-  const form = useForm<State>({
+  const form = useForm<OpeningHoursFormState>({
     defaultValues: defaultState,
   });
   const { control, getValues, setValue, watch } = form;

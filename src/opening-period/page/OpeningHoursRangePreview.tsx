@@ -4,7 +4,7 @@ import {
   createWeekdaysStringFromIndices,
   dropMilliseconds,
 } from '../../common/utils/date-time/format';
-import { OpeningHoursTimeSpan, State } from './types';
+import { OpeningHoursTimeSpan, OpeningHoursFormState } from './types';
 import { toWeekdays } from './utils';
 import './OpeningHoursRangePreview.scss';
 
@@ -29,16 +29,16 @@ function renderStartAndEndTimes(
 const PreviewRow = ({
   label,
   time,
-  state,
+  description,
 }: {
   label?: string;
   time?: string | null | undefined;
-  state?: string;
+  description?: string;
 }): JSX.Element => (
   <div className="time-span-row">
     <p>{label}</p>
     <p>{time}</p>
-    <p>{state}</p>
+    <p>{description}</p>
   </div>
 );
 
@@ -60,11 +60,15 @@ const TimeSpanRow = ({
         timeSpan.state?.value as ResourceState
       )
     }
-    state={timeSpan?.state?.label ?? 'Suljettu'}
+    description={timeSpan?.state?.label ?? 'Suljettu'}
   />
 );
 
-export default ({ data: { openingHours } }: { data: State }): JSX.Element => (
+export default ({
+  data: { openingHours },
+}: {
+  data: OpeningHoursFormState;
+}): JSX.Element => (
   <div className="opening-hours-range-preview-container">
     <h2>Esikatselu</h2>
     {openingHours.map((openingHour, openingHourIdx) => (
