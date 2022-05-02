@@ -1,9 +1,6 @@
 import React from 'react';
 import { Language, ResourceState } from '../../common/lib/types';
-import {
-  createWeekdaysStringFromIndices,
-  dropMilliseconds,
-} from '../../common/utils/date-time/format';
+import { createWeekdaysStringFromIndices } from '../../common/utils/date-time/format';
 import { OpeningHoursTimeSpan, OpeningHoursFormState } from './types';
 import { toWeekdays } from './utils';
 import './OpeningHoursRangePreview.scss';
@@ -16,14 +13,16 @@ function renderStartAndEndTimes(
 ): string {
   if (fullDay) {
     if (resourceState === ResourceState.CLOSED) {
-      return '';
+      return '--:--';
     }
     return '24h';
   }
 
-  return `${startTime ? dropMilliseconds(startTime) : ''} - ${
-    endTime ? dropMilliseconds(endTime) : ''
-  }`;
+  if (resourceState === ResourceState.CLOSED) {
+    return '--:--  -  --:--';
+  }
+
+  return `${startTime ?? ''} - ${endTime ?? ''}`;
 }
 
 const PreviewRow = ({
