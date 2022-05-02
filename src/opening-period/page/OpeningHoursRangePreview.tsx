@@ -84,19 +84,19 @@ export default ({
             )}
             timeSpan={openingHour.normal?.normal}
           />
-          {openingHour.normal?.exceptions?.map((exception, exceptionIdx) => (
-            <div key={`exception-${exceptionIdx}`}>
-              <TimeSpanRow timeSpan={exception} />
+          {openingHour.normal?.details?.map((detail, detailIdx) => (
+            <div key={`detail-${detailIdx}`}>
+              <TimeSpanRow timeSpan={detail} />
             </div>
           ))}
         </div>
-        {openingHour.variable?.map((variable, variableId) => (
+        {openingHour.alternating?.map((alternating, variableId) => (
           <div key={`variable-${variableId}`}>
-            <PreviewRow time={variable.rule?.label} />
-            <TimeSpanRow timeSpan={variable.normal} />
-            {variable.exceptions?.map((exception, exceptionIdx) => (
-              <div key={`variable-exception-${exceptionIdx}`}>
-                <TimeSpanRow timeSpan={exception} />
+            <PreviewRow time={alternating.rule?.label} />
+            <TimeSpanRow timeSpan={alternating.normal} />
+            {alternating.details?.map((detail, detailIdx) => (
+              <div key={`alternating-detail-${detailIdx}`}>
+                <TimeSpanRow timeSpan={detail} />
               </div>
             ))}
           </div>

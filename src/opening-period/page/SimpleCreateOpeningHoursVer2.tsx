@@ -198,7 +198,7 @@ const OpeningHoursRangeSelections = ({
   const { control } = useFormContext<OpeningHoursFormState>();
   const { fields, append, remove } = useFieldArray({
     control,
-    name: `${namePrefix}.exceptions`,
+    name: `${namePrefix}.details`,
   });
 
   return (
@@ -217,7 +217,7 @@ const OpeningHoursRangeSelections = ({
               <OpeningHoursRangeTimeSpan
                 defaultValues={defaultValues}
                 resourceStates={resourceStates}
-                namePrefix={`${namePrefix}.exceptions[${i}]`}
+                namePrefix={`${namePrefix}.details[${i}]`}
               />
               <Button variant="danger" onClick={(): void => remove(i)}>
                 Poista
@@ -269,7 +269,7 @@ const OpeningHoursRange = ({
   const open = watch(`${namePrefix}.isOpen`);
   const { append, fields, remove } = useFieldArray({
     control,
-    name: `${namePrefix}.variable`,
+    name: `${namePrefix}.alternating`,
   });
 
   return (
@@ -315,11 +315,11 @@ const OpeningHoursRange = ({
           <div className="container varying-opening-hour">
             <Controller
               defaultValue={options[0]}
-              name={`${namePrefix}.variable[${i}].rule`}
+              name={`${namePrefix}.alternating[${i}].rule`}
               control={control}
               render={({ onChange, value }): JSX.Element => (
                 <Select<OptionType>
-                  className="variable-opening-hours-select"
+                  className="alternating-opening-hours-select"
                   defaultValue={options[0]}
                   label="Toistuvuus"
                   onChange={onChange}
@@ -338,7 +338,7 @@ const OpeningHoursRange = ({
             <OpeningHoursRangeSelections
               defaultValues={defaultValues}
               resourceStates={resourceStates}
-              namePrefix={`${namePrefix}.variable[${i}]`}
+              namePrefix={`${namePrefix}.alternating[${i}]`}
             />
           </div>
         </div>
@@ -412,9 +412,9 @@ export default ({ resourceId }: { resourceId: string }): JSX.Element => {
         },
         isOpen: true,
         normal: {
-          exceptions: [],
+          details: [],
         },
-        variable: [],
+        alternating: [],
       },
     ],
   };

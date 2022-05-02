@@ -18,20 +18,20 @@ export type OpeningHoursTimeSpan = {
   description?: string;
 };
 
-type VariableOpeningHours = {
+type AlternatingOpeningHours = {
   rule: OptionType;
 } & OpeningHours;
 
 type OpeningHours = {
   normal: OpeningHoursTimeSpan;
-  exceptions: OpeningHoursTimeSpan[];
+  details: OpeningHoursTimeSpan[];
 };
 
 type OpeningHoursRange = {
   days: Days;
   isOpen: boolean;
   normal?: OpeningHours;
-  variable: VariableOpeningHours[];
+  alternating: AlternatingOpeningHours[];
 };
 
 export type OpeningHoursFormState = {
