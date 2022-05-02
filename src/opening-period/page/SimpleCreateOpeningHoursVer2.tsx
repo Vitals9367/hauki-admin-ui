@@ -254,7 +254,7 @@ const OpeningHoursRangeSelections = ({
               className="link-button"
               onClick={() => append({})}
               type="button">
-              + Lisää tila
+              + Lisää tarkennettu aukioloaika
             </button>
           </div>
         </div>
