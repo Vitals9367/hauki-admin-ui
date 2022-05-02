@@ -1,5 +1,5 @@
 import { Button, Checkbox, Select, TextInput, TimeInput } from 'hds-react';
-import React, { useEffect, useState } from 'react';
+import React, { Fragment, useEffect, useState } from 'react';
 import {
   Controller,
   FormProvider,
@@ -16,7 +16,6 @@ import {
 import api from '../../common/utils/api/api';
 import { SecondaryButton } from '../../components/button/Button';
 import Preview from './OpeningHoursRangePreview';
-import './SimpleCreateOpeningHours.scss';
 import './SimpleCreateOpeningHours2.scss';
 import { Days, OptionType, OpeningHoursFormState } from './types';
 
@@ -100,7 +99,7 @@ const SwitchButtons = ({
   </div>
 );
 
-const OpeningHoursRangeTimeSpan = ({
+const OpeningHoursTimeSpan = ({
   defaultValues,
   disabled = false,
   resourceStates,
@@ -120,8 +119,8 @@ const OpeningHoursRangeTimeSpan = ({
   const state = watch(`${namePrefix}.state`);
 
   return (
-    <div className="opening-hours-range__time-span">
-      <div className="opening-hours-range__time-span-inputs">
+    <div className="opening-hours-time-span">
+      <div className="opening-hours-time-span__range">
         <TimeInput
           ref={register()}
           disabled={disabled || fullDay}
@@ -132,7 +131,7 @@ const OpeningHoursRangeTimeSpan = ({
           name={`${namePrefix}.start`}
           value={defaultValues?.startTime}
         />
-        <div>-</div>
+        <div className="opening-hours-time-span__range-divider">-</div>
         <TimeInput
           ref={register()}
           disabled={disabled || fullDay}
@@ -171,7 +170,7 @@ const OpeningHoursRangeTimeSpan = ({
             disabled={disabled}
             label="Tila"
             options={resourceStates}
-            className="opening-hours-range-select"
+            className="opening-hours-state-select"
             onChange={onChange}
             placeholder="Valitse"
             required
@@ -186,7 +185,7 @@ const OpeningHoursRangeTimeSpan = ({
   );
 };
 
-const OpeningHoursRangeSelections = ({
+const OpeningHoursTimeSpanAndDetails = ({
   defaultValues,
   resourceStates,
   namePrefix,
@@ -202,39 +201,33 @@ const OpeningHoursRangeSelections = ({
   });
 
   return (
-    <div>
-      <div className="opening-hours-range__selections">
-        <div className="opening-hours-range__time-spans">
-          <div className="opening-hours__time-span-container">
-            <OpeningHoursRangeTimeSpan
-              defaultValues={defaultValues}
-              resourceStates={resourceStates}
-              namePrefix={`${namePrefix}.normal`}
-            />
-          </div>
-          {fields.map((field, i) => (
-            <div key={field.id} className="exception">
-              <OpeningHoursRangeTimeSpan
-                defaultValues={defaultValues}
-                resourceStates={resourceStates}
-                namePrefix={`${namePrefix}.details[${i}]`}
-              />
-              <Button variant="danger" onClick={(): void => remove(i)}>
-                Poista
-              </Button>
-            </div>
-          ))}
-          <div>
-            <button
-              className="link-button"
-              onClick={(): void => append({})}
-              type="button">
-              + Lisää tarkennettu aukioloaika
-            </button>
-          </div>
+    <>
+      <OpeningHoursTimeSpan
+        defaultValues={defaultValues}
+        resourceStates={resourceStates}
+        namePrefix={`${namePrefix}.normal`}
+      />
+      {fields.map((field, i) => (
+        <div key={field.id} className="opening-hours-time-span-details">
+          <OpeningHoursTimeSpan
+            defaultValues={defaultValues}
+            resourceStates={resourceStates}
+            namePrefix={`${namePrefix}.details[${i}]`}
+          />
+          <Button variant="danger" onClick={(): void => remove(i)}>
+            Poista
+          </Button>
         </div>
+      ))}
+      <div>
+        <button
+          className="link-button"
+          onClick={(): void => append({})}
+          type="button">
+          + Lisää tarkennettu aukioloaika
+        </button>
       </div>
-    </div>
+    </>
   );
 };
 
@@ -246,7 +239,7 @@ type DefaultValues = {
 
 const daysOrder = ['Ma', 'Ti', 'Ke', 'To', 'Pe', 'La', 'Su'];
 
-const OpeningHoursRange = ({
+const OpeningHours = ({
   resourceStates,
   defaultValues,
   namePrefix,
@@ -273,10 +266,10 @@ const OpeningHoursRange = ({
   });
 
   return (
-    <div className="opening-hours-range-container">
-      <div className="weekdays">
+    <div className="opening-hours-container">
+      <div>
         <div>Päivä</div>
-        <div className="weekdays-and-is-open-selector">
+        <div className="weekdays">
           {daysOrder.map((day) => (
             <DayCheckbox
               key={`${namePrefix}-${day}`}
@@ -302,17 +295,15 @@ const OpeningHoursRange = ({
         </div>
       </div>
       {open && (
-        <div className="opening-hours-range">
-          <OpeningHoursRangeSelections
-            defaultValues={defaultValues}
-            resourceStates={resourceStates}
-            namePrefix={`${namePrefix}.normal`}
-          />
-        </div>
+        <OpeningHoursTimeSpanAndDetails
+          defaultValues={defaultValues}
+          resourceStates={resourceStates}
+          namePrefix={`${namePrefix}.normal`}
+        />
       )}
       {fields.map((field, i) => (
-        <div key={field.id}>
-          <div className="container varying-opening-hour">
+        <Fragment key={field.id}>
+          <div className="alternating-opening-hour-container">
             <Controller
               defaultValue={options[0]}
               name={`${namePrefix}.alternating[${i}].rule`}
@@ -334,23 +325,18 @@ const OpeningHoursRange = ({
               Poista
             </Button>
           </div>
-          <div className="opening-hours-range">
-            <OpeningHoursRangeSelections
+          <div>
+            <OpeningHoursTimeSpanAndDetails
               defaultValues={defaultValues}
               resourceStates={resourceStates}
               namePrefix={`${namePrefix}.alternating[${i}]`}
             />
           </div>
-        </div>
+        </Fragment>
       ))}
-      <div className="container">
-        <button
-          className="link-button"
-          onClick={() => append({})}
-          type="button">
-          + Lisää vuorotteleva aukioloaika
-        </button>
-      </div>
+      <button className="link-button" onClick={() => append({})} type="button">
+        + Lisää vuorotteleva aukioloaika
+      </button>
     </div>
   );
 };
@@ -439,9 +425,9 @@ export default ({ resourceId }: { resourceId: string }): JSX.Element => {
   return (
     (resource && datePeriodConfig && (
       <FormProvider {...form}>
-        <div className="opening-hours-form-section">
+        <div className="opening-hours-page">
           <div>
-            <div className="opening-hours-form__title">
+            <div className="opening-hours-page__title">
               <h1 data-test="resource-info" className="resource-info-title">
                 {resource?.name?.fi}
               </h1>
@@ -450,7 +436,7 @@ export default ({ resourceId }: { resourceId: string }): JSX.Element => {
             <div className="opening-hours-form">
               <section>
                 {fields.map((field, i) => (
-                  <OpeningHoursRange
+                  <OpeningHours
                     key={field.id}
                     resourceStates={resourceStates}
                     days={field.days}
@@ -509,7 +495,7 @@ export default ({ resourceId }: { resourceId: string }): JSX.Element => {
                   />
                 ))}
               </section>
-              <div className="opening-hours-form__buttons">
+              <div className="opening-hours-page__actions">
                 <Button onClick={returnToResourcePage}>Tallenna</Button>
                 <SecondaryButton onClick={returnToResourcePage}>
                   Peruuta
