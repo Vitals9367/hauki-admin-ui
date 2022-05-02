@@ -15,7 +15,7 @@ import {
 } from '../../common/lib/types';
 import api from '../../common/utils/api/api';
 import { SecondaryButton } from '../../components/button/Button';
-import Preview from './OpeningHoursRangePreview';
+import Preview from './OpeningHoursPreview';
 import './SimpleCreateOpeningHours2.scss';
 import { Days, OptionType, OpeningHoursFormState } from './types';
 

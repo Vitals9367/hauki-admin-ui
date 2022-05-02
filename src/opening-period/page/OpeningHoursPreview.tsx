@@ -3,7 +3,7 @@ import { Language, ResourceState } from '../../common/lib/types';
 import { createWeekdaysStringFromIndices } from '../../common/utils/date-time/format';
 import { OpeningHoursTimeSpan, OpeningHoursFormState } from './types';
 import { toWeekdays } from './utils';
-import './OpeningHoursRangePreview.scss';
+import './OpeningHoursPreview.scss';
 
 function renderStartAndEndTimes(
   startTime?: string | null,
@@ -71,7 +71,7 @@ export default ({
 }: {
   data: OpeningHoursFormState;
 }): JSX.Element => (
-  <div className="opening-hours-range-preview-container">
+  <div className="opening-hours-preview-container">
     <h2>Esikatselu</h2>
     {openingHours.map((openingHour, openingHourIdx) => (
       <div key={`normal-${openingHourIdx}`}>
