@@ -198,7 +198,7 @@ const OpeningHoursRangeSelections = ({
   const { control } = useFormContext<OpeningHoursFormState>();
   const { fields, append, remove } = useFieldArray({
     control,
-    name: 'exceptions',
+    name: `${namePrefix}.exceptions`,
   });
 
   return (
@@ -213,7 +213,7 @@ const OpeningHoursRangeSelections = ({
             />
           </div>
           {fields.map((field, i) => (
-            <div className="exception" key={field.id}>
+            <div key={field.id} className="exception">
               <OpeningHoursRangeTimeSpan
                 defaultValues={defaultValues}
                 resourceStates={resourceStates}
@@ -269,7 +269,7 @@ const OpeningHoursRange = ({
   const open = watch(`${namePrefix}.isOpen`);
   const { append, fields, remove } = useFieldArray({
     control,
-    name: 'variable',
+    name: `${namePrefix}.variable`,
   });
 
   return (
