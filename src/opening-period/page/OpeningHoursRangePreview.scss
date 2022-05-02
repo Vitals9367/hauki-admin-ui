@@ -1,0 +1,27 @@
+.opening-hours-range-preview-container {
+  align-self: flex-start;
+  background: #fff;
+  flex: 0 0 400px;
+  justify-self: flex-start;
+  padding: 1rem;
+  position: sticky;
+  top: 0;
+}
+
+.time-span-row {
+  display: grid;
+  gap: 5px;
+  grid-template-columns: 100px 6fr 6fr;
+  align-items: start;
+  font-family: HelsinkiGrotesk-Medium, Arial, sans-serif;
+}
+
+p {
+  margin-top: 0;
+  margin-bottom: 0;
+  line-height: 2;
+
+  &.time-span-preview-description {
+    font-family: HelsinkiGrotesk-Regular, Arial, sans-serif;
+  }
+}

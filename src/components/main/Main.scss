@@ -30,7 +30,7 @@
 
 @media screen and (min-width: $breakpoint-xl) {
   .main-container {
-    max-width: $container-width-xl;
+    max-width: 1600px; // $container-width-xl;
     padding-left: 0;
     padding-right: 0;
   }
