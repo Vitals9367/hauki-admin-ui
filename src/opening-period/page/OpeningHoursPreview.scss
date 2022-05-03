@@ -31,10 +31,14 @@ p {
 .opening-hours-preview-time-span {
   align-items: center;
   display: flex;
-  justify-content: center;
+  justify-content: space-between;
 }
 
 .opening-hours-preview-time-span__time {
   flex: 1;
-  text-align: center;
+  letter-spacing: 1px;
+}
+
+.opening-hours-preview-time-span__time--end {
+  text-align: right;
 }

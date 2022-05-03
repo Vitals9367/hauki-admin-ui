@@ -17,7 +17,7 @@ const TimeSpan = ({
       {start ?? '-- : --'}
     </span>
     <span>-</span>
-    <span className="opening-hours-preview-time-span__time">
+    <span className="opening-hours-preview-time-span__time opening-hours-preview-time-span__time--end">
       {end ?? '-- : --'}
     </span>
   </>
