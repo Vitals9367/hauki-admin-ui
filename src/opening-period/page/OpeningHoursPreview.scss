@@ -1,3 +1,5 @@
+@import 'node_modules/hds-design-tokens/lib/all.scss';
+
 .opening-hours-preview-container {
   align-self: flex-start;
   background: #fff;
@@ -10,8 +12,8 @@
 
 .time-span-row {
   display: grid;
-  gap: 5px;
-  grid-template-columns: 100px 6fr 6fr;
+  gap: 30px;
+  grid-template-columns: 120px 10fr 6fr;
   align-items: start;
   font-family: HelsinkiGrotesk-Medium, Arial, sans-serif;
 }
@@ -24,4 +26,15 @@ p {
   &.time-span-preview-description {
     font-family: HelsinkiGrotesk-Regular, Arial, sans-serif;
   }
+}
+
+.opening-hours-preview-time-span {
+  align-items: center;
+  display: flex;
+  justify-content: center;
+}
+
+.opening-hours-preview-time-span__time {
+  flex: 1;
+  text-align: center;
 }

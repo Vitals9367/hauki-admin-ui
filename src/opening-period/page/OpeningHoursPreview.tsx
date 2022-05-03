@@ -5,22 +5,41 @@ import { OpeningHoursTimeSpan, OpeningHoursFormState } from './types';
 import { toWeekdays } from './utils';
 import './OpeningHoursPreview.scss';
 
-function renderStartAndEndTimes(
-  startTime?: string | null,
-  endTime?: string | null,
+const TimeSpan = ({
+  start,
+  end,
+}: {
+  start?: string;
+  end?: string;
+}): JSX.Element => (
+  <>
+    <span className="opening-hours-preview-time-span__time">
+      {start ?? '-- : --'}
+    </span>
+    <span>-</span>
+    <span className="opening-hours-preview-time-span__time">
+      {end ?? '-- : --'}
+    </span>
+  </>
+);
+
+const renderStartAndEndTimes = (
+  startTime?: string,
+  endTime?: string,
   fullDay?: boolean,
-  isClosed?: boolean
-): string {
-  if (isClosed) {
-    return '--:--  -  --:--';
-  }
-
-  if (fullDay) {
-    return '24h';
-  }
-
-  return `${startTime ?? ''} - ${endTime ?? ''}`;
-}
+  isOpen?: boolean
+): JSX.Element => (
+  <span className="opening-hours-preview-time-span">
+    {isOpen && fullDay ? (
+      '24h'
+    ) : (
+      <TimeSpan
+        start={isOpen ? startTime : undefined}
+        end={isOpen ? endTime : undefined}
+      />
+    )}
+  </span>
+);
 
 const PreviewRow = ({
   label,
@@ -28,7 +47,7 @@ const PreviewRow = ({
   description,
 }: {
   label?: string;
-  time?: string | null | undefined;
+  time?: JSX.Element | string | null | undefined;
   description?: string;
 }): JSX.Element => (
   <div className="time-span-row">
@@ -39,7 +58,7 @@ const PreviewRow = ({
 );
 
 const TimeSpanRow = ({
-  isOpen = true,
+  isOpen: isOpenOuter = true,
   label,
   timeSpan,
 }: {
@@ -47,6 +66,9 @@ const TimeSpanRow = ({
   label?: string;
   timeSpan?: OpeningHoursTimeSpan;
 }): JSX.Element => {
+  const isOpen =
+    isOpenOuter &&
+    (timeSpan?.state?.value as ResourceState) !== ResourceState.CLOSED;
   return (
     <PreviewRow
       label={label}
@@ -54,8 +76,7 @@ const TimeSpanRow = ({
         timeSpan?.start,
         timeSpan?.end,
         timeSpan?.fullDay,
-        !isOpen ||
-          (timeSpan?.state?.value as ResourceState) === ResourceState.CLOSED
+        isOpen
       )}
       description={
         timeSpan?.state?.value === ResourceState.OTHER
