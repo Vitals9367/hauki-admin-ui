@@ -242,6 +242,7 @@ const daysOrder = ['Ma', 'Ti', 'Ke', 'To', 'Pe', 'La', 'Su'];
 const OpeningHours = ({
   resourceStates,
   defaultValues,
+  defaultIOpen,
   namePrefix,
   onDayChange,
   days,
@@ -282,7 +283,7 @@ const OpeningHours = ({
             </DayCheckbox>
           ))}
           <Controller
-            defaultValue
+            defaultValue={defaultIOpen}
             name={`${namePrefix}.isOpen`}
             render={({ onChange, value }): JSX.Element => (
               <SwitchButtons
@@ -393,10 +394,42 @@ export default ({ resourceId }: { resourceId: string }): JSX.Element => {
           Ke: true,
           To: true,
           Pe: true,
-          La: true,
-          Su: true,
+          La: false,
+          Su: false,
         },
         isOpen: true,
+        normal: {
+          details: [],
+        },
+        alternating: [],
+      },
+      {
+        days: {
+          Ma: false,
+          Ti: false,
+          Ke: false,
+          To: false,
+          Pe: false,
+          La: true,
+          Su: false,
+        },
+        isOpen: false,
+        normal: {
+          details: [],
+        },
+        alternating: [],
+      },
+      {
+        days: {
+          Ma: false,
+          Ti: false,
+          Ke: false,
+          To: false,
+          Pe: false,
+          La: false,
+          Su: true,
+        },
+        isOpen: false,
         normal: {
           details: [],
         },
@@ -409,7 +442,7 @@ export default ({ resourceId }: { resourceId: string }): JSX.Element => {
     defaultValues: defaultState,
   });
   const { control, getValues, setValue, watch } = form;
-  const { append, fields, remove } = useFieldArray({
+  const { insert, fields, remove } = useFieldArray({
     control,
     name: 'openingHours',
   });
@@ -438,6 +471,7 @@ export default ({ resourceId }: { resourceId: string }): JSX.Element => {
                 {fields.map((field, i) => (
                   <OpeningHours
                     key={field.id}
+                    defaultIOpen={field.isOpen}
                     resourceStates={resourceStates}
                     days={field.days}
                     namePrefix={`openingHours[${i}]`}
@@ -448,6 +482,7 @@ export default ({ resourceId }: { resourceId: string }): JSX.Element => {
                             idx !== i &&
                             getValues(`openingHours[${idx}].days.${day}`)
                         );
+
                         if (prevId >= 0) {
                           setDay(prevId, day, false);
 
@@ -459,33 +494,27 @@ export default ({ resourceId }: { resourceId: string }): JSX.Element => {
                       }
 
                       if (allDayAreUncheckedForRow(i)) {
-                        if (i > 0) {
-                          setDay(i - 1, day, true);
-                        } else {
-                          setDay(i + 1, day, true);
-                        }
-                        remove(i);
+                        setDay(i, day, true);
                         return;
                       }
 
-                      if (fields.length - 1 === i) {
-                        append({
-                          ...defaultState,
-                          days: {
-                            Ma: false,
-                            Ti: false,
-                            Ke: false,
-                            To: false,
-                            Pe: false,
-                            La: false,
-                            Su: false,
-                            [day]: true,
-                          },
-                        });
-                        return;
-                      }
-
-                      setDay(i + 1, day, true);
+                      insert(i + 1, {
+                        days: {
+                          Ma: false,
+                          Ti: false,
+                          Ke: false,
+                          To: false,
+                          Pe: false,
+                          La: false,
+                          Su: false,
+                          [day]: true,
+                        },
+                        isOpen: true,
+                        normal: {
+                          details: [],
+                        },
+                        alternating: [],
+                      });
                     }}
                     defaultValues={{
                       startTime: '09:00',
