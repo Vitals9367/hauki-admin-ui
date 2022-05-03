@@ -42,15 +42,17 @@ const renderStartAndEndTimes = (
 );
 
 const PreviewRow = ({
+  className,
   label,
   time,
   description,
 }: {
+  className?: string;
   label?: string;
   time?: JSX.Element | string | null | undefined;
   description?: string;
 }): JSX.Element => (
-  <div className="time-span-row">
+  <div className={`time-span-row ${className ?? ''}`}>
     <p>{label}</p>
     <p>{time}</p>
     <p>{description}</p>
@@ -113,7 +115,10 @@ export default ({
         </div>
         {openingHour.alternating?.map((alternating, variableId) => (
           <div key={`variable-${variableId}`}>
-            <PreviewRow time={alternating.rule?.label} />
+            <PreviewRow
+              className="alternating-time-span-label"
+              time={alternating.rule?.label}
+            />
             <TimeSpanRow timeSpan={alternating.normal} />
             {alternating.details?.map((detail, detailIdx) => (
               <div key={`alternating-detail-${detailIdx}`}>

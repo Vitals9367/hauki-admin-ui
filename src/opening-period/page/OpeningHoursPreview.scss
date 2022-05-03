@@ -35,10 +35,11 @@ p {
 }
 
 .opening-hours-preview-time-span__time {
-  flex: 1;
+  flex: 0 0 48px;
   letter-spacing: 1px;
+  text-align: center;
 }
 
-.opening-hours-preview-time-span__time--end {
-  text-align: right;
+.alternating-time-span-label {
+  font-weight: bold;
 }
