@@ -10,18 +10,16 @@
   top: 0;
 }
 
-.time-span-row {
+.opening-hours-preview-grid {
   display: grid;
-  gap: 30px;
-  grid-template-columns: 120px 10fr 6fr;
-  align-items: start;
-  font-family: HelsinkiGrotesk-Medium, Arial, sans-serif;
+  gap: 0px 30px;
+  grid-template-columns: 120px 140px 1fr;
 }
 
 p {
   margin-top: 0;
   margin-bottom: 0;
-  line-height: 2;
+  line-height: 1.75;
 
   &.time-span-preview-description {
     font-family: HelsinkiGrotesk-Regular, Arial, sans-serif;
