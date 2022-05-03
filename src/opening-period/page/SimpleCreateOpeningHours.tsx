@@ -453,6 +453,30 @@ export default ({ resourceId }: { resourceId: string }): JSX.Element => {
   const setDay = (i: number, day: keyof Days, checked: boolean): void =>
     setValue(`openingHours[${i}].days.${day}`, checked);
 
+  const findPreviousChecked = (i: number, day: keyof Days): number =>
+    fields.findIndex(
+      (item, idx) => idx !== i && getValues(`openingHours[${idx}].days.${day}`)
+    );
+
+  const addNewRow = (i: number, day: keyof Days): void =>
+    insert(i + 1, {
+      days: {
+        Ma: false,
+        Ti: false,
+        Ke: false,
+        To: false,
+        Pe: false,
+        La: false,
+        Su: false,
+        [day]: true,
+      },
+      isOpen: true,
+      normal: {
+        details: [],
+      },
+      alternating: [],
+    });
+
   const values = watch();
 
   return (
@@ -477,44 +501,18 @@ export default ({ resourceId }: { resourceId: string }): JSX.Element => {
                     namePrefix={`openingHours[${i}]`}
                     onDayChange={(day, checked): void => {
                       if (checked) {
-                        const prevId = fields.findIndex(
-                          (item, idx) =>
-                            idx !== i &&
-                            getValues(`openingHours[${idx}].days.${day}`)
-                        );
-
+                        const prevId = findPreviousChecked(i, day);
                         if (prevId >= 0) {
                           setDay(prevId, day, false);
-
                           if (allDayAreUncheckedForRow(prevId)) {
                             remove(prevId);
                           }
                         }
-                        return;
-                      }
-
-                      if (allDayAreUncheckedForRow(i)) {
+                      } else if (allDayAreUncheckedForRow(i)) {
                         setDay(i, day, true);
-                        return;
+                      } else {
+                        addNewRow(i + 1, day);
                       }
-
-                      insert(i + 1, {
-                        days: {
-                          Ma: false,
-                          Ti: false,
-                          Ke: false,
-                          To: false,
-                          Pe: false,
-                          La: false,
-                          Su: false,
-                          [day]: true,
-                        },
-                        isOpen: true,
-                        normal: {
-                          details: [],
-                        },
-                        alternating: [],
-                      });
                     }}
                     defaultValues={{
                       startTime: '09:00',
