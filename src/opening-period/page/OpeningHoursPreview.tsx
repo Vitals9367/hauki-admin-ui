@@ -60,34 +60,29 @@ const PreviewRow = ({
 );
 
 const TimeSpanRow = ({
-  isOpen: isOpenOuter = true,
+  isOpen = true,
   label,
   timeSpan,
 }: {
   isOpen?: boolean;
   label?: string;
   timeSpan?: OpeningHoursTimeSpan;
-}): JSX.Element => {
-  const isOpen =
-    isOpenOuter &&
-    (timeSpan?.state?.value as ResourceState) !== ResourceState.CLOSED;
-  return (
-    <PreviewRow
-      label={label}
-      time={renderStartAndEndTimes(
-        timeSpan?.start,
-        timeSpan?.end,
-        timeSpan?.fullDay,
-        isOpen
-      )}
-      description={
-        timeSpan?.state?.value === ResourceState.OTHER
-          ? timeSpan.description
-          : timeSpan?.state?.label ?? 'Suljettu'
-      }
-    />
-  );
-};
+}): JSX.Element => (
+  <PreviewRow
+    label={label}
+    time={renderStartAndEndTimes(
+      timeSpan?.start,
+      timeSpan?.end,
+      timeSpan?.fullDay,
+      isOpen
+    )}
+    description={
+      timeSpan?.state?.value === ResourceState.OTHER
+        ? timeSpan.description
+        : timeSpan?.state?.label ?? 'Suljettu'
+    }
+  />
+);
 
 export default ({
   data: { openingHours },
