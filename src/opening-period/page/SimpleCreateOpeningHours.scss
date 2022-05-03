@@ -28,98 +28,37 @@
   }
 }
 
-.opening-hours-form {
-  background: #ffffff;
-}
-
-.opening-hours-range__label {
-  display: flex;
-  font-weight: bold;
-  margin-top: 45px;
-  width: 245px;
-}
-
-.opening-hours-range__time-span-inputs {
-  display: flex;
+.weekdays {
   align-items: center;
-  gap: 5px;
-}
-
-.opening-hours-range__selections {
   display: flex;
   gap: 10px;
 }
 
-.opening-hours-section {
+.opening-hours-container {
+  align-items: flex-start;
+  border-bottom: 1px solid #cfcfcf;
   display: flex;
   flex-direction: column;
-  gap: 10px;
-}
-
-.opening-hours-range-select {
-  min-width: 240px;
-}
-
-.separate-weekdays-section {
-  align-items: center;
-  border-bottom: 1px solid #e7e7e7;
-  gap: 50px;
-  display: flex;
-  padding: 2rem 2rem;
-}
-
-.separate-weekdays-section__label {
-  font-weight: bold;
-}
-
-.opening-hours-form__buttons {
-  display: flex;
-  gap: 1rem;
-  padding: 3rem 2rem 2rem;
-}
-
-.opening-hours-ranges__switch-buttons {
-  margin-top: 30px;
-}
-
-.opening-hours-range {
-  display: flex;
-  gap: 20px;
+  gap: 1rem 2rem;
   padding: 1rem 2rem;
 }
 
-.exception-section {
-  align-items: flex-start;
+.alternating-opening-hour-container {
   display: flex;
-  flex-direction: column;
-  margin-top: 40px;
+  align-items: flex-end;
+  gap: 20px;
 }
 
-.opening-hours-range__time-spans {
+.fullday-checkbox-container {
+  padding-bottom: 1rem;
+}
+
+.opening-hours-page {
   display: flex;
-  flex-direction: column;
   gap: 10px;
 }
 
-.opening-hours-range__time-span {
-  align-items: flex-end;
-  display: flex;
-  gap: 30px;
-}
-
-.exception {
-  display: flex;
-  align-items: flex-end;
-  gap: 1rem;
-}
-
-.opening-hours__time-span-container {
-  align-items: flex-end;
-  display: flex;
-  gap: 1rem;
-}
-
-.opening-hours-form__title {
+.opening-hours-page__title {
   background: #ffffff;
   border-bottom: 1px solid #e7e7e7;
   display: flex;
@@ -133,6 +72,38 @@
   z-index: 100;
 }
 
+.opening-hours-page__actions {
+  display: flex;
+  gap: 1rem;
+  padding: 1rem 2rem;
+}
+
+.opening-hours-state-select {
+  min-width: 240px;
+}
+
+.opening-hours-time-span {
+  align-items: flex-end;
+  display: flex;
+  gap: 30px;
+}
+
+.opening-hours-time-span__range {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.opening-hours-time-span__range-divider {
+  margin-top: 1.5rem;
+}
+
+.opening-hours-time-span-details {
+  align-items: flex-end;
+  display: flex;
+  gap: 1rem;
+}
+
 .link-button {
   background: transparent;
   border: 0;
@@ -142,10 +113,6 @@
   text-decoration: underline;
 }
 
-.add-variable-opening-hours-button {
-  margin-left: 538px;
-}
-
-.variable-opening-hours-select {
-  width: 245px;
+.opening-hours-form {
+  background: #ffffff;
 }

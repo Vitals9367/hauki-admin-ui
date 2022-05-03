@@ -1,5 +1,12 @@
-import { Button, Select, TimeInput } from 'hds-react';
-import React, { useEffect, useState } from 'react';
+import { Button, Checkbox, Select, TextInput, TimeInput } from 'hds-react';
+import React, { Fragment, useEffect, useState } from 'react';
+import {
+  Controller,
+  FormProvider,
+  useFieldArray,
+  useForm,
+  useFormContext,
+} from 'react-hook-form';
 import { useHistory } from 'react-router-dom';
 import {
   Resource,
@@ -8,7 +15,46 @@ import {
 } from '../../common/lib/types';
 import api from '../../common/utils/api/api';
 import { SecondaryButton } from '../../components/button/Button';
+import Preview from './OpeningHoursPreview';
 import './SimpleCreateOpeningHours.scss';
+import { Days, OptionType, OpeningHoursFormState } from './types';
+
+const DayCheckbox = ({
+  children,
+  namePrefix,
+  onChange: onChangeOuter,
+  checked,
+}: {
+  children: string;
+  namePrefix: string;
+  onChange: (checked: boolean) => void;
+  checked: boolean;
+}): JSX.Element => {
+  const id = `${namePrefix}.days.${children}`;
+  const { control } = useFormContext<OpeningHoursFormState>();
+
+  return (
+    <Controller
+      control={control}
+      defaultValue={checked}
+      name={`${namePrefix}.days.${children}`}
+      render={({ onChange, value }): JSX.Element => (
+        <label htmlFor={id} className="day-label">
+          <input
+            id={id}
+            type="checkbox"
+            onChange={(): void => {
+              onChange(!value);
+              onChangeOuter(!value);
+            }}
+            checked={value}
+          />
+          <span className="day-option">{children}</span>
+        </label>
+      )}
+    />
+  );
+};
 
 const SwitchButton = ({
   isActive,
@@ -53,10 +99,11 @@ const SwitchButtons = ({
   </div>
 );
 
-const OpeningHoursRangeTimeSpan = ({
+const OpeningHoursTimeSpan = ({
   defaultValues,
   disabled = false,
   resourceStates,
+  namePrefix,
 }: {
   defaultValues?: {
     startTime: string;
@@ -64,114 +111,125 @@ const OpeningHoursRangeTimeSpan = ({
     state: ResourceState;
   };
   disabled?: boolean;
+  namePrefix: string;
   resourceStates: OptionType[];
 }): JSX.Element => {
-  const [state, setState] = useState(
-    defaultValues?.state
-      ? resourceStates.find(({ value }) => value === defaultValues.state)
-      : undefined
-  );
+  const { control, register, watch } = useFormContext();
+  const fullDay = watch(`${namePrefix}.fullDay`);
+  const state = watch(`${namePrefix}.state`);
 
   return (
-    <div className="opening-hours-range__time-span">
-      <div className="opening-hours-range__time-span-inputs">
+    <div className="opening-hours-time-span">
+      <div className="opening-hours-time-span__range">
         <TimeInput
-          disabled={disabled}
+          ref={register()}
+          disabled={disabled || fullDay}
           id="startDate"
           hoursLabel="tunnit"
           minutesLabel="minuutit"
+          label="Avataan"
+          name={`${namePrefix}.start`}
           value={defaultValues?.startTime}
         />
-        <div>-</div>
+        <div className="opening-hours-time-span__range-divider">-</div>
         <TimeInput
-          disabled={disabled}
-          id="startDate"
+          ref={register()}
+          disabled={disabled || fullDay}
+          id="endDate"
           hoursLabel="tunnit"
           minutesLabel="minuutit"
+          label="Suljetaan"
+          name={`${namePrefix}.end`}
           value={defaultValues?.endTime}
         />
       </div>
-      <Select<OptionType>
-        disabled={disabled}
-        label="Tila"
-        options={resourceStates}
-        className="opening-hours-range-select"
-        onChange={setState}
-        placeholder="Placeholder"
-        value={state}
-        required
+      <div className="fullday-checkbox-container">
+        <Controller
+          defaultValue={false}
+          render={(field): JSX.Element => (
+            <Checkbox
+              id={`${namePrefix}.fullDay`}
+              name={`${namePrefix}.fullDay`}
+              label="24 h"
+              onChange={(e): void => {
+                field.onChange(e.target.checked);
+              }}
+              checked={field.value}
+            />
+          )}
+          control={control}
+          name={`${namePrefix}.fullDay`}
+        />
+      </div>
+      <Controller
+        defaultValue={resourceStates[0]}
+        name={`${namePrefix}.state`}
+        control={control}
+        render={({ onChange, value }): JSX.Element => (
+          <Select<OptionType>
+            disabled={disabled}
+            label="Tila"
+            options={resourceStates}
+            className="opening-hours-state-select"
+            onChange={onChange}
+            placeholder="Valitse"
+            required
+            value={value}
+          />
+        )}
       />
+      {state?.value === ResourceState.OTHER && (
+        <TextInput id="" ref={register()} name={`${namePrefix}.description`} />
+      )}
     </div>
   );
 };
 
-const OpeningHoursRangeSelections = ({
-  defaultIOpen,
+const OpeningHoursTimeSpanAndDetails = ({
   defaultValues,
-  onDelete,
   resourceStates,
+  namePrefix,
 }: {
   defaultValues?: DefaultValues;
-  defaultIOpen: boolean;
-  onDelete?: () => void;
   resourceStates: OptionType[];
-}) => {
-  const [open, setOpen] = useState(defaultIOpen);
-  const [exceptions, setExceptions] = useState(0);
+  namePrefix: string;
+}): JSX.Element => {
+  const { control } = useFormContext<OpeningHoursFormState>();
+  const { fields, append, remove } = useFieldArray({
+    control,
+    name: `${namePrefix}.details`,
+  });
+
   return (
-    <div>
-      <div className="opening-hours-range__selections">
-        <div className="opening-hours-ranges__switch-buttons">
-          <SwitchButtons
-            labels={{ on: 'Auki', off: 'Kiinni' }}
-            onChange={() => setOpen(!open)}
-            value={open}
+    <>
+      <OpeningHoursTimeSpan
+        defaultValues={defaultValues}
+        resourceStates={resourceStates}
+        namePrefix={`${namePrefix}.normal`}
+      />
+      {fields.map((field, i) => (
+        <div key={field.id} className="opening-hours-time-span-details">
+          <OpeningHoursTimeSpan
+            defaultValues={defaultValues}
+            resourceStates={resourceStates}
+            namePrefix={`${namePrefix}.details[${i}]`}
           />
+          <Button variant="danger" onClick={(): void => remove(i)}>
+            Poista
+          </Button>
         </div>
-        <div className="opening-hours-range__time-spans">
-          <div className="opening-hours__time-span-container">
-            <OpeningHoursRangeTimeSpan
-              disabled={!open}
-              defaultValues={defaultValues}
-              resourceStates={resourceStates}
-            />
-            {onDelete && (
-              <Button variant="danger" onClick={onDelete}>
-                Poista
-              </Button>
-            )}
-          </div>
-          {open &&
-            Array.from(Array(exceptions).keys()).map(() => (
-              <div className="exception">
-                <OpeningHoursRangeTimeSpan
-                  defaultValues={defaultValues}
-                  resourceStates={resourceStates}
-                />
-                <Button
-                  variant="danger"
-                  onClick={() => setExceptions((i) => i - 1)}>
-                  Poista
-                </Button>
-              </div>
-            ))}
-          <div>
-            {open && (
-              <button
-                className="link-button"
-                onClick={() => setExceptions((i) => i + 1)}
-                type="button">
-                + Lisää tarkennus
-              </button>
-            )}
-          </div>
-        </div>
+      ))}
+      <div>
+        <button
+          className="link-button"
+          onClick={(): void => append({})}
+          type="button">
+          + Lisää tarkennettu aukioloaika
+        </button>
       </div>
-    </div>
+    </>
   );
 };
-
-type OptionType = { value: string; label: string };
 
 type DefaultValues = {
   startTime: string;
@@ -179,91 +237,134 @@ type DefaultValues = {
   state: ResourceState;
 };
 
-const OpeningHoursRange = ({
-  label,
-  defaultIOpen = true,
+const daysOrder = ['Ma', 'Ti', 'Ke', 'To', 'Pe', 'La', 'Su'];
+
+const OpeningHours = ({
   resourceStates,
   defaultValues,
+  namePrefix,
+  onDayChange,
+  days,
 }: {
-  label: string;
   defaultIOpen?: boolean;
+  days: Days;
+  namePrefix: string;
   resourceStates: OptionType[];
   defaultValues?: DefaultValues;
+  onDayChange: (day: keyof Days, checked: boolean) => void;
 }): JSX.Element => {
-  const [varyingOpeningHours, setVaryingOpeningHours] = useState<number>(0);
   const options = [
     { value: '0', label: 'Joka toinen viikko' },
     { value: '1', label: 'Joka kolmas viikko' },
     { value: '2', label: 'Joka neljäs viikko' },
   ];
+  const { control, watch } = useFormContext<OpeningHoursFormState>();
+  const open = watch(`${namePrefix}.isOpen`);
+  const { append, fields, remove } = useFieldArray({
+    control,
+    name: `${namePrefix}.alternating`,
+  });
+
   return (
-    <div>
-      <div className="opening-hours-range">
-        <div className="opening-hours-range__label">{label}</div>
-        <OpeningHoursRangeSelections
-          defaultIOpen={defaultIOpen}
-          defaultValues={defaultValues}
-          resourceStates={resourceStates}
-        />
-      </div>
-      {Array.from(Array(varyingOpeningHours).keys()).map(() => (
-        <div className="opening-hours-range">
-          <Select<OptionType>
-            label="Sääntö"
-            options={options}
-            className="variable-opening-hours-select"
-            placeholder="Valitse"
-            required
-            defaultValue={options[0]}
-          />
-          <OpeningHoursRangeSelections
-            defaultIOpen={defaultIOpen}
-            defaultValues={defaultValues}
-            onDelete={() =>
-              setVaryingOpeningHours((prevState) => prevState - 1)
-            }
-            resourceStates={resourceStates}
+    <div className="opening-hours-container">
+      <div>
+        <div>Päivä</div>
+        <div className="weekdays">
+          {daysOrder.map((day) => (
+            <DayCheckbox
+              key={`${namePrefix}-${day}`}
+              checked={days[day as keyof Days]}
+              namePrefix={namePrefix}
+              onChange={(checked): void =>
+                onDayChange(day as keyof Days, checked)
+              }>
+              {day}
+            </DayCheckbox>
+          ))}
+          <Controller
+            defaultValue
+            name={`${namePrefix}.isOpen`}
+            render={({ onChange, value }): JSX.Element => (
+              <SwitchButtons
+                labels={{ on: 'Auki', off: 'Kiinni' }}
+                onChange={onChange}
+                value={value}
+              />
+            )}
           />
         </div>
-      ))}
-      <div>
-        <button
-          className="link-button add-variable-opening-hours-button"
-          onClick={() => setVaryingOpeningHours((prevState) => prevState + 1)}
-          type="button">
-          + Lisää vaihteleva aukioloaika
-        </button>
       </div>
+      {open && (
+        <OpeningHoursTimeSpanAndDetails
+          defaultValues={defaultValues}
+          resourceStates={resourceStates}
+          namePrefix={`${namePrefix}.normal`}
+        />
+      )}
+      {fields.map((field, i) => (
+        <Fragment key={field.id}>
+          <div className="alternating-opening-hour-container">
+            <Controller
+              defaultValue={options[0]}
+              name={`${namePrefix}.alternating[${i}].rule`}
+              control={control}
+              render={({ onChange, value }): JSX.Element => (
+                <Select<OptionType>
+                  className="alternating-opening-hours-select"
+                  defaultValue={options[0]}
+                  label="Toistuvuus"
+                  onChange={onChange}
+                  options={options}
+                  placeholder="Valitse"
+                  required
+                  value={value}
+                />
+              )}
+            />
+            <Button variant="danger" onClick={() => remove(i)}>
+              Poista
+            </Button>
+          </div>
+          <div>
+            <OpeningHoursTimeSpanAndDetails
+              defaultValues={defaultValues}
+              resourceStates={resourceStates}
+              namePrefix={`${namePrefix}.alternating[${i}]`}
+            />
+          </div>
+        </Fragment>
+      ))}
+      <button className="link-button" onClick={() => append({})} type="button">
+        + Lisää vuorotteleva aukioloaika
+      </button>
     </div>
   );
 };
 
-export default function CreateNewOpeningPeriodPage({
-  resourceId,
-}: {
-  resourceId: string;
-}): JSX.Element {
+export default ({ resourceId }: { resourceId: string }): JSX.Element => {
   const [resource, setResource] = useState<Resource>();
   const [datePeriodConfig, setDatePeriodConfig] = useState<
     UiDatePeriodConfig
   >();
-  const [separateWeekdays, setSeparateWeekdays] = useState(false);
   const history = useHistory();
   const returnToResourcePage = (): void =>
     history.push(`/resource/${resourceId}`);
 
-  const defaultWeekendValueValue = {
-    startTime: '09:00',
-    endTime: '15:00',
-    state: ResourceState.OPEN,
-  };
-
-  const resourceStates = datePeriodConfig
+  let resourceStates = datePeriodConfig
     ? datePeriodConfig.resourceState.options.map((translatedApiChoice) => ({
         value: translatedApiChoice.value,
-        label: translatedApiChoice.label.fi as string,
+        label: translatedApiChoice.label.fi,
       }))
     : [];
+
+  resourceStates = [
+    ...resourceStates,
+    // TODO: This needs to be returned from the server
+    {
+      label: 'Muu, mikä?',
+      value: ResourceState.OTHER,
+    },
+  ];
 
   useEffect((): void => {
     const fetchData = async (): Promise<void> => {
@@ -283,78 +384,128 @@ export default function CreateNewOpeningPeriodPage({
     fetchData();
   }, [resourceId]);
 
+  const defaultState = {
+    openingHours: [
+      {
+        days: {
+          Ma: true,
+          Ti: true,
+          Ke: true,
+          To: true,
+          Pe: true,
+          La: true,
+          Su: true,
+        },
+        isOpen: true,
+        normal: {
+          details: [],
+        },
+        alternating: [],
+      },
+    ],
+  };
+
+  const form = useForm<OpeningHoursFormState>({
+    defaultValues: defaultState,
+  });
+  const { control, getValues, setValue, watch } = form;
+  const { append, fields, remove } = useFieldArray({
+    control,
+    name: 'openingHours',
+  });
+
+  const allDayAreUncheckedForRow = (idx: number): boolean =>
+    daysOrder.every((day) => !getValues(`openingHours[${idx}].days.${day}`));
+
+  const setDay = (i: number, day: keyof Days, checked: boolean): void =>
+    setValue(`openingHours[${i}].days.${day}`, checked);
+
+  const values = watch();
+
   return (
     (resource && datePeriodConfig && (
-      <div>
-        <div className="opening-hours-form__title">
-          <h1 data-test="resource-info" className="resource-info-title">
-            {resource?.name?.fi}
-          </h1>
-          <span>Osoite: {resource?.address.fi}</span>
-        </div>
-        <div className="opening-hours-form">
-          <div className="separate-weekdays-section">
-            <span className="separate-weekdays-section__label">
-              Erottele arkipäivät
-            </span>
+      <FormProvider {...form}>
+        <div className="opening-hours-page">
+          <div>
+            <div className="opening-hours-page__title">
+              <h1 data-test="resource-info" className="resource-info-title">
+                {resource?.name?.fi}
+              </h1>
+              <span>Osoite: {resource?.address.fi}</span>
+            </div>
+            <div className="opening-hours-form">
+              <section>
+                {fields.map((field, i) => (
+                  <OpeningHours
+                    key={field.id}
+                    resourceStates={resourceStates}
+                    days={field.days}
+                    namePrefix={`openingHours[${i}]`}
+                    onDayChange={(day, checked): void => {
+                      if (checked) {
+                        const prevId = fields.findIndex(
+                          (item, idx) =>
+                            idx !== i &&
+                            getValues(`openingHours[${idx}].days.${day}`)
+                        );
+                        if (prevId >= 0) {
+                          setDay(prevId, day, false);
 
-            <SwitchButtons
-              labels={{ on: 'Kyllä', off: 'Ei' }}
-              onChange={() => setSeparateWeekdays(!separateWeekdays)}
-              value={separateWeekdays}
-            />
+                          if (allDayAreUncheckedForRow(prevId)) {
+                            remove(prevId);
+                          }
+                        }
+                        return;
+                      }
+
+                      if (allDayAreUncheckedForRow(i)) {
+                        if (i > 0) {
+                          setDay(i - 1, day, true);
+                        } else {
+                          setDay(i + 1, day, true);
+                        }
+                        remove(i);
+                        return;
+                      }
+
+                      if (fields.length - 1 === i) {
+                        append({
+                          ...defaultState,
+                          days: {
+                            Ma: false,
+                            Ti: false,
+                            Ke: false,
+                            To: false,
+                            Pe: false,
+                            La: false,
+                            Su: false,
+                            [day]: true,
+                          },
+                        });
+                        return;
+                      }
+
+                      setDay(i + 1, day, true);
+                    }}
+                    defaultValues={{
+                      startTime: '09:00',
+                      endTime: '20:00',
+                      state: ResourceState.OPEN,
+                    }}
+                  />
+                ))}
+              </section>
+              <div className="opening-hours-page__actions">
+                <Button onClick={returnToResourcePage}>Tallenna</Button>
+                <SecondaryButton onClick={returnToResourcePage}>
+                  Peruuta
+                </SecondaryButton>
+              </div>
+            </div>
           </div>
-          <section className="opening-hours-section">
-            {separateWeekdays &&
-              [
-                'Maanantai',
-                'Tiistai',
-                'Keskiviikko',
-                'Torstai',
-                'Perjantai',
-              ].map((day) => (
-                <OpeningHoursRange
-                  label={day}
-                  resourceStates={resourceStates}
-                  defaultValues={{
-                    startTime: '09:00',
-                    endTime: '20:00',
-                    state: ResourceState.OPEN,
-                  }}
-                />
-              ))}
-            {!separateWeekdays && (
-              <OpeningHoursRange
-                label="Ma-Pe"
-                resourceStates={resourceStates}
-                defaultValues={{
-                  startTime: '09:00',
-                  endTime: '20:00',
-                  state: ResourceState.OPEN,
-                }}
-              />
-            )}
-            <OpeningHoursRange
-              label="Lauantai"
-              resourceStates={resourceStates}
-              defaultIOpen={false}
-              defaultValues={defaultWeekendValueValue}
-            />
-            <OpeningHoursRange
-              label="Sunnuntai"
-              resourceStates={resourceStates}
-              defaultIOpen={false}
-              defaultValues={defaultWeekendValueValue}
-            />
-          </section>
-          <div className="opening-hours-form__buttons">
-            <Button onClick={returnToResourcePage}>Tallenna</Button>
-            <SecondaryButton onClick={returnToResourcePage}>
-              Peruuta
-            </SecondaryButton>
-          </div>
+          <Preview data={values} />
         </div>
-      </div>
+      </FormProvider>
     )) || <h1>Ladataan...</h1>
   );
-}
+};
