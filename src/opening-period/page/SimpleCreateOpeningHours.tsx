@@ -247,6 +247,7 @@ const OpeningHours = ({
         <div className="weekdays">
           {removedDay && (
             <Notification
+              key={removedDay}
               label={`${removedDay}-päivä siirretty omaksi riviksi`}
               position="bottom-right"
               dismissible
