@@ -1,6 +1,7 @@
 import {
   Button,
   Checkbox,
+  Notification,
   Select,
   TextInput,
   TimeInput,
@@ -28,36 +29,37 @@ import './SimpleCreateOpeningHours.scss';
 import { Days, OptionType, OpeningHoursFormState } from './types';
 
 const DayCheckbox = ({
-  children,
+  currentDay,
   namePrefix,
   onChange: onChangeOuter,
   checked,
 }: {
-  children: string;
+  currentDay: string;
   namePrefix: string;
   onChange: (checked: boolean) => void;
   checked: boolean;
 }): JSX.Element => {
-  const id = `${namePrefix}.days.${children}`;
+  const id = `${namePrefix}.days.${currentDay}`;
   const { control } = useFormContext<OpeningHoursFormState>();
 
   return (
     <Controller
       control={control}
       defaultValue={checked}
-      name={`${namePrefix}.days.${children}`}
+      name={`${namePrefix}.days.${currentDay}`}
       render={({ onChange, value }): JSX.Element => (
         <label htmlFor={id} className="day-label">
           <input
             id={id}
             type="checkbox"
             onChange={(): void => {
-              onChange(!value);
-              onChangeOuter(!value);
+              const newChecked = !value;
+              onChange(newChecked);
+              onChangeOuter(newChecked);
             }}
             checked={value}
           />
-          <span className="day-option">{children}</span>
+          <span className="day-option">{currentDay}</span>
         </label>
       )}
     />
@@ -196,6 +198,14 @@ const OpeningHoursTimeSpanAndDetails = ({
   );
 };
 
+const isOnlySelectedDay = (day: string, days: Days): boolean => {
+  const selectedDays = Object.entries(days)
+    .filter((dayData: [string, boolean]) => dayData[1])
+    .map((dayData: [string, boolean]) => dayData[0]);
+
+  return selectedDays.length === 1 && selectedDays[0] === day;
+};
+
 type DefaultValues = {
   startTime: string;
   endTime: string;
@@ -228,22 +238,38 @@ const OpeningHours = ({
     control,
     name: `${namePrefix}.alternating`,
   });
+  const [removedDay, setRemovedDay] = React.useState<string | null>(null);
 
   return (
     <div className="opening-hours-container">
       <div>
         <div>Päivä</div>
         <div className="weekdays">
+          {removedDay && (
+            <Notification
+              label={`${removedDay}-päivä siirretty omaksi riviksi`}
+              position="bottom-right"
+              dismissible
+              autoClose
+              closeButtonLabelText="Sulje ilmoitus"
+              onClose={() => setRemovedDay(null)}
+              style={{ zIndex: 100 }}>
+              {`Juuri poistettu ${removedDay} siirrettiin omaksi rivikseen.`}
+            </Notification>
+          )}
           {daysOrder.map((day) => (
             <DayCheckbox
               key={`${namePrefix}-${day}`}
               checked={days[day as keyof Days]}
+              currentDay={day}
               namePrefix={namePrefix}
-              onChange={(checked): void =>
-                onDayChange(day as keyof Days, checked)
-              }>
-              {day}
-            </DayCheckbox>
+              onChange={(checked): void => {
+                onDayChange(day as keyof Days, checked);
+                if (!isOnlySelectedDay(day, days) && !checked) {
+                  setRemovedDay(day);
+                }
+              }}
+            />
           ))}
           <div className="weekdays-state-toggle">
             <Controller
