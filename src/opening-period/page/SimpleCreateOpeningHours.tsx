@@ -15,6 +15,7 @@ import {
 } from '../../common/lib/types';
 import api from '../../common/utils/api/api';
 import { SecondaryButton } from '../../components/button/Button';
+import { daysOrder } from './constants';
 import Preview from './OpeningHoursPreview';
 import './SimpleCreateOpeningHours.scss';
 import { Days, OptionType, OpeningHoursFormState } from './types';
@@ -236,8 +237,6 @@ type DefaultValues = {
   endTime: string;
   state: ResourceState;
 };
-
-const daysOrder = ['Ma', 'Ti', 'Ke', 'To', 'Pe', 'La', 'Su'];
 
 const OpeningHours = ({
   resourceStates,

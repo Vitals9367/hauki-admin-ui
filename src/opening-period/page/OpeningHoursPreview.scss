@@ -8,19 +8,37 @@
   top: 0;
 }
 
-.opening-hours-preview-grid {
-  display: grid;
-  gap: 0px 30px;
-  grid-template-columns: 120px 140px 1fr;
+.opening-hours-preview-table {
+  width: 100%;
 }
 
-p {
+.opening-hours-preview-table__caption {
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin-bottom: 1rem;
+  text-align: left;
+}
+
+.opening-hours-preview-table__header {
+  text-align: left;
+}
+
+.opening-hours-preview-table__day-column {
+  width: 120px;
+}
+
+.opening-hours-preview-table__time-span-column {
+  padding: 0 10px;
+  width: 140px;
+}
+
+td {
   margin-top: 0;
   margin-bottom: 0;
   line-height: 1.75;
 }
 
-p::first-letter {
+td::first-letter {
   text-transform: capitalize;
 }
 

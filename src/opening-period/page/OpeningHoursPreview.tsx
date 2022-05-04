@@ -2,7 +2,7 @@ import React, { Fragment } from 'react';
 import { Language, ResourceState } from '../../common/lib/types';
 import { createWeekdaysStringFromIndices } from '../../common/utils/date-time/format';
 import { OpeningHoursTimeSpan, OpeningHoursFormState } from './types';
-import { toWeekdays } from './utils';
+import { sortOpeningHours, toWeekdays } from './utils';
 import './OpeningHoursPreview.scss';
 
 const TimeSpan = ({
@@ -52,11 +52,16 @@ const PreviewRow = ({
   time?: JSX.Element | string | null | undefined;
   description?: string;
 }): JSX.Element => (
-  <>
-    <p>{label}</p>
-    <p className={timeClassname}>{time}</p>
-    <p>{description}</p>
-  </>
+  <tr>
+    <td className="opening-hours-preview-table__day-column">{label}</td>
+    <td
+      className={`opening-hours-preview-table__time-span-column ${
+        timeClassname ?? ''
+      }`}>
+      {time}
+    </td>
+    <td>{description}</td>
+  </tr>
 );
 
 const TimeSpanRow = ({
@@ -90,39 +95,56 @@ export default ({
   data: OpeningHoursFormState;
 }): JSX.Element => (
   <div className="opening-hours-preview-container">
-    <h2>Esikatselu</h2>
-    <div className="opening-hours-preview-grid">
-      {openingHours.map((openingHour, openingHourIdx) => (
-        <Fragment key={`normal-${openingHourIdx}`}>
-          <TimeSpanRow
-            isOpen={openingHour.isOpen}
-            label={createWeekdaysStringFromIndices(
-              toWeekdays(openingHour.days),
-              Language.FI
-            )}
-            timeSpan={openingHour.normal?.normal}
-          />
-          {openingHour.normal?.details?.map((detail, detailIdx) => (
-            <Fragment key={`detail-${detailIdx}`}>
-              <TimeSpanRow timeSpan={detail} />
-            </Fragment>
-          ))}
-          {openingHour.alternating?.map((alternating, variableId) => (
-            <Fragment key={`variable-${variableId}`}>
-              <PreviewRow
-                timeClassname="alternating-time-span-label"
-                time={alternating.rule?.label}
-              />
-              <TimeSpanRow timeSpan={alternating.normal} />
-              {alternating.details?.map((detail, detailIdx) => (
-                <Fragment key={`alternating-detail-${detailIdx}`}>
-                  <TimeSpanRow timeSpan={detail} />
-                </Fragment>
-              ))}
-            </Fragment>
-          ))}
-        </Fragment>
-      ))}
-    </div>
+    <table className="opening-hours-preview-table">
+      <caption className="opening-hours-preview-table__caption">
+        Esikatselu
+      </caption>
+      <thead className="opening-hours-preview-table__header">
+        <tr>
+          <th className="opening-hours-preview-table__day-column" scope="col">
+            Päivä
+          </th>
+          <th
+            className="opening-hours-preview-table__time-span-column"
+            scope="col">
+            Aukiolo
+          </th>
+          <th scope="col">Tila</th>
+        </tr>
+      </thead>
+      <tbody>
+        {sortOpeningHours(openingHours).map((openingHour, openingHourIdx) => (
+          <Fragment key={`normal-${openingHourIdx}`}>
+            <TimeSpanRow
+              isOpen={openingHour.isOpen}
+              label={createWeekdaysStringFromIndices(
+                toWeekdays(openingHour.days),
+                Language.FI
+              )}
+              timeSpan={openingHour.normal?.normal}
+            />
+            {openingHour.normal?.details?.map((detail, detailIdx) => (
+              <Fragment key={`detail-${detailIdx}`}>
+                <TimeSpanRow timeSpan={detail} />
+              </Fragment>
+            ))}
+            {openingHour.alternating?.map((alternating, variableId) => (
+              <Fragment key={`variable-${variableId}`}>
+                <PreviewRow
+                  timeClassname="alternating-time-span-label"
+                  time={alternating.rule?.label}
+                />
+                <TimeSpanRow timeSpan={alternating.normal} />
+                {alternating.details?.map((detail, detailIdx) => (
+                  <Fragment key={`alternating-detail-${detailIdx}`}>
+                    <TimeSpanRow timeSpan={detail} />
+                  </Fragment>
+                ))}
+              </Fragment>
+            ))}
+          </Fragment>
+        ))}
+      </tbody>
+    </table>
   </div>
 );

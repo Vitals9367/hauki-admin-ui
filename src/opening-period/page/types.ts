@@ -27,7 +27,7 @@ type OpeningHours = {
   details: OpeningHoursTimeSpan[];
 };
 
-type OpeningHoursRange = {
+export type OpeningHoursRange = {
   days: Days;
   isOpen: boolean;
   normal?: OpeningHours;
