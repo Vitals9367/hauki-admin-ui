@@ -64,49 +64,6 @@ const DayCheckbox = ({
   );
 };
 
-const SwitchButton = ({
-  isActive,
-  label,
-  onChange,
-}: {
-  isActive: boolean;
-  label: string;
-  onChange: () => void;
-}): JSX.Element => (
-  <Button
-    className={`switch-buttons-button ${
-      isActive ? 'switch-buttons-button--active' : ''
-    }`}
-    variant="secondary"
-    onClick={(): void => onChange()}>
-    {label}
-  </Button>
-);
-
-const SwitchButtons = ({
-  labels,
-  value,
-  onChange,
-}: {
-  labels: { on: string; off: string };
-  value: boolean;
-  onChange: (x: boolean) => void;
-}): JSX.Element => (
-  <div className="switch-buttons">
-    <SwitchButton
-      isActive={value}
-      label={labels.on}
-      onChange={(): void => onChange(true)}
-    />
-    <span className="switch-buttons-divider">/</span>
-    <SwitchButton
-      isActive={!value}
-      label={labels.off}
-      onChange={(): void => onChange(false)}
-    />
-  </div>
-);
-
 const OpeningHoursTimeSpan = ({
   defaultValues,
   disabled = false,

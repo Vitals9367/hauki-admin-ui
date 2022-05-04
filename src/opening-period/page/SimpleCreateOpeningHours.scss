@@ -1,33 +1,5 @@
 @import 'node_modules/hds-design-tokens/lib/all.scss';
 
-.switch-buttons {
-  display: flex;
-  align-items: center;
-}
-
-.switch-buttons-divider {
-  margin: 0 $spacing-xs;
-}
-
-.switch-buttons-button.switch-buttons-button.switch-buttons-button {
-  --background-color: transparent;
-  --border-color: transparent;
-  --color: black;
-  --outline-width: 0;
-
-  &:hover {
-    border-color: transparent;
-  }
-
-  &:focus {
-    border-color: transparent;
-  }
-
-  &.switch-buttons-button--active {
-    border-bottom-color: black;
-  }
-}
-
 .weekdays {
   align-items: end;
   display: flex;
@@ -62,7 +34,7 @@
 }
 
 .opening-hours-page__title {
-  background: #ffffff;
+  background: #fff;
   border-bottom: 1px solid #e7e7e7;
   display: flex;
   flex-direction: column;
@@ -117,5 +89,5 @@
 }
 
 .opening-hours-form {
-  background: #ffffff;
+  background: #fff;
 }
