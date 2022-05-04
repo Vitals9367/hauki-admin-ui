@@ -1,4 +1,11 @@
-import { Button, Checkbox, Select, TextInput, TimeInput } from 'hds-react';
+import {
+  Button,
+  Checkbox,
+  Select,
+  TextInput,
+  TimeInput,
+  ToggleButton,
+} from 'hds-react';
 import React, { Fragment, useEffect, useState } from 'react';
 import {
   Controller,
@@ -281,17 +288,20 @@ const OpeningHours = ({
               {day}
             </DayCheckbox>
           ))}
-          <Controller
-            defaultValue={defaultIOpen}
-            name={`${namePrefix}.isOpen`}
-            render={({ onChange, value }): JSX.Element => (
-              <SwitchButtons
-                labels={{ on: 'Auki', off: 'Kiinni' }}
-                onChange={onChange}
-                value={value}
-              />
-            )}
-          />
+          <div className="weekdays-state-toggle">
+            <Controller
+              defaultValue={defaultIOpen}
+              name={`${namePrefix}.isOpen`}
+              render={({ onChange, value }): JSX.Element => (
+                <ToggleButton
+                  id={`${namePrefix}-isOpenToggle`}
+                  label="Auki"
+                  onChange={() => onChange(!value)}
+                  checked={value}
+                />
+              )}
+            />
+          </div>
         </div>
       </div>
       {open && (

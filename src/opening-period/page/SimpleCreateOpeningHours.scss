@@ -29,8 +29,12 @@
 }
 
 .weekdays {
-  align-items: center;
+  align-items: end;
   display: flex;
+}
+
+.weekdays-state-toggle {
+  margin-left: var(--spacing-xl);
 }
 
 .opening-hours-container {
