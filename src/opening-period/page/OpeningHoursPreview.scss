@@ -10,7 +10,7 @@
 
 .opening-hours-preview-table {
   table-layout: fixed;
-  width: 100%;
+  min-width: 100%;
 }
 
 .opening-hours-preview-table__caption {
@@ -25,7 +25,7 @@
 }
 
 .opening-hours-preview-table__day-column {
-  width: 120px;
+  width: 60px;
 }
 
 .opening-hours-preview-table__time-span-column {

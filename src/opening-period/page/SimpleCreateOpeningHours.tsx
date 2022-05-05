@@ -80,18 +80,20 @@ const OpeningHoursTimeSpan = ({
   item,
   resourceStates,
   namePrefix,
+  onDelete,
 }: {
   disabled?: boolean;
   item?: TOpeningHoursTimeSpan;
   namePrefix: string;
   resourceStates: OptionType[];
+  onDelete?: () => void;
 }): JSX.Element => {
   const { control, register, watch } = useFormContext();
   const fullDay = watch(`${namePrefix}.fullDay`);
   const state = watch(`${namePrefix}.state`);
 
   return (
-    <div className="opening-hours-time-span">
+    <>
       <div className="opening-hours-time-span__range">
         <TimeInput
           ref={register()}
@@ -150,10 +152,26 @@ const OpeningHoursTimeSpan = ({
           />
         )}
       />
+      <div>
+        {onDelete && (
+          <Button variant="danger" onClick={onDelete}>
+            Poista
+          </Button>
+        )}
+      </div>
       {state === ResourceState.OTHER && (
-        <TextInput id="" ref={register()} name={`${namePrefix}.description`} />
+        <div className="opening-hours-time-span__description-container">
+          <TextInput
+            id=""
+            ref={register()}
+            label="Kuvaus suomeksi"
+            name={`${namePrefix}.description`}
+          />
+          <TextInput id="" label="Kuvaus ruotsiksi" />
+          <TextInput id="" label="Kuvaus englanniksi" />
+        </div>
       )}
-    </div>
+    </>
   );
 };
 
@@ -174,24 +192,23 @@ const OpeningHoursTimeSpanAndDetails = ({
 
   return (
     <>
-      <OpeningHoursTimeSpan
-        item={item?.normal}
-        resourceStates={resourceStates}
-        namePrefix={`${namePrefix}.normal`}
-      />
-      {fields.map((field, i) => (
-        <div key={field.id} className="opening-hours-time-span-details">
+      <div className="opening-hours-and-details-container">
+        <OpeningHoursTimeSpan
+          item={item?.normal}
+          resourceStates={resourceStates}
+          namePrefix={`${namePrefix}.normal`}
+        />
+        {fields.map((field, i) => (
           <OpeningHoursTimeSpan
+            key={field.id}
             item={field as TOpeningHoursTimeSpan}
             resourceStates={resourceStates}
             namePrefix={`${namePrefix}.details[${i}]`}
+            onDelete={(): void => remove(i)}
           />
-          <Button variant="danger" onClick={(): void => remove(i)}>
-            Poista
-          </Button>
-        </div>
-      ))}
-      <div>
+        ))}
+      </div>
+      <div className="opening-hours-actions-container">
         <button
           className="link-button"
           onClick={(): void =>
@@ -329,30 +346,30 @@ const OpeningHours = ({
               Poista
             </Button>
           </div>
-          <div>
-            <OpeningHoursTimeSpanAndDetails
-              item={field as TOpeningHours}
-              resourceStates={resourceStates}
-              namePrefix={`${namePrefix}.alternating[${i}]`}
-            />
-          </div>
+          <OpeningHoursTimeSpanAndDetails
+            item={field as TOpeningHours}
+            resourceStates={resourceStates}
+            namePrefix={`${namePrefix}.alternating[${i}]`}
+          />
         </Fragment>
       ))}
-      <button
-        className="link-button"
-        onClick={(): void =>
-          append({
-            normal: {
-              start: '09:00',
-              end: '20:00',
-              fullDay: false,
-              state: ResourceState.OPEN,
-            },
-          })
-        }
-        type="button">
-        + Lisää vuorotteleva aukioloaika
-      </button>
+      <div className="opening-hours-actions-container">
+        <button
+          className="link-button"
+          onClick={(): void =>
+            append({
+              normal: {
+                start: '09:00',
+                end: '20:00',
+                fullDay: false,
+                state: ResourceState.OPEN,
+              },
+            })
+          }
+          type="button">
+          + Lisää vuorotteleva aukioloaika
+        </button>
+      </div>
     </div>
   );
 };
