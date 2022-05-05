@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/ban-ts-ignore */
 import {
   Button,
   Checkbox,
@@ -26,7 +27,14 @@ import { SecondaryButton } from '../../components/button/Button';
 import { daysOrder } from './constants';
 import Preview from './OpeningHoursPreview';
 import './SimpleCreateOpeningHours.scss';
-import { Days, OptionType, OpeningHoursFormState } from './types';
+import {
+  Days,
+  OptionType,
+  OpeningHoursFormState,
+  OpeningHoursRange,
+  OpeningHours as TOpeningHours,
+  OpeningHoursTimeSpan as TOpeningHoursTimeSpan,
+} from './types';
 
 const DayCheckbox = ({
   currentDay,
@@ -37,7 +45,7 @@ const DayCheckbox = ({
   currentDay: string;
   namePrefix: string;
   onChange: (checked: boolean) => void;
-  checked: boolean;
+  checked?: boolean;
 }): JSX.Element => {
   const id = `${namePrefix}.days.${currentDay}`;
   const { control } = useFormContext<OpeningHoursFormState>();
@@ -45,11 +53,12 @@ const DayCheckbox = ({
   return (
     <Controller
       control={control}
-      defaultValue={checked}
+      defaultValue={checked ?? false}
       name={`${namePrefix}.days.${currentDay}`}
-      render={({ onChange, value }): JSX.Element => (
+      render={({ onChange, value, ref }): JSX.Element => (
         <label htmlFor={id} className="day-label">
           <input
+            ref={ref}
             id={id}
             type="checkbox"
             onChange={(): void => {
@@ -67,17 +76,13 @@ const DayCheckbox = ({
 };
 
 const OpeningHoursTimeSpan = ({
-  defaultValues,
   disabled = false,
+  item,
   resourceStates,
   namePrefix,
 }: {
-  defaultValues?: {
-    startTime: string;
-    endTime: string;
-    state: ResourceState;
-  };
   disabled?: boolean;
+  item?: TOpeningHoursTimeSpan;
   namePrefix: string;
   resourceStates: OptionType[];
 }): JSX.Element => {
@@ -96,7 +101,7 @@ const OpeningHoursTimeSpan = ({
           minutesLabel="minuutit"
           label="Avataan"
           name={`${namePrefix}.start`}
-          value={defaultValues?.startTime}
+          value={item?.start || '09:00'}
         />
         <div className="opening-hours-time-span__range-divider">-</div>
         <TimeInput
@@ -107,12 +112,12 @@ const OpeningHoursTimeSpan = ({
           minutesLabel="minuutit"
           label="Suljetaan"
           name={`${namePrefix}.end`}
-          value={defaultValues?.endTime}
+          value={item?.end || '20:00'}
         />
       </div>
       <div className="fullday-checkbox-container">
         <Controller
-          defaultValue={false}
+          defaultValue={item?.fullDay ?? false}
           render={(field): JSX.Element => (
             <Checkbox
               id={`${namePrefix}.fullDay`}
@@ -129,7 +134,7 @@ const OpeningHoursTimeSpan = ({
         />
       </div>
       <Controller
-        defaultValue={resourceStates[0]}
+        defaultValue={item?.state ?? ResourceState.OPEN}
         name={`${namePrefix}.state`}
         control={control}
         render={({ onChange, value }): JSX.Element => (
@@ -138,10 +143,10 @@ const OpeningHoursTimeSpan = ({
             label="Tila"
             options={resourceStates}
             className="opening-hours-state-select"
-            onChange={onChange}
+            onChange={(option: OptionType): void => onChange(option.value)}
             placeholder="Valitse"
             required
-            value={value}
+            value={resourceStates.find((option) => option.value === value)}
           />
         )}
       />
@@ -153,11 +158,11 @@ const OpeningHoursTimeSpan = ({
 };
 
 const OpeningHoursTimeSpanAndDetails = ({
-  defaultValues,
+  item,
   resourceStates,
   namePrefix,
 }: {
-  defaultValues?: DefaultValues;
+  item?: TOpeningHours;
   resourceStates: OptionType[];
   namePrefix: string;
 }): JSX.Element => {
@@ -170,14 +175,14 @@ const OpeningHoursTimeSpanAndDetails = ({
   return (
     <>
       <OpeningHoursTimeSpan
-        defaultValues={defaultValues}
+        item={item?.normal}
         resourceStates={resourceStates}
         namePrefix={`${namePrefix}.normal`}
       />
       {fields.map((field, i) => (
         <div key={field.id} className="opening-hours-time-span-details">
           <OpeningHoursTimeSpan
-            defaultValues={defaultValues}
+            item={field as TOpeningHoursTimeSpan}
             resourceStates={resourceStates}
             namePrefix={`${namePrefix}.details[${i}]`}
           />
@@ -189,7 +194,14 @@ const OpeningHoursTimeSpanAndDetails = ({
       <div>
         <button
           className="link-button"
-          onClick={(): void => append({})}
+          onClick={(): void =>
+            append({
+              start: '09:00',
+              end: '20:00',
+              fullDay: false,
+              state: ResourceState.OPEN,
+            })
+          }
           type="button">
           + Lisää tarkennettu aukioloaika
         </button>
@@ -209,22 +221,19 @@ const isOnlySelectedDay = (day: string, days: Days): boolean => {
 type DefaultValues = {
   startTime: string;
   endTime: string;
+  fullDay: boolean;
   state: ResourceState;
 };
 
 const OpeningHours = ({
+  item,
   resourceStates,
-  defaultValues,
-  defaultIOpen,
   namePrefix,
   onDayChange,
-  days,
 }: {
-  defaultIOpen?: boolean;
-  days: Days;
+  item: OpeningHoursRange;
   namePrefix: string;
   resourceStates: OptionType[];
-  defaultValues?: DefaultValues;
   onDayChange: (day: keyof Days, checked: boolean) => void;
 }): JSX.Element => {
   const options = [
@@ -253,7 +262,7 @@ const OpeningHours = ({
               dismissible
               autoClose
               closeButtonLabelText="Sulje ilmoitus"
-              onClose={() => setRemovedDay(null)}
+              onClose={(): void => setRemovedDay(null)}
               style={{ zIndex: 100 }}>
               {`Juuri poistettu ${removedDay} siirrettiin omaksi rivikseen.`}
             </Notification>
@@ -261,12 +270,12 @@ const OpeningHours = ({
           {daysOrder.map((day) => (
             <DayCheckbox
               key={`${namePrefix}-${day}`}
-              checked={days[day as keyof Days]}
+              checked={item.days[day as keyof Days]}
               currentDay={day}
               namePrefix={namePrefix}
               onChange={(checked): void => {
                 onDayChange(day as keyof Days, checked);
-                if (!isOnlySelectedDay(day, days) && !checked) {
+                if (!isOnlySelectedDay(day, item.days) && !checked) {
                   setRemovedDay(day);
                 }
               }}
@@ -274,13 +283,14 @@ const OpeningHours = ({
           ))}
           <div className="weekdays-state-toggle">
             <Controller
-              defaultValue={defaultIOpen}
+              control={control}
+              defaultValue={item.isOpen ?? true}
               name={`${namePrefix}.isOpen`}
               render={({ onChange, value }): JSX.Element => (
                 <ToggleButton
-                  id={`${namePrefix}-isOpenToggle`}
+                  id={`${namePrefix}-isOpen`}
                   label="Auki"
-                  onChange={() => onChange(!value)}
+                  onChange={(): void => onChange(!value)}
                   checked={value}
                 />
               )}
@@ -290,9 +300,9 @@ const OpeningHours = ({
       </div>
       {open && (
         <OpeningHoursTimeSpanAndDetails
-          defaultValues={defaultValues}
+          item={item.openingHours as TOpeningHours}
           resourceStates={resourceStates}
-          namePrefix={`${namePrefix}.normal`}
+          namePrefix={`${namePrefix}.openingHours`}
         />
       )}
       {fields.map((field, i) => (
@@ -315,20 +325,32 @@ const OpeningHours = ({
                 />
               )}
             />
-            <Button variant="danger" onClick={() => remove(i)}>
+            <Button variant="danger" onClick={(): void => remove(i)}>
               Poista
             </Button>
           </div>
           <div>
             <OpeningHoursTimeSpanAndDetails
-              defaultValues={defaultValues}
+              item={field as TOpeningHours}
               resourceStates={resourceStates}
               namePrefix={`${namePrefix}.alternating[${i}]`}
             />
           </div>
         </Fragment>
       ))}
-      <button className="link-button" onClick={() => append({})} type="button">
+      <button
+        className="link-button"
+        onClick={(): void =>
+          append({
+            normal: {
+              start: '09:00',
+              end: '20:00',
+              fullDay: false,
+              state: ResourceState.OPEN,
+            },
+          })
+        }
+        type="button">
         + Lisää vuorotteleva aukioloaika
       </button>
     </div>
@@ -378,7 +400,7 @@ export default ({ resourceId }: { resourceId: string }): JSX.Element => {
     fetchData();
   }, [resourceId]);
 
-  const defaultState = {
+  const defaultValues: { openingHours: OpeningHoursRange[] } = {
     openingHours: [
       {
         days: {
@@ -390,11 +412,6 @@ export default ({ resourceId }: { resourceId: string }): JSX.Element => {
           La: false,
           Su: false,
         },
-        isOpen: true,
-        normal: {
-          details: [],
-        },
-        alternating: [],
       },
       {
         days: {
@@ -407,10 +424,6 @@ export default ({ resourceId }: { resourceId: string }): JSX.Element => {
           Su: false,
         },
         isOpen: false,
-        normal: {
-          details: [],
-        },
-        alternating: [],
       },
       {
         days: {
@@ -423,19 +436,17 @@ export default ({ resourceId }: { resourceId: string }): JSX.Element => {
           Su: true,
         },
         isOpen: false,
-        normal: {
-          details: [],
-        },
-        alternating: [],
       },
     ],
   };
 
   const form = useForm<OpeningHoursFormState>({
-    defaultValues: defaultState,
+    defaultValues,
+    shouldUnregister: false,
   });
+
   const { control, getValues, setValue, watch } = form;
-  const { insert, fields, remove } = useFieldArray({
+  const { insert, fields, remove } = useFieldArray<OpeningHoursRange>({
     control,
     name: 'openingHours',
   });
@@ -452,25 +463,24 @@ export default ({ resourceId }: { resourceId: string }): JSX.Element => {
     );
 
   const addNewRow = (i: number, day: keyof Days): void =>
-    insert(i + 1, {
-      days: {
-        Ma: false,
-        Ti: false,
-        Ke: false,
-        To: false,
-        Pe: false,
-        La: false,
-        Su: false,
-        [day]: true,
+    insert(
+      i + 1,
+      {
+        days: {
+          Ma: false,
+          Ti: false,
+          Ke: false,
+          To: false,
+          Pe: false,
+          La: false,
+          Su: false,
+          [day]: true,
+        },
       },
-      isOpen: true,
-      normal: {
-        details: [],
-      },
-      alternating: [],
-    });
+      false
+    );
 
-  const values = watch();
+  const { openingHours } = watch();
 
   return (
     (resource && datePeriodConfig && (
@@ -488,9 +498,8 @@ export default ({ resourceId }: { resourceId: string }): JSX.Element => {
                 {fields.map((field, i) => (
                   <OpeningHours
                     key={field.id}
-                    defaultIOpen={field.isOpen}
+                    item={field as OpeningHoursRange}
                     resourceStates={resourceStates}
-                    days={field.days}
                     namePrefix={`openingHours[${i}]`}
                     onDayChange={(day, checked): void => {
                       if (checked) {
@@ -504,13 +513,8 @@ export default ({ resourceId }: { resourceId: string }): JSX.Element => {
                       } else if (allDayAreUncheckedForRow(i)) {
                         setDay(i, day, true);
                       } else {
-                        addNewRow(i + 1, day);
+                        addNewRow(i, day);
                       }
-                    }}
-                    defaultValues={{
-                      startTime: '09:00',
-                      endTime: '20:00',
-                      state: ResourceState.OPEN,
                     }}
                   />
                 ))}
@@ -523,7 +527,10 @@ export default ({ resourceId }: { resourceId: string }): JSX.Element => {
               </div>
             </div>
           </div>
-          <Preview data={values} />
+          <Preview
+            openingHours={openingHours}
+            resourceStates={resourceStates}
+          />
         </div>
       </FormProvider>
     )) || <h1>Ladataan...</h1>

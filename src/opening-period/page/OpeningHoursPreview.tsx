@@ -1,7 +1,7 @@
 import React, { Fragment } from 'react';
 import { Language, ResourceState } from '../../common/lib/types';
 import { createWeekdaysStringFromIndices } from '../../common/utils/date-time/format';
-import { OpeningHoursTimeSpan, OpeningHoursFormState } from './types';
+import { OpeningHoursTimeSpan, OpeningHoursRange, OptionType } from './types';
 import { sortOpeningHours, toWeekdays } from './utils';
 import './OpeningHoursPreview.scss';
 
@@ -14,11 +14,11 @@ const TimeSpan = ({
 }): JSX.Element => (
   <>
     <span className="opening-hours-preview-time-span__time">
-      {start ?? '-- : --'}
+      {start || '-- : --'}
     </span>
     <span>-</span>
     <span className="opening-hours-preview-time-span__time opening-hours-preview-time-span__time--end">
-      {end ?? '-- : --'}
+      {end || '-- : --'}
     </span>
   </>
 );
@@ -64,13 +64,34 @@ const PreviewRow = ({
   </tr>
 );
 
+const resolveDescription = (
+  resourceStates: OptionType[],
+  isOpen: boolean,
+  timeSpan?: OpeningHoursTimeSpan
+): string => {
+  if (!isOpen) {
+    return 'Suljettu';
+  }
+
+  if (!timeSpan) {
+    return 'Tuntematon';
+  }
+
+  return timeSpan.state === ResourceState.OTHER
+    ? timeSpan.description!
+    : resourceStates.find((state) => state.value === timeSpan.state)?.label ??
+        'Tuntematon';
+};
+
 const TimeSpanRow = ({
   isOpen = true,
   label,
+  resourceStates,
   timeSpan,
 }: {
   isOpen?: boolean;
   label?: string;
+  resourceStates: OptionType[];
   timeSpan?: OpeningHoursTimeSpan;
 }): JSX.Element => (
   <PreviewRow
@@ -81,18 +102,16 @@ const TimeSpanRow = ({
       timeSpan?.fullDay,
       isOpen
     )}
-    description={
-      timeSpan?.state?.value === ResourceState.OTHER
-        ? timeSpan.description
-        : timeSpan?.state?.label ?? 'Suljettu'
-    }
+    description={resolveDescription(resourceStates, isOpen, timeSpan)}
   />
 );
 
 export default ({
-  data: { openingHours },
+  openingHours,
+  resourceStates,
 }: {
-  data: OpeningHoursFormState;
+  openingHours: OpeningHoursRange[];
+  resourceStates: OptionType[];
 }): JSX.Element => (
   <div className="opening-hours-preview-container">
     <table className="opening-hours-preview-table">
@@ -113,37 +132,49 @@ export default ({
         </tr>
       </thead>
       <tbody>
-        {sortOpeningHours(openingHours).map((openingHour, openingHourIdx) => (
-          <Fragment key={`normal-${openingHourIdx}`}>
-            <TimeSpanRow
-              isOpen={openingHour.isOpen}
-              label={createWeekdaysStringFromIndices(
-                toWeekdays(openingHour.days),
-                Language.FI
-              )}
-              timeSpan={openingHour.normal?.normal}
-            />
-            {openingHour.normal?.details?.map((detail, detailIdx) => (
-              <Fragment key={`detail-${detailIdx}`}>
-                <TimeSpanRow timeSpan={detail} />
-              </Fragment>
-            ))}
-            {openingHour.alternating?.map((alternating, variableId) => (
-              <Fragment key={`variable-${variableId}`}>
-                <PreviewRow
-                  timeClassname="alternating-time-span-label"
-                  time={alternating.rule?.label}
-                />
-                <TimeSpanRow timeSpan={alternating.normal} />
-                {alternating.details?.map((detail, detailIdx) => (
-                  <Fragment key={`alternating-detail-${detailIdx}`}>
-                    <TimeSpanRow timeSpan={detail} />
-                  </Fragment>
-                ))}
-              </Fragment>
-            ))}
-          </Fragment>
-        ))}
+        {sortOpeningHours(openingHours.filter((o) => o)).map(
+          (openingHour, openingHourIdx) => (
+            <Fragment key={`normal-${openingHourIdx}`}>
+              <TimeSpanRow
+                isOpen={openingHour.isOpen}
+                label={createWeekdaysStringFromIndices(
+                  toWeekdays(openingHour.days),
+                  Language.FI
+                )}
+                resourceStates={resourceStates}
+                timeSpan={openingHour.openingHours?.normal}
+              />
+              {openingHour.openingHours?.details?.map((detail, detailIdx) => (
+                <Fragment key={`detail-${detailIdx}`}>
+                  <TimeSpanRow
+                    resourceStates={resourceStates}
+                    timeSpan={detail}
+                  />
+                </Fragment>
+              ))}
+              {openingHour.alternating?.map((alternating, variableId) => (
+                <Fragment key={`variable-${variableId}`}>
+                  <PreviewRow
+                    timeClassname="alternating-time-span-label"
+                    time={alternating.rule?.label}
+                  />
+                  <TimeSpanRow
+                    resourceStates={resourceStates}
+                    timeSpan={alternating.normal}
+                  />
+                  {alternating.details?.map((detail, detailIdx) => (
+                    <Fragment key={`alternating-detail-${detailIdx}`}>
+                      <TimeSpanRow
+                        resourceStates={resourceStates}
+                        timeSpan={detail}
+                      />
+                    </Fragment>
+                  ))}
+                </Fragment>
+              ))}
+            </Fragment>
+          )
+        )}
       </tbody>
     </table>
   </div>

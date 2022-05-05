@@ -29,7 +29,7 @@ export const toWeekdays = (days: Days): Weekdays =>
 export const sortOpeningHours = (
   openingHours: OpeningHoursRange[]
 ): OpeningHoursRange[] =>
-  openingHours.sort((a, b) => {
+  [...openingHours].sort((a, b) => {
     const findSelectedDate = (days: Days): string | undefined =>
       (Object.entries(days).find((entry) => entry[1]) || [])[0];
 

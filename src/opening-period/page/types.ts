@@ -1,3 +1,5 @@
+import { ResourceState } from '../../common/lib/types';
+
 export type OptionType = { value: string; label: string | null };
 
 export type Days = {
@@ -11,27 +13,27 @@ export type Days = {
 };
 
 export type OpeningHoursTimeSpan = {
-  start: string;
-  end: string;
-  fullDay: boolean;
-  state?: OptionType;
+  start?: string;
+  end?: string;
+  fullDay?: boolean;
+  state?: ResourceState;
   description?: string;
 };
 
-type AlternatingOpeningHours = {
+export type AlternatingOpeningHours = {
   rule: OptionType;
 } & OpeningHours;
 
-type OpeningHours = {
-  normal: OpeningHoursTimeSpan;
-  details: OpeningHoursTimeSpan[];
+export type OpeningHours = {
+  normal?: OpeningHoursTimeSpan;
+  details?: OpeningHoursTimeSpan[];
 };
 
 export type OpeningHoursRange = {
   days: Days;
-  isOpen: boolean;
-  normal?: OpeningHours;
-  alternating: AlternatingOpeningHours[];
+  isOpen?: boolean;
+  openingHours?: OpeningHours;
+  alternating?: AlternatingOpeningHours[];
 };
 
 export type OpeningHoursFormState = {
