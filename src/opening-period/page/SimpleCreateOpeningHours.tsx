@@ -8,7 +8,7 @@ import {
   TimeInput,
   ToggleButton,
 } from 'hds-react';
-import React, { Fragment, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Controller,
   FormProvider,
@@ -32,7 +32,6 @@ import {
   OptionType,
   OpeningHoursFormState,
   OpeningHoursRange,
-  OpeningHours as TOpeningHours,
   OpeningHoursTimeSpan as TOpeningHoursTimeSpan,
 } from './types';
 
@@ -170,50 +169,36 @@ const OpeningHoursTimeSpan = ({
   );
 };
 
-const OpeningHoursTimeSpanAndDetails = ({
-  item,
+const OpeningHoursTimeSpans = ({
   resourceStates,
   namePrefix,
 }: {
-  item?: TOpeningHours;
   resourceStates: OptionType[];
   namePrefix: string;
 }): JSX.Element => {
   const { control } = useFormContext<OpeningHoursFormState>();
   const { fields, append, remove } = useFieldArray({
     control,
-    name: `${namePrefix}.details`,
+    name: `${namePrefix}`,
   });
 
   return (
     <>
       <div className="opening-hours-and-details-container">
-        <OpeningHoursTimeSpan
-          item={item?.normal}
-          resourceStates={resourceStates}
-          namePrefix={`${namePrefix}.normal`}
-        />
         {fields.map((field, i) => (
           <OpeningHoursTimeSpan
             key={field.id}
             item={field as TOpeningHoursTimeSpan}
             resourceStates={resourceStates}
-            namePrefix={`${namePrefix}.details[${i}]`}
-            onDelete={(): void => remove(i)}
+            namePrefix={`${namePrefix}[${i}]`}
+            onDelete={i === 0 ? undefined : (): void => remove(i)}
           />
         ))}
       </div>
       <div className="opening-hours-actions-container">
         <button
           className="link-button"
-          onClick={(): void =>
-            append({
-              start: '09:00',
-              end: '20:00',
-              fullDay: false,
-              state: ResourceState.OPEN,
-            })
-          }
+          onClick={(): void => append({})}
           type="button">
           + Lisää tarkennettu aukioloaika
         </button>
@@ -236,17 +221,17 @@ const OpeningHours = ({
   resourceStates: OptionType[];
   onDayChange: (day: number, checked: boolean) => void;
 }): JSX.Element => {
-  const options = [
-    { value: '0', label: 'Joka toinen viikko' },
-    { value: '1', label: 'Joka kolmas viikko' },
-    { value: '2', label: 'Joka neljäs viikko' },
-  ];
+  // const options = [
+  //   { value: '0', label: 'Joka toinen viikko' },
+  //   { value: '1', label: 'Joka kolmas viikko' },
+  //   { value: '2', label: 'Joka neljäs viikko' },
+  // ];
   const { control, watch } = useFormContext<OpeningHoursFormState>();
   const open = watch(`${namePrefix}.isOpen`);
-  const { append, fields, remove } = useFieldArray({
-    control,
-    name: `${namePrefix}.alternating`,
-  });
+  // const { append, fields, remove } = useFieldArray({
+  //   control,
+  //   name: `${namePrefix}.alternating`,
+  // });
   const [removedDay, setRemovedDay] = React.useState<number | null>(null);
   const days = watch(`${namePrefix}.days`) as number[];
 
@@ -309,13 +294,12 @@ const OpeningHours = ({
         </div>
       </div>
       {open && (
-        <OpeningHoursTimeSpanAndDetails
-          item={item.openingHours as TOpeningHours}
+        <OpeningHoursTimeSpans
           resourceStates={resourceStates}
-          namePrefix={`${namePrefix}.openingHours`}
+          namePrefix={`${namePrefix}.normal`}
         />
       )}
-      {fields.map((field, i) => (
+      {/* {fields.map((field, i) => (
         <Fragment key={field.id}>
           <div className="alternating-opening-hour-container">
             <Controller
@@ -340,7 +324,6 @@ const OpeningHours = ({
             </Button>
           </div>
           <OpeningHoursTimeSpanAndDetails
-            item={field as TOpeningHours}
             resourceStates={resourceStates}
             namePrefix={`${namePrefix}.alternating[${i}]`}
           />
@@ -362,7 +345,7 @@ const OpeningHours = ({
           type="button">
           + Lisää vuorotteleva aukioloaika
         </button>
-      </div>
+      </div> */}
     </div>
   );
 };
@@ -414,14 +397,18 @@ export default ({ resourceId }: { resourceId: string }): JSX.Element => {
     openingHours: [
       {
         days: [1, 2, 3, 4, 5],
+        isOpen: true,
+        normal: [{}],
       },
       {
         days: [6],
         isOpen: false,
+        normal: [{}],
       },
       {
         days: [7],
         isOpen: false,
+        normal: [{}],
       },
     ],
   };
@@ -463,7 +450,7 @@ export default ({ resourceId }: { resourceId: string }): JSX.Element => {
     );
 
   const addNewRow = (i: number, day: number): void =>
-    insert(i + 1, { days: [day] }, false);
+    insert(i + 1, { days: [day], normal: [{}] }, false);
 
   const { openingHours } = watch();
 

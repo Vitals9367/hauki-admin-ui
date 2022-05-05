@@ -135,24 +135,27 @@ export default ({
         {sortOpeningHours(openingHours.filter((o) => o)).map(
           (openingHour, openingHourIdx) => (
             <Fragment key={`normal-${openingHourIdx}`}>
-              <TimeSpanRow
-                isOpen={openingHour.isOpen}
-                label={createWeekdaysStringFromIndices(
-                  openingHour.days,
-                  Language.FI
-                )}
-                resourceStates={resourceStates}
-                timeSpan={openingHour.openingHours?.normal}
-              />
-              {openingHour.openingHours?.details?.map((detail, detailIdx) => (
-                <Fragment key={`detail-${detailIdx}`}>
+              {openingHour.normal?.map((openingHourTimeSpan, i) =>
+                i === 0 ? (
                   <TimeSpanRow
+                    key={`detail-${i}`}
+                    isOpen={openingHour.isOpen}
+                    label={createWeekdaysStringFromIndices(
+                      openingHour.days,
+                      Language.FI
+                    )}
                     resourceStates={resourceStates}
-                    timeSpan={detail}
+                    timeSpan={openingHourTimeSpan}
                   />
-                </Fragment>
-              ))}
-              {openingHour.alternating?.map((alternating, variableId) => (
+                ) : (
+                  <TimeSpanRow
+                    key={`detail-${i}`}
+                    resourceStates={resourceStates}
+                    timeSpan={openingHourTimeSpan}
+                  />
+                )
+              )}
+              {/* {openingHour.alternating?.map((alternating, variableId) => (
                 <Fragment key={`variable-${variableId}`}>
                   <PreviewRow
                     timeClassname="alternating-time-span-label"
@@ -171,7 +174,7 @@ export default ({
                     </Fragment>
                   ))}
                 </Fragment>
-              ))}
+              ))} */}
             </Fragment>
           )
         )}
