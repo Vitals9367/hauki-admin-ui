@@ -77,7 +77,7 @@ const weekdays: WeekdayIndexToShortNameMappings = {
   },
 };
 
-function getWeekdayShortNameByIndexAndLang({
+export function getWeekdayShortNameByIndexAndLang({
   weekdayIndex,
   language,
 }: {
@@ -94,7 +94,7 @@ type WeekdaySpan = {
 };
 
 export function createWeekdaysStringFromIndices(
-  weekdayIndexArray: Weekdays | null,
+  weekdayIndexArray: Weekdays | number[] | null,
   language: Language
 ): string {
   if (!weekdayIndexArray) {

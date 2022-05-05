@@ -19,7 +19,7 @@ label.day-label {
   margin-right: $spacing-s;
   margin-top: 0;
 
-  input[type="checkbox"] {
+  input[type='checkbox'] {
     position: absolute;
     opacity: 0;
     width: 1em;
@@ -27,13 +27,17 @@ label.day-label {
     z-index: 10000;
   }
 
-  & input[type="checkbox"]:checked ~ .day-option {
+  & input[type='checkbox']:checked ~ .day-option {
     background-color: var(--color-coat-of-arms);
     color: white;
   }
 
-  & input[type="checkbox"]:focus ~ .day-option {
+  & input[type='checkbox']:focus ~ .day-option {
     outline: blue solid 2px;
+  }
+
+  &::first-letter {
+    text-transform: uppercase;
   }
 }
 

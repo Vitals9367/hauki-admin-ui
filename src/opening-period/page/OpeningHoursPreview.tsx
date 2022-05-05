@@ -2,7 +2,7 @@ import React, { Fragment } from 'react';
 import { Language, ResourceState } from '../../common/lib/types';
 import { createWeekdaysStringFromIndices } from '../../common/utils/date-time/format';
 import { OpeningHoursTimeSpan, OpeningHoursRange, OptionType } from './types';
-import { sortOpeningHours, toWeekdays } from './utils';
+import { sortOpeningHours } from './utils';
 import './OpeningHoursPreview.scss';
 
 const TimeSpan = ({
@@ -138,7 +138,9 @@ export default ({
               <TimeSpanRow
                 isOpen={openingHour.isOpen}
                 label={createWeekdaysStringFromIndices(
-                  toWeekdays(openingHour.days),
+                  Object.entries(openingHour.days)
+                    .filter((entry) => entry[1])
+                    .map((entry) => +entry[0]),
                   Language.FI
                 )}
                 resourceStates={resourceStates}

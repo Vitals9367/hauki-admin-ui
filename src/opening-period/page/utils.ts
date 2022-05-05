@@ -1,25 +1,25 @@
+/* eslint-disable import/prefer-default-export */
 import { Weekdays, WeekdayTypes } from '../../common/lib/types';
-import { daysOrder } from './constants';
 import { Days, OpeningHoursRange } from './types';
 
 export const toWeekdays = (days: Days): Weekdays =>
   Object.entries(days)
     .filter((entry) => entry[1])
     .map((entry) => {
-      switch (entry[0]) {
-        case 'Ma':
+      switch (+entry[0]) {
+        case 1:
           return WeekdayTypes.MONDAY;
-        case 'Ti':
+        case 2:
           return WeekdayTypes.TUESDAY;
-        case 'Ke':
+        case 3:
           return WeekdayTypes.WEDNESDAY;
-        case 'To':
+        case 4:
           return WeekdayTypes.THURSDAY;
-        case 'Pe':
+        case 5:
           return WeekdayTypes.FRIDAY;
-        case 'La':
+        case 6:
           return WeekdayTypes.SATURDAY;
-        case 'Su':
+        case 7:
           return WeekdayTypes.SUNDAY;
         default:
           throw new Error('Invalid day');
@@ -30,8 +30,15 @@ export const sortOpeningHours = (
   openingHours: OpeningHoursRange[]
 ): OpeningHoursRange[] =>
   [...openingHours].sort((a, b) => {
-    const findSelectedDate = (days: Days): string | undefined =>
-      (Object.entries(days).find((entry) => entry[1]) || [])[0];
+    const findSelectedDate = (days: Days): number | undefined => {
+      const [day] = Object.entries(days).find((entry) => entry[1]) || [];
+
+      if (day) {
+        return +day;
+      }
+
+      return undefined;
+    };
 
     const day1 = findSelectedDate(a.days);
 
@@ -45,5 +52,5 @@ export const sortOpeningHours = (
       throw new Error('Cannot find day for comparison');
     }
 
-    return daysOrder.indexOf(day1) - daysOrder.indexOf(day2);
+    return day1 - day2;
   });

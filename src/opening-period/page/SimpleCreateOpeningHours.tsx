@@ -18,13 +18,14 @@ import {
 } from 'react-hook-form';
 import { useHistory } from 'react-router-dom';
 import {
+  Language,
   Resource,
   ResourceState,
   UiDatePeriodConfig,
 } from '../../common/lib/types';
 import api from '../../common/utils/api/api';
+import { getWeekdayShortNameByIndexAndLang } from '../../common/utils/date-time/format';
 import { SecondaryButton } from '../../components/button/Button';
-import { daysOrder } from './constants';
 import Preview from './OpeningHoursPreview';
 import './SimpleCreateOpeningHours.scss';
 import {
@@ -42,7 +43,7 @@ const DayCheckbox = ({
   onChange: onChangeOuter,
   checked,
 }: {
-  currentDay: string;
+  currentDay: number;
   namePrefix: string;
   onChange: (checked: boolean) => void;
   checked?: boolean;
@@ -68,7 +69,12 @@ const DayCheckbox = ({
             }}
             checked={value}
           />
-          <span className="day-option">{currentDay}</span>
+          <span className="day-option">
+            {getWeekdayShortNameByIndexAndLang({
+              weekdayIndex: currentDay,
+              language: Language.FI,
+            })}
+          </span>
         </label>
       )}
     />
@@ -227,12 +233,12 @@ const OpeningHoursTimeSpanAndDetails = ({
   );
 };
 
-const isOnlySelectedDay = (day: string, days: Days): boolean => {
+const isOnlySelectedDay = (day: number, days: Days): boolean => {
   const selectedDays = Object.entries(days)
     .filter((dayData: [string, boolean]) => dayData[1])
     .map((dayData: [string, boolean]) => dayData[0]);
 
-  return selectedDays.length === 1 && selectedDays[0] === day;
+  return selectedDays.length === 1 && selectedDays[0] === `${day}`;
 };
 
 type DefaultValues = {
@@ -264,7 +270,7 @@ const OpeningHours = ({
     control,
     name: `${namePrefix}.alternating`,
   });
-  const [removedDay, setRemovedDay] = React.useState<string | null>(null);
+  const [removedDay, setRemovedDay] = React.useState<number | null>(null);
 
   return (
     <div className="opening-hours-container">
@@ -284,7 +290,7 @@ const OpeningHours = ({
               {`Juuri poistettu ${removedDay} siirrettiin omaksi rivikseen.`}
             </Notification>
           )}
-          {daysOrder.map((day) => (
+          {[1, 2, 3, 4, 5, 6, 7].map((day) => (
             <DayCheckbox
               key={`${namePrefix}-${day}`}
               checked={item.days[day as keyof Days]}
@@ -421,36 +427,36 @@ export default ({ resourceId }: { resourceId: string }): JSX.Element => {
     openingHours: [
       {
         days: {
-          Ma: true,
-          Ti: true,
-          Ke: true,
-          To: true,
-          Pe: true,
-          La: false,
-          Su: false,
+          1: true,
+          2: true,
+          3: true,
+          4: true,
+          5: true,
+          6: false,
+          7: false,
         },
       },
       {
         days: {
-          Ma: false,
-          Ti: false,
-          Ke: false,
-          To: false,
-          Pe: false,
-          La: true,
-          Su: false,
+          1: false,
+          2: false,
+          3: false,
+          4: false,
+          5: false,
+          6: true,
+          7: false,
         },
         isOpen: false,
       },
       {
         days: {
-          Ma: false,
-          Ti: false,
-          Ke: false,
-          To: false,
-          Pe: false,
-          La: false,
-          Su: true,
+          1: false,
+          2: false,
+          3: false,
+          4: false,
+          5: false,
+          6: false,
+          7: true,
         },
         isOpen: false,
       },
@@ -469,7 +475,9 @@ export default ({ resourceId }: { resourceId: string }): JSX.Element => {
   });
 
   const allDayAreUncheckedForRow = (idx: number): boolean =>
-    daysOrder.every((day) => !getValues(`openingHours[${idx}].days.${day}`));
+    [1, 2, 3, 4, 5, 6, 7].every(
+      (day: number) => !getValues(`openingHours[${idx}].days.${day}`)
+    );
 
   const setDay = (i: number, day: keyof Days, checked: boolean): void =>
     setValue(`openingHours[${i}].days.${day}`, checked);
@@ -484,13 +492,13 @@ export default ({ resourceId }: { resourceId: string }): JSX.Element => {
       i + 1,
       {
         days: {
-          Ma: false,
-          Ti: false,
-          Ke: false,
-          To: false,
-          Pe: false,
-          La: false,
-          Su: false,
+          1: false,
+          2: false,
+          3: false,
+          4: false,
+          5: false,
+          6: false,
+          7: false,
           [day]: true,
         },
       },
