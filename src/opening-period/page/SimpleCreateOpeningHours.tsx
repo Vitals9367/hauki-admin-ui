@@ -150,7 +150,7 @@ const OpeningHoursTimeSpan = ({
           />
         )}
       />
-      {state?.value === ResourceState.OTHER && (
+      {state === ResourceState.OTHER && (
         <TextInput id="" ref={register()} name={`${namePrefix}.description`} />
       )}
     </div>
