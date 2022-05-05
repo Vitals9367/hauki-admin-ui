@@ -138,9 +138,7 @@ export default ({
               <TimeSpanRow
                 isOpen={openingHour.isOpen}
                 label={createWeekdaysStringFromIndices(
-                  Object.entries(openingHour.days)
-                    .filter((entry) => entry[1])
-                    .map((entry) => +entry[0]),
+                  openingHour.days,
                   Language.FI
                 )}
                 resourceStates={resourceStates}
