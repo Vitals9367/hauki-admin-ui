@@ -33,9 +33,9 @@ const openingHoursRangeEqual = (
 ): boolean => {
   if (
     o1.isOpen === o2.isOpen &&
-    o1.normal?.length === o2.normal?.length &&
-    (o1.normal || []).every((timeSpan1) =>
-      o2.normal?.find((timeSpan2) => isEqual(timeSpan1, timeSpan2))
+    o1.timeSpans?.length === o2.timeSpans?.length &&
+    (o1.timeSpans || []).every((timeSpan1) =>
+      o2.timeSpans?.find((timeSpan2) => isEqual(timeSpan1, timeSpan2))
     ) &&
     o1.alternating?.length === o2.alternating?.length &&
     (o1.alternating || []).every((alternatingOpeningHour1) =>

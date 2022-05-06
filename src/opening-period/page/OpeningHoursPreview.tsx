@@ -134,8 +134,8 @@ export default ({
       <tbody>
         {groupOpeningHoursForPreview(openingHours).map(
           (openingHour, openingHourIdx) => (
-            <Fragment key={`normal-${openingHourIdx}`}>
-              {openingHour.normal?.map((openingHourTimeSpan, i) =>
+            <Fragment key={`timeSpans-${openingHourIdx}`}>
+              {openingHour.timeSpans?.map((openingHourTimeSpan, i) =>
                 i === 0 ? (
                   <TimeSpanRow
                     key={`detail-${i}`}

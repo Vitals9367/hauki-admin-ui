@@ -296,7 +296,7 @@ const OpeningHours = ({
       {open && (
         <OpeningHoursTimeSpans
           resourceStates={resourceStates}
-          namePrefix={`${namePrefix}.normal`}
+          namePrefix={`${namePrefix}.timeSpans`}
         />
       )}
       {fields.map((field, i) => (
@@ -400,17 +400,17 @@ export default ({ resourceId }: { resourceId: string }): JSX.Element => {
       {
         days: [1, 2, 3, 4, 5],
         isOpen: true,
-        normal: [{}],
+        timeSpans: [{}],
       },
       {
         days: [6],
         isOpen: false,
-        normal: [{}],
+        timeSpans: [{}],
       },
       {
         days: [7],
         isOpen: false,
-        normal: [{}],
+        timeSpans: [{}],
       },
     ],
   };
@@ -453,7 +453,7 @@ export default ({ resourceId }: { resourceId: string }): JSX.Element => {
 
   const addNewRow = (currIndex: number, day: number): void => {
     const newIdx = currIndex + 1;
-    const values = { days: [day], isOpen: true, normal: [{}] };
+    const values = { days: [day], isOpen: true, timeSpans: [{}] };
     insert(newIdx, values, false);
     // FIXME: For some reason the normal array won't get added in the insert
     setValue(`openingHours[${newIdx}]`, values);
