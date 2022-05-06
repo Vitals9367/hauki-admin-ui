@@ -132,7 +132,8 @@ export default ({
         </tr>
       </thead>
       <tbody>
-        {groupOpeningHoursForPreview(openingHours).map(
+        {/* For some reason when a new row gets inserted it first appears as undefined so need to filter those out */}
+        {groupOpeningHoursForPreview(openingHours.filter((o) => o)).map(
           (openingHour, openingHourIdx) => (
             <Fragment key={`timeSpans-${openingHourIdx}`}>
               {openingHour.timeSpans?.map((openingHourTimeSpan, i) =>
