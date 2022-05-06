@@ -2,7 +2,7 @@ import React, { Fragment } from 'react';
 import { Language, ResourceState } from '../../common/lib/types';
 import { createWeekdaysStringFromIndices } from '../../common/utils/date-time/format';
 import { OpeningHoursTimeSpan, OpeningHoursRange, OptionType } from './types';
-import { sortOpeningHours } from './utils';
+import { groupOpeningHoursForPreview } from './utils';
 import './OpeningHoursPreview.scss';
 
 const TimeSpan = ({
@@ -132,7 +132,7 @@ export default ({
         </tr>
       </thead>
       <tbody>
-        {sortOpeningHours(openingHours.filter((o) => o)).map(
+        {groupOpeningHoursForPreview(openingHours).map(
           (openingHour, openingHourIdx) => (
             <Fragment key={`normal-${openingHourIdx}`}>
               {openingHour.normal?.map((openingHourTimeSpan, i) =>

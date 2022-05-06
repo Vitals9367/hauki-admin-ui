@@ -233,7 +233,7 @@ const OpeningHours = ({
   //   name: `${namePrefix}.alternating`,
   // });
   const [removedDay, setRemovedDay] = React.useState<number | null>(null);
-  const days = watch(`${namePrefix}.days`) as number[];
+  const days = watch(`${namePrefix}.days`, []) as number[];
 
   return (
     <div className="opening-hours-container">
@@ -449,8 +449,13 @@ export default ({ resourceId }: { resourceId: string }): JSX.Element => {
         (getValues(`openingHours[${idx}].days`) as number[]).includes(day)
     );
 
-  const addNewRow = (i: number, day: number): void =>
-    insert(i + 1, { days: [day], normal: [{}] }, false);
+  const addNewRow = (currIndex: number, day: number): void => {
+    const newIdx = currIndex + 1;
+    const values = { days: [day], isOpen: true, normal: [{}] };
+    insert(newIdx, values, false);
+    // FIXME: For some reason the normal array won't get added in the insert
+    setValue(`openingHours[${newIdx}]`, values);
+  };
 
   const { openingHours } = watch();
 
