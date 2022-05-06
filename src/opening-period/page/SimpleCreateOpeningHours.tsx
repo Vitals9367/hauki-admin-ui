@@ -17,6 +17,7 @@ import {
   useFormContext,
 } from 'react-hook-form';
 import { useHistory } from 'react-router-dom';
+import { upperFirst } from 'lodash';
 import {
   Language,
   Resource,
@@ -211,11 +212,13 @@ const isOnlySelectedDay = (day: number, days: number[]): boolean =>
   days.length === 1 && days[0] === day;
 
 const OpeningHours = ({
+  dropIn,
   item,
   resourceStates,
   namePrefix,
   onDayChange,
 }: {
+  dropIn: boolean;
   item: OpeningHoursRange;
   namePrefix: string;
   resourceStates: OptionType[];
@@ -234,23 +237,34 @@ const OpeningHours = ({
   });
   const [removedDay, setRemovedDay] = React.useState<number | null>(null);
   const days = watch(`${namePrefix}.days`, []) as number[];
+  const removedDayLabel = removedDay
+    ? upperFirst(
+        getWeekdayShortNameByIndexAndLang({
+          weekdayIndex: removedDay,
+          language: Language.FI,
+        })
+      )
+    : '';
 
   return (
-    <div className="opening-hours-container">
+    <div
+      className={`opening-hours-container ${
+        dropIn ? 'opening-hours-container--drop-in' : ''
+      }`}>
       <div>
         <div>Päivä</div>
         <div className="weekdays">
           {removedDay && (
             <Notification
               key={removedDay}
-              label={`${removedDay}-päivä siirretty omaksi riviksi`}
+              label={`${removedDayLabel}-päivä siirretty omaksi riviksi`}
               position="bottom-right"
               dismissible
               autoClose
               closeButtonLabelText="Sulje ilmoitus"
               onClose={(): void => setRemovedDay(null)}
               style={{ zIndex: 100 }}>
-              {`Juuri poistettu ${removedDay} siirrettiin omaksi rivikseen.`}
+              {`Juuri poistettu ${removedDayLabel} siirrettiin omaksi rivikseen.`}
             </Notification>
           )}
           <Controller
@@ -425,6 +439,7 @@ export default ({ resourceId }: { resourceId: string }): JSX.Element => {
     control,
     name: 'openingHours',
   });
+  const [dropInRow, setDropInRow] = useState<number | undefined>();
 
   const allDayAreUncheckedForRow = (idx: number): boolean => {
     const days = getValues(`openingHours[${idx}].days`) as number[];
@@ -457,6 +472,7 @@ export default ({ resourceId }: { resourceId: string }): JSX.Element => {
     insert(newIdx, values, false);
     // FIXME: For some reason the normal array won't get added in the insert
     setValue(`openingHours[${newIdx}]`, values);
+    setDropInRow(newIdx);
   };
 
   const { openingHours } = watch();
@@ -477,10 +493,12 @@ export default ({ resourceId }: { resourceId: string }): JSX.Element => {
                 {fields.map((field, i) => (
                   <OpeningHours
                     key={field.id}
+                    dropIn={dropInRow === i}
                     item={field as OpeningHoursRange}
                     resourceStates={resourceStates}
                     namePrefix={`openingHours[${i}]`}
                     onDayChange={(day, checked): void => {
+                      setDropInRow(undefined);
                       if (checked) {
                         setDay(i, day, true);
                         const prevId = findPreviousChecked(i, day);
