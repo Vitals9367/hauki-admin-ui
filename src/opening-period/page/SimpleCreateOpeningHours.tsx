@@ -39,6 +39,34 @@ import {
   OpeningHoursTimeSpan as TOpeningHoursTimeSpan,
 } from './types';
 
+type DayLabels = {
+  fi: string[];
+};
+
+const dayLabels: DayLabels = {
+  fi: [
+    'maanantai',
+    'tiistai',
+    'keskiviikko',
+    'torstai',
+    'perjantai',
+    'lauantai',
+    'sunnuntai',
+  ],
+};
+
+type InflectLabels = {
+  fi: {
+    [x: number]: string;
+  };
+};
+
+const customInflects: InflectLabels = {
+  fi: {
+    3: 'keskiviikon',
+  },
+};
+
 const DayCheckbox = ({
   currentDay,
   namePrefix,
@@ -247,12 +275,54 @@ const OpeningHours = ({
       })
     : '';
 
+  const groupDays = (daysToIterate: number[]): number[][] =>
+    daysToIterate.sort().reduce((acc: number[][], day): number[][] => {
+      const lastSet = acc.length > 0 ? acc[acc.length - 1] : [];
+      if (lastSet.length === 0) {
+        return [[day]];
+      }
+      if (lastSet && lastSet[lastSet.length - 1] + 1 === day) {
+        return [...acc.slice(0, acc.length - 1), [...lastSet, day]];
+      }
+      return [...acc, [day]];
+    }, []);
+
+  const resolveDayTranslation = (day: number, useGenitive: boolean): string => {
+    const defaultLabel = dayLabels.fi[day - 1];
+    return useGenitive
+      ? customInflects.fi[day] || `${defaultLabel}n`
+      : defaultLabel;
+  };
+
+  const capitalize = (str: string): string => {
+    return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
+  };
+
   return (
     <div
       className={`opening-hours-container ${
         dropIn ? 'opening-hours-container--drop-in' : ''
       }`}>
       <div>
+        <h3 className="opening-hours-container-title">
+          {capitalize(
+            item.days.length === 1
+              ? `${resolveDayTranslation(item.days[0], true)} aukiolo`
+              : `${groupDays(item.days)
+                  .map((group) =>
+                    group.length === 1
+                      ? resolveDayTranslation(group[0], false)
+                      : `${resolveDayTranslation(
+                          group[0],
+                          false
+                        )}-${resolveDayTranslation(
+                          group[group.length - 1],
+                          false
+                        )}`
+                  )
+                  .join(', ')} aukiolot`
+          )}
+        </h3>
         <div>Päivä</div>
         <div className="weekdays">
           {removedDay && (
