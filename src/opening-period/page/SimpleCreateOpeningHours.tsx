@@ -25,7 +25,10 @@ import {
   UiDatePeriodConfig,
 } from '../../common/lib/types';
 import api from '../../common/utils/api/api';
-import { getWeekdayShortNameByIndexAndLang } from '../../common/utils/date-time/format';
+import {
+  getWeekdayLongNameByIndexAndLang,
+  getWeekdayShortNameByIndexAndLang,
+} from '../../common/utils/date-time/format';
 import { SecondaryButton } from '../../components/button/Button';
 import Preview from './OpeningHoursPreview';
 import './SimpleCreateOpeningHours.scss';
@@ -238,12 +241,10 @@ const OpeningHours = ({
   const [removedDay, setRemovedDay] = React.useState<number | null>(null);
   const days = watch(`${namePrefix}.days`, []) as number[];
   const removedDayLabel = removedDay
-    ? upperFirst(
-        getWeekdayShortNameByIndexAndLang({
-          weekdayIndex: removedDay,
-          language: Language.FI,
-        })
-      )
+    ? getWeekdayLongNameByIndexAndLang({
+        weekdayIndex: removedDay,
+        language: Language.FI,
+      })
     : '';
 
   return (
@@ -257,7 +258,9 @@ const OpeningHours = ({
           {removedDay && (
             <Notification
               key={removedDay}
-              label={`${removedDayLabel}-päivä siirretty omaksi riviksi`}
+              label={`${upperFirst(
+                removedDayLabel
+              )}-päivä siirretty omaksi riviksi`}
               position="bottom-right"
               dismissible
               autoClose

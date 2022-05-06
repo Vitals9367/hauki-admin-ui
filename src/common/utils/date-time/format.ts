@@ -87,6 +87,52 @@ export function getWeekdayShortNameByIndexAndLang({
   return weekdays[language][weekdayIndex];
 }
 
+type WeekdayIndexToLongNameMappings = {
+  [language in Language]: {
+    [weekdayType in WeekdayTypes]: string;
+  };
+};
+
+const weekdaysLong: WeekdayIndexToLongNameMappings = {
+  fi: {
+    1: 'maanantai',
+    2: 'tiistai',
+    3: 'keskiviikko',
+    4: 'torstai',
+    5: 'perjantai',
+    6: 'lauantai',
+    7: 'sunnuntai',
+  },
+  sv: {
+    1: 'Måndag',
+    2: 'Tisdag',
+    3: 'Onsdag',
+    4: 'Torsdag',
+    5: 'Fredag',
+    6: 'Lördag',
+    7: 'Söndag',
+  },
+  en: {
+    1: 'Monday',
+    2: 'Tuesday',
+    3: 'Wednesday',
+    4: 'Thursday',
+    5: 'Friday',
+    6: 'Saturday',
+    7: 'Sunday',
+  },
+};
+
+export function getWeekdayLongNameByIndexAndLang({
+  weekdayIndex,
+  language,
+}: {
+  weekdayIndex: WeekdayTypes;
+  language: Language;
+}): string {
+  return weekdaysLong[language][weekdayIndex];
+}
+
 type WeekdaySpan = {
   startIndex: number;
   lastInsertedIndex: number;
