@@ -1,5 +1,5 @@
 import { isEqual } from 'lodash';
-import { OpeningHoursRange } from './types';
+import { AlternatingOpeningHour, OpeningHoursRange } from './types';
 
 const sortOpeningHours = (
   openingHours: OpeningHoursRange[]
@@ -11,6 +11,22 @@ const sortOpeningHours = (
     return day1 - day2;
   });
 
+const alternatingOpeningHourEquals = (
+  o1: AlternatingOpeningHour,
+  o2: AlternatingOpeningHour
+): boolean => {
+  if (
+    o1.rule.value === o2.rule.value &&
+    (o1.timeSpans || []).every((timeSpan1) =>
+      o2.timeSpans?.find((timeSpan2) => isEqual(timeSpan1, timeSpan2))
+    )
+  ) {
+    return true;
+  }
+
+  return false;
+};
+
 const openingHoursRangeEqual = (
   o1: OpeningHoursRange,
   o2: OpeningHoursRange
@@ -18,8 +34,17 @@ const openingHoursRangeEqual = (
   if (
     o1.isOpen === o2.isOpen &&
     o1.normal?.length === o2.normal?.length &&
-    o1.normal?.every((timeSpan1) =>
+    (o1.normal || []).every((timeSpan1) =>
       o2.normal?.find((timeSpan2) => isEqual(timeSpan1, timeSpan2))
+    ) &&
+    o1.alternating?.length === o2.alternating?.length &&
+    (o1.alternating || []).every((alternatingOpeningHour1) =>
+      o2.alternating?.find((alternatingOpeningHour2) =>
+        alternatingOpeningHourEquals(
+          alternatingOpeningHour1,
+          alternatingOpeningHour2
+        )
+      )
     )
   ) {
     return true;

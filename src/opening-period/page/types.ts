@@ -10,15 +10,16 @@ export type OpeningHoursTimeSpan = {
   description?: string;
 };
 
-export type AlternatingOpeningHours = {
+export type AlternatingOpeningHour = {
   rule: OptionType;
-} & OpeningHoursTimeSpan;
+  timeSpans: OpeningHoursTimeSpan[];
+};
 
 export type OpeningHoursRange = {
   days: number[];
   isOpen?: boolean;
   normal?: OpeningHoursTimeSpan[];
-  alternating?: AlternatingOpeningHours[];
+  alternating?: AlternatingOpeningHour[];
 };
 
 export type OpeningHoursFormState = {

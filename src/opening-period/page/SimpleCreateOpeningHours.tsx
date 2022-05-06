@@ -8,7 +8,7 @@ import {
   TimeInput,
   ToggleButton,
 } from 'hds-react';
-import React, { useEffect, useState } from 'react';
+import React, { Fragment, useEffect, useState } from 'react';
 import {
   Controller,
   FormProvider,
@@ -221,17 +221,17 @@ const OpeningHours = ({
   resourceStates: OptionType[];
   onDayChange: (day: number, checked: boolean) => void;
 }): JSX.Element => {
-  // const options = [
-  //   { value: '0', label: 'Joka toinen viikko' },
-  //   { value: '1', label: 'Joka kolmas viikko' },
-  //   { value: '2', label: 'Joka neljäs viikko' },
-  // ];
+  const options = [
+    { value: '0', label: 'Joka toinen viikko' },
+    { value: '1', label: 'Joka kolmas viikko' },
+    { value: '2', label: 'Joka neljäs viikko' },
+  ];
   const { control, watch } = useFormContext<OpeningHoursFormState>();
   const open = watch(`${namePrefix}.isOpen`);
-  // const { append, fields, remove } = useFieldArray({
-  //   control,
-  //   name: `${namePrefix}.alternating`,
-  // });
+  const { append, fields, remove } = useFieldArray({
+    control,
+    name: `${namePrefix}.alternating`,
+  });
   const [removedDay, setRemovedDay] = React.useState<number | null>(null);
   const days = watch(`${namePrefix}.days`, []) as number[];
 
@@ -299,7 +299,7 @@ const OpeningHours = ({
           namePrefix={`${namePrefix}.normal`}
         />
       )}
-      {/* {fields.map((field, i) => (
+      {fields.map((field, i) => (
         <Fragment key={field.id}>
           <div className="alternating-opening-hour-container">
             <Controller
@@ -323,9 +323,9 @@ const OpeningHours = ({
               Poista
             </Button>
           </div>
-          <OpeningHoursTimeSpanAndDetails
+          <OpeningHoursTimeSpans
             resourceStates={resourceStates}
-            namePrefix={`${namePrefix}.alternating[${i}]`}
+            namePrefix={`${namePrefix}.alternating[${i}].timeSpans`}
           />
         </Fragment>
       ))}
@@ -334,18 +334,20 @@ const OpeningHours = ({
           className="link-button"
           onClick={(): void =>
             append({
-              normal: {
-                start: '09:00',
-                end: '20:00',
-                fullDay: false,
-                state: ResourceState.OPEN,
-              },
+              timeSpans: [
+                {
+                  start: '09:00',
+                  end: '20:00',
+                  fullDay: false,
+                  state: ResourceState.OPEN,
+                },
+              ],
             })
           }
           type="button">
           + Lisää vuorotteleva aukioloaika
         </button>
-      </div> */}
+      </div>
     </div>
   );
 };

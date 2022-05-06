@@ -155,18 +155,16 @@ export default ({
                   />
                 )
               )}
-              {/* {openingHour.alternating?.map((alternating, variableId) => (
+              {openingHour.alternating?.map((alternating, variableId) => (
                 <Fragment key={`variable-${variableId}`}>
-                  <PreviewRow
-                    timeClassname="alternating-time-span-label"
-                    time={alternating.rule?.label}
-                  />
-                  <TimeSpanRow
-                    resourceStates={resourceStates}
-                    timeSpan={alternating.normal}
-                  />
-                  {alternating.details?.map((detail, detailIdx) => (
+                  {alternating.timeSpans?.map((detail, detailIdx) => (
                     <Fragment key={`alternating-detail-${detailIdx}`}>
+                      {detailIdx === 0 && (
+                        <PreviewRow
+                          timeClassname="alternating-time-span-label"
+                          time={alternating.rule?.label}
+                        />
+                      )}
                       <TimeSpanRow
                         resourceStates={resourceStates}
                         timeSpan={detail}
@@ -174,7 +172,7 @@ export default ({
                     </Fragment>
                   ))}
                 </Fragment>
-              ))} */}
+              ))}
             </Fragment>
           )
         )}
