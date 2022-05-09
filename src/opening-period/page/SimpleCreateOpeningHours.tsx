@@ -103,6 +103,9 @@ const OpeningHoursTimeSpan = ({
   const { control, register, watch } = useFormContext();
   const fullDay = watch(`${namePrefix}.fullDay`);
   const state = watch(`${namePrefix}.state`);
+  const sanitizedResourceStateOptions: OptionType[] = resourceStates.filter(
+    ({ value }) => value !== 'undefined'
+  );
 
   return (
     <>
@@ -155,12 +158,14 @@ const OpeningHoursTimeSpan = ({
           <Select<OptionType>
             disabled={disabled}
             label="Tila"
-            options={resourceStates}
+            options={sanitizedResourceStateOptions}
             className="opening-hours-state-select"
             onChange={(option: OptionType): void => onChange(option.value)}
             placeholder="Valitse"
             required
-            value={resourceStates.find((option) => option.value === value)}
+            value={sanitizedResourceStateOptions.find(
+              (option) => option.value === value
+            )}
           />
         )}
       />
