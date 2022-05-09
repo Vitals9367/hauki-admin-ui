@@ -293,7 +293,7 @@ const OpeningHours = ({
         dropIn ? 'opening-hours-container--drop-in' : ''
       }`}>
       <div>
-        <h3 className="opening-hours-container-title">
+        <h3 className="opening-hours-container-title" role="status">
           {upperFirst(
             item.days.length === 1
               ? `${resolveDayTranslation(item.days[0], true)} aukioloajat`
