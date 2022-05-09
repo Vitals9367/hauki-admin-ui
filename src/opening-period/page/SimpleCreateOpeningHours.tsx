@@ -116,7 +116,7 @@ const OpeningHoursTimeSpan = ({
           id="startDate"
           hoursLabel="tunnit"
           minutesLabel="minuutit"
-          label="Avataan"
+          label="Alkaen"
           name={`${namePrefix}.start`}
           value={item?.start || '09:00'}
         />
@@ -127,7 +127,7 @@ const OpeningHoursTimeSpan = ({
           id="endDate"
           hoursLabel="tunnit"
           minutesLabel="minuutit"
-          label="Suljetaan"
+          label="Päättyen"
           name={`${namePrefix}.end`}
           value={item?.end || '20:00'}
         />
