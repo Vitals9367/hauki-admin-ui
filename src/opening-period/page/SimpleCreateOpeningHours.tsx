@@ -279,6 +279,7 @@ const OpeningHours = ({
       weekdayIndex: day,
       language,
     });
+
     return useGenitive
       ? (languageGenitiveInflects[language] &&
           languageGenitiveInflects[language][day]) ||
@@ -295,7 +296,7 @@ const OpeningHours = ({
         <h3 className="opening-hours-container-title">
           {upperFirst(
             item.days.length === 1
-              ? `${resolveDayTranslation(item.days[0], true)} aukiolo`
+              ? `${resolveDayTranslation(item.days[0], true)} aukioloajat`
               : `${groupDays(item.days)
                   .map((group) =>
                     group.length === 1
@@ -308,7 +309,7 @@ const OpeningHours = ({
                           false
                         )}`
                   )
-                  .join(', ')} aukiolot`
+                  .join(', ')} aukioloajat`
           )}
         </h3>
         <div>Päivä</div>
