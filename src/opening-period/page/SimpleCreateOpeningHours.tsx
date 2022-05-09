@@ -33,38 +33,24 @@ import { SecondaryButton } from '../../components/button/Button';
 import Preview from './OpeningHoursPreview';
 import './SimpleCreateOpeningHours.scss';
 import {
-  OptionType,
   OpeningHoursFormState,
   OpeningHoursRange,
   OpeningHoursTimeSpan as TOpeningHoursTimeSpan,
+  OptionType,
 } from './types';
 
-type DayLabels = {
-  fi: string[];
-};
-
-const dayLabels: DayLabels = {
-  fi: [
-    'maanantai',
-    'tiistai',
-    'keskiviikko',
-    'torstai',
-    'perjantai',
-    'lauantai',
-    'sunnuntai',
-  ],
-};
-
 type InflectLabels = {
-  fi: {
+  [language in Language]: {
     [x: number]: string;
   };
 };
 
-const customInflects: InflectLabels = {
+const languageGenitiveInflects: InflectLabels = {
   fi: {
     3: 'keskiviikon',
   },
+  sv: {},
+  en: {},
 };
 
 const DayCheckbox = ({
@@ -288,14 +274,16 @@ const OpeningHours = ({
     }, []);
 
   const resolveDayTranslation = (day: number, useGenitive: boolean): string => {
-    const defaultLabel = dayLabels.fi[day - 1];
+    const language = Language.FI;
+    const translatedDay = getWeekdayLongNameByIndexAndLang({
+      weekdayIndex: day,
+      language,
+    });
     return useGenitive
-      ? customInflects.fi[day] || `${defaultLabel}n`
-      : defaultLabel;
-  };
-
-  const capitalize = (str: string): string => {
-    return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
+      ? (languageGenitiveInflects[language] &&
+          languageGenitiveInflects[language][day]) ||
+          `${translatedDay}n`
+      : translatedDay;
   };
 
   return (
@@ -305,7 +293,7 @@ const OpeningHours = ({
       }`}>
       <div>
         <h3 className="opening-hours-container-title">
-          {capitalize(
+          {upperFirst(
             item.days.length === 1
               ? `${resolveDayTranslation(item.days[0], true)} aukiolo`
               : `${groupDays(item.days)
