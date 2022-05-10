@@ -368,6 +368,11 @@ const OpeningHours = ({
                   label="Auki"
                   onChange={(): void => onChange(!value)}
                   checked={value}
+                  theme={{
+                    '--toggle-button-color': 'var(--color-coat-of-arms)',
+                    '--toggle-button-hover-color':
+                      'var(--color-coat-of-arms-dark)',
+                  }}
                 />
               )}
             />
