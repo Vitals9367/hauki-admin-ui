@@ -89,12 +89,14 @@ const DayCheckbox = ({
 
 const OpeningHoursTimeSpan = ({
   disabled = false,
+  groupLabel,
   item,
   resourceStates,
   namePrefix,
   onDelete,
 }: {
   disabled?: boolean;
+  groupLabel: string;
   item?: TOpeningHoursTimeSpan;
   namePrefix: string;
   resourceStates: OptionType[];
@@ -108,12 +110,15 @@ const OpeningHoursTimeSpan = ({
   );
 
   return (
-    <>
+    <div
+      className="opening-hours-and-details-container"
+      role="group"
+      aria-label={groupLabel}>
       <div className="opening-hours-time-span__range">
         <TimeInput
           ref={register()}
           disabled={disabled || fullDay}
-          id="startDate"
+          id={`${namePrefix}-start`}
           hoursLabel="tunnit"
           minutesLabel="minuutit"
           label="Alkaen"
@@ -124,7 +129,7 @@ const OpeningHoursTimeSpan = ({
         <TimeInput
           ref={register()}
           disabled={disabled || fullDay}
-          id="endDate"
+          id={`${namePrefix}-endDate`}
           hoursLabel="tunnit"
           minutesLabel="minuutit"
           label="Päättyen"
@@ -137,7 +142,7 @@ const OpeningHoursTimeSpan = ({
           defaultValue={item?.fullDay ?? false}
           render={(field): JSX.Element => (
             <Checkbox
-              id={`${namePrefix}.fullDay`}
+              id={`${namePrefix}-fullDay`}
               name={`${namePrefix}.fullDay`}
               label="24 h"
               onChange={(e): void => {
@@ -157,6 +162,7 @@ const OpeningHoursTimeSpan = ({
         render={({ onChange, value }): JSX.Element => (
           <Select<OptionType>
             disabled={disabled}
+            id={`${namePrefix}-state`}
             label="Tila"
             options={sanitizedResourceStateOptions}
             className="opening-hours-state-select"
@@ -172,14 +178,14 @@ const OpeningHoursTimeSpan = ({
       <div>
         {onDelete && (
           <Button variant="danger" onClick={onDelete}>
-            Poista
+            Poista<span className="sr-only">{groupLabel}</span>
           </Button>
         )}
       </div>
       {state === ResourceState.OTHER && (
         <div className="opening-hours-time-span__description-container">
           <TextInput
-            id=""
+            id={`${namePrefix}-description`}
             ref={register()}
             label="Kuvaus suomeksi"
             name={`${namePrefix}.description`}
@@ -188,7 +194,7 @@ const OpeningHoursTimeSpan = ({
           <TextInput id="" label="Kuvaus englanniksi" />
         </div>
       )}
-    </>
+    </div>
   );
 };
 
@@ -207,17 +213,16 @@ const OpeningHoursTimeSpans = ({
 
   return (
     <>
-      <div className="opening-hours-and-details-container">
-        {fields.map((field, i) => (
-          <OpeningHoursTimeSpan
-            key={field.id}
-            item={field as TOpeningHoursTimeSpan}
-            resourceStates={resourceStates}
-            namePrefix={`${namePrefix}[${i}]`}
-            onDelete={i === 0 ? undefined : (): void => remove(i)}
-          />
-        ))}
-      </div>
+      {fields.map((field, i) => (
+        <OpeningHoursTimeSpan
+          key={field.id}
+          groupLabel={`aukiolomääritys ${i + 1}`}
+          item={field as TOpeningHoursTimeSpan}
+          resourceStates={resourceStates}
+          namePrefix={`${namePrefix}[${i}]`}
+          onDelete={i === 0 ? undefined : (): void => remove(i)}
+        />
+      ))}
       <div className="opening-hours-actions-container">
         <button
           className="link-button"
@@ -317,46 +322,51 @@ const OpeningHours = ({
                   .join(', ')} aukioloajat`
           )}
         </h3>
-        <div>Päivä</div>
-        <div className="weekdays">
-          {removedDay && (
-            <Notification
-              key={removedDay}
-              label={`${upperFirst(
-                removedDayLabel
-              )}-päivä siirretty omaksi riviksi`}
-              position="bottom-right"
-              dismissible
-              autoClose
-              closeButtonLabelText="Sulje ilmoitus"
-              onClose={(): void => setRemovedDay(null)}
-              style={{ zIndex: 100 }}>
-              {`Juuri poistettu ${removedDayLabel} siirrettiin omaksi rivikseen.`}
-            </Notification>
-          )}
-          <Controller
-            control={control}
-            defaultValue={item.days ?? []}
-            name={`${namePrefix}.days`}
-            render={(): JSX.Element => (
-              <>
-                {[1, 2, 3, 4, 5, 6, 7].map((day) => (
-                  <DayCheckbox
-                    key={`${namePrefix}-${day}`}
-                    checked={days.includes(day)}
-                    currentDay={day}
-                    namePrefix={namePrefix}
-                    onChange={(checked): void => {
-                      onDayChange(day, checked);
-                      if (!isOnlySelectedDay(day, item.days) && !checked) {
-                        setRemovedDay(day);
-                      }
-                    }}
-                  />
-                ))}
-              </>
+        <div id={`${namePrefix}-days`}>Päivä</div>
+        <div className="weekdays-container">
+          <div
+            className="weekdays"
+            role="group"
+            aria-labelledby={`${namePrefix}-days`}>
+            {removedDay && (
+              <Notification
+                key={removedDay}
+                label={`${upperFirst(
+                  removedDayLabel
+                )}-päivä siirretty omaksi riviksi`}
+                position="bottom-right"
+                dismissible
+                autoClose
+                closeButtonLabelText="Sulje ilmoitus"
+                onClose={(): void => setRemovedDay(null)}
+                style={{ zIndex: 100 }}>
+                {`Juuri poistettu ${removedDayLabel} siirrettiin omaksi rivikseen.`}
+              </Notification>
             )}
-          />
+            <Controller
+              control={control}
+              defaultValue={item.days ?? []}
+              name={`${namePrefix}.days`}
+              render={(): JSX.Element => (
+                <>
+                  {[1, 2, 3, 4, 5, 6, 7].map((day) => (
+                    <DayCheckbox
+                      key={`${namePrefix}-${day}`}
+                      checked={days.includes(day)}
+                      currentDay={day}
+                      namePrefix={namePrefix}
+                      onChange={(checked): void => {
+                        onDayChange(day, checked);
+                        if (!isOnlySelectedDay(day, item.days) && !checked) {
+                          setRemovedDay(day);
+                        }
+                      }}
+                    />
+                  ))}
+                </>
+              )}
+            />
+          </div>
           <div className="weekdays-state-toggle">
             <Controller
               control={control}

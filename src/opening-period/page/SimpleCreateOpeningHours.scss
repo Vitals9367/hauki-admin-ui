@@ -1,7 +1,11 @@
 @import 'node_modules/hds-design-tokens/lib/all.scss';
 
-.weekdays {
+.weekdays-container {
   align-items: flex-end;
+  display: flex;
+}
+
+.weekdays {
   display: flex;
 }
 
@@ -75,7 +79,7 @@
 .opening-hours-and-details-container {
   align-items: flex-end;
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr 1fr;
+  grid-template-columns: 1fr 70px 1fr 1fr;
   gap: 20px;
 }
 
