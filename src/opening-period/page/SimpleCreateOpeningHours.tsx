@@ -104,7 +104,7 @@ const OpeningHoursTimeSpan = ({
 }): JSX.Element => {
   const { control, register, watch } = useFormContext();
   const fullDay = watch(`${namePrefix}.fullDay`);
-  const state = watch(`${namePrefix}.state`);
+  const resourceState = watch(`${namePrefix}.resourceState`);
   const sanitizedResourceStateOptions: OptionType[] = resourceStates.filter(
     ({ value }) => value !== 'undefined'
   );
@@ -156,16 +156,16 @@ const OpeningHoursTimeSpan = ({
         />
       </div>
       <Controller
-        defaultValue={item?.state ?? ResourceState.OPEN}
-        name={`${namePrefix}.state`}
+        defaultValue={item?.resourceState ?? ResourceState.OPEN}
+        name={`${namePrefix}.resourceState`}
         control={control}
         render={({ onChange, value }): JSX.Element => (
           <Select<OptionType>
             disabled={disabled}
-            id={`${namePrefix}-state`}
+            id={`${namePrefix}-resource-state`}
             label="Tila"
             options={sanitizedResourceStateOptions}
-            className="opening-hours-state-select"
+            className="opening-hours-resource-state-select"
             onChange={(option: OptionType): void => onChange(option.value)}
             placeholder="Valitse"
             required
@@ -182,7 +182,7 @@ const OpeningHoursTimeSpan = ({
           </Button>
         )}
       </div>
-      {state === ResourceState.OTHER && (
+      {resourceState === ResourceState.OTHER && (
         <div className="opening-hours-time-span__description-container">
           <TextInput
             id={`${namePrefix}-description`}
@@ -435,7 +435,7 @@ const OpeningHours = ({
                   start: '09:00',
                   end: '20:00',
                   fullDay: false,
-                  state: ResourceState.OPEN,
+                  resourceState: ResourceState.OPEN,
                 },
               ],
             })

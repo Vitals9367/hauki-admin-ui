@@ -6,7 +6,7 @@ export type OpeningHoursTimeSpan = {
   start?: string;
   end?: string;
   fullDay?: boolean;
-  state?: ResourceState;
+  resourceState?: ResourceState;
   description?: string;
 };
 
