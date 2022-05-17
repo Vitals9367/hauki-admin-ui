@@ -185,13 +185,23 @@ const OpeningHoursTimeSpan = ({
       {resourceState === ResourceState.OTHER && (
         <div className="opening-hours-time-span__description-container">
           <TextInput
-            id={`${namePrefix}-description`}
-            ref={register()}
+            id={`${namePrefix}-description-fi`}
             label="Kuvaus suomeksi"
-            name={`${namePrefix}.description`}
+            name={`${namePrefix}.description.fi`}
+            ref={register()}
           />
-          <TextInput id="" label="Kuvaus ruotsiksi" />
-          <TextInput id="" label="Kuvaus englanniksi" />
+          <TextInput
+            id={`${namePrefix}-description-sv`}
+            label="Kuvaus ruotsiksi"
+            name={`${namePrefix}.description.sv`}
+            ref={register()}
+          />
+          <TextInput
+            id={`${namePrefix}-description-en`}
+            label="Kuvaus englanniksi"
+            name={`${namePrefix}.description.en`}
+            ref={register()}
+          />
         </div>
       )}
     </div>

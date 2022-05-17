@@ -1,4 +1,4 @@
-import { ResourceState } from '../../common/lib/types';
+import { LanguageStrings, ResourceState } from '../../common/lib/types';
 
 export type OptionType = { value: string; label: string | null };
 
@@ -7,7 +7,7 @@ export type OpeningHoursTimeSpan = {
   end?: string;
   fullDay?: boolean;
   resourceState?: ResourceState;
-  description?: string;
+  description?: LanguageStrings;
 };
 
 export type AlternatingOpeningHour = {

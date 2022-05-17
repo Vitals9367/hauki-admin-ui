@@ -78,9 +78,9 @@ const resolveDescription = (
   }
 
   return timeSpan.resourceState === ResourceState.OTHER
-    ? timeSpan.description!
-    : resourceStates.find((state) => state.value === timeSpan.resourceState)?.label ??
-        'Tuntematon';
+    ? timeSpan.description?.fi!
+    : resourceStates.find((state) => state.value === timeSpan.resourceState)
+        ?.label ?? 'Tuntematon';
 };
 
 const TimeSpanRow = ({
