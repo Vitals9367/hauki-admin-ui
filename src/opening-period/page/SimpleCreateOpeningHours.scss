@@ -34,7 +34,7 @@
   display: flex;
   flex-direction: column;
   gap: 1rem 2rem;
-  padding: 1rem 2rem;
+  padding: 2rem;
 }
 
 .alternating-opening-hour-container {
@@ -120,4 +120,14 @@
 .opening-hours-actions-container {
   display: flex;
   align-items: center;
+}
+
+.opening-hour-forms-required-help-text {
+  font-size: 1rem;
+  margin: 0;
+  padding: 1rem 0 0 0;
+}
+
+.asterisk {
+  font-weight: bold;
 }

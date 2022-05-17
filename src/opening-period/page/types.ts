@@ -15,7 +15,7 @@ export type AlternatingOpeningHour = {
   timeSpans: OpeningHoursTimeSpan[];
 };
 
-export type OpeningHoursRange = {
+export type OpeningHours = {
   days: number[];
   isOpen?: boolean;
   timeSpans?: OpeningHoursTimeSpan[];
@@ -23,5 +23,5 @@ export type OpeningHoursRange = {
 };
 
 export type OpeningHoursFormState = {
-  openingHours: OpeningHoursRange[];
+  openingHours: OpeningHours[];
 };

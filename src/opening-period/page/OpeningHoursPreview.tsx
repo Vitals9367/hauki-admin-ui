@@ -1,7 +1,7 @@
 import React, { Fragment } from 'react';
 import { Language, ResourceState } from '../../common/lib/types';
 import { createWeekdaysStringFromIndices } from '../../common/utils/date-time/format';
-import { OpeningHoursTimeSpan, OpeningHoursRange, OptionType } from './types';
+import { OpeningHoursTimeSpan, OpeningHours, OptionType } from './types';
 import { groupOpeningHoursForPreview } from './utils';
 import './OpeningHoursPreview.scss';
 
@@ -110,7 +110,7 @@ export default ({
   openingHours,
   resourceStates,
 }: {
-  openingHours: OpeningHoursRange[];
+  openingHours: OpeningHours[];
   resourceStates: OptionType[];
 }): JSX.Element => (
   <div className="opening-hours-preview-container">

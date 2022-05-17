@@ -34,7 +34,7 @@ import Preview from './OpeningHoursPreview';
 import './SimpleCreateOpeningHours.scss';
 import {
   OpeningHoursFormState,
-  OpeningHoursRange,
+  OpeningHours as TOpeningHours,
   OpeningHoursTimeSpan as TOpeningHoursTimeSpan,
   OptionType,
 } from './types';
@@ -246,7 +246,7 @@ const OpeningHours = ({
   onDayChange,
 }: {
   dropIn: boolean;
-  item: OpeningHoursRange;
+  item: TOpeningHours;
   namePrefix: string;
   resourceStates: OptionType[];
   onDayChange: (day: number, checked: boolean) => void;
@@ -491,7 +491,7 @@ export default ({ resourceId }: { resourceId: string }): JSX.Element => {
     fetchData();
   }, [resourceId]);
 
-  const defaultValues: { openingHours: OpeningHoursRange[] } = {
+  const defaultValues: { openingHours: TOpeningHours[] } = {
     openingHours: [
       {
         days: [1, 2, 3, 4, 5],
@@ -517,7 +517,7 @@ export default ({ resourceId }: { resourceId: string }): JSX.Element => {
   });
 
   const { control, getValues, setValue, watch } = form;
-  const { insert, fields, remove } = useFieldArray<OpeningHoursRange>({
+  const { insert, fields, remove } = useFieldArray<TOpeningHours>({
     control,
     name: 'openingHours',
   });
@@ -569,6 +569,10 @@ export default ({ resourceId }: { resourceId: string }): JSX.Element => {
                 {resource?.name?.fi}
               </h1>
               <span>Osoite: {resource?.address.fi}</span>
+              <p className="opening-hour-forms-required-help-text">
+                Kaikki kentät jotka ovat merkitty{' '}
+                <span className="asterisk">*</span>:llä ovat pakollisia
+              </p>
             </div>
             <div className="opening-hours-form">
               <section>
@@ -576,7 +580,7 @@ export default ({ resourceId }: { resourceId: string }): JSX.Element => {
                   <OpeningHours
                     key={field.id}
                     dropIn={dropInRow === i}
-                    item={field as OpeningHoursRange}
+                    item={field as TOpeningHours}
                     resourceStates={resourceStates}
                     namePrefix={`openingHours[${i}]`}
                     onDayChange={(day, checked): void => {

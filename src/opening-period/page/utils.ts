@@ -1,9 +1,7 @@
 import { isEqual } from 'lodash';
-import { AlternatingOpeningHour, OpeningHoursRange } from './types';
+import { AlternatingOpeningHour, OpeningHours } from './types';
 
-const sortOpeningHours = (
-  openingHours: OpeningHoursRange[]
-): OpeningHoursRange[] =>
+const sortOpeningHours = (openingHours: OpeningHours[]): OpeningHours[] =>
   [...openingHours].sort((a, b) => {
     const day1 = a.days.sort()[0];
     const day2 = b.days.sort()[0];
@@ -28,8 +26,8 @@ const alternatingOpeningHourEquals = (
 };
 
 const openingHoursRangeEqual = (
-  o1: OpeningHoursRange,
-  o2: OpeningHoursRange
+  o1: OpeningHours,
+  o2: OpeningHours
 ): boolean => {
   if (
     o1.isOpen === o2.isOpen &&
@@ -54,17 +52,17 @@ const openingHoursRangeEqual = (
 };
 
 const areConsecutiveDays = (
-  openingHour1: OpeningHoursRange,
-  openingHour2: OpeningHoursRange
+  openingHour1: OpeningHours,
+  openingHour2: OpeningHours
 ): boolean => openingHour2.days.sort()[0] - openingHour1.days.sort()[0] === 1;
 
-const isWeekend = (openingHour: OpeningHoursRange): boolean =>
+const isWeekend = (openingHour: OpeningHours): boolean =>
   openingHour.days.includes(6) || openingHour.days.includes(7);
 
 const groupByConsecutiveDays = (
-  openingHours: OpeningHoursRange[]
-): OpeningHoursRange[] => {
-  const individualDays: OpeningHoursRange[] = [];
+  openingHours: OpeningHours[]
+): OpeningHours[] => {
+  const individualDays: OpeningHours[] = [];
 
   openingHours.forEach((openingHour) => {
     openingHour.days.forEach((day) => {
@@ -72,7 +70,7 @@ const groupByConsecutiveDays = (
     });
   });
 
-  const groups: OpeningHoursRange[][] = [[]];
+  const groups: OpeningHours[][] = [[]];
   let i = 0;
 
   individualDays
@@ -118,6 +116,5 @@ const groupByConsecutiveDays = (
 
 // eslint-disable-next-line import/prefer-default-export
 export const groupOpeningHoursForPreview = (
-  openingHours: OpeningHoursRange[]
-): OpeningHoursRange[] =>
-  sortOpeningHours(groupByConsecutiveDays(openingHours));
+  openingHours: OpeningHours[]
+): OpeningHours[] => sortOpeningHours(groupByConsecutiveDays(openingHours));
