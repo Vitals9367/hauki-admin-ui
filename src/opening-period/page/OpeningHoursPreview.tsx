@@ -24,18 +24,23 @@ const TimeSpan = ({
 );
 
 const renderStartAndEndTimes = (
-  startTime?: string | null,
-  endTime?: string | null,
-  fullDay?: boolean,
-  isOpen?: boolean
+  timeSpan?: OpeningHoursTimeSpan
 ): JSX.Element => (
   <span className="opening-hours-preview-time-span">
-    {isOpen && fullDay ? (
+    {timeSpan?.resourceState !== ResourceState.CLOSED && timeSpan?.fullDay ? (
       '24h'
     ) : (
       <TimeSpan
-        start={isOpen ? startTime : null}
-        end={isOpen ? endTime : null}
+        start={
+          timeSpan?.resourceState === ResourceState.CLOSED
+            ? null
+            : timeSpan?.start
+        }
+        end={
+          timeSpan?.resourceState === ResourceState.CLOSED
+            ? null
+            : timeSpan?.end
+        }
       />
     )}
   </span>
@@ -66,13 +71,8 @@ const PreviewRow = ({
 
 const resolveDescription = (
   resourceStates: OptionType[],
-  isOpen: boolean,
   timeSpan?: OpeningHoursTimeSpan
 ): string => {
-  if (!isOpen) {
-    return 'Suljettu';
-  }
-
   if (!timeSpan) {
     return 'Tuntematon';
   }
@@ -84,25 +84,18 @@ const resolveDescription = (
 };
 
 const TimeSpanRow = ({
-  isOpen = true,
   label,
   resourceStates,
   timeSpan,
 }: {
-  isOpen?: boolean;
   label?: string;
   resourceStates: OptionType[];
   timeSpan?: OpeningHoursTimeSpan;
 }): JSX.Element => (
   <PreviewRow
+    description={resolveDescription(resourceStates, timeSpan)}
     label={label}
-    time={renderStartAndEndTimes(
-      timeSpan?.start,
-      timeSpan?.end,
-      timeSpan?.fullDay,
-      isOpen
-    )}
-    description={resolveDescription(resourceStates, isOpen, timeSpan)}
+    time={renderStartAndEndTimes(timeSpan)}
   />
 );
 
@@ -140,7 +133,6 @@ export default ({
                 i === 0 ? (
                   <TimeSpanRow
                     key={`detail-${i}`}
-                    isOpen={openingHour.isOpen}
                     label={createWeekdaysStringFromIndices(
                       openingHour.days,
                       Language.FI

@@ -17,7 +17,6 @@ export type AlternatingOpeningHour = {
 
 export type OpeningHours = {
   days: number[];
-  isOpen?: boolean;
   timeSpans: OpeningHoursTimeSpan[];
   alternating?: AlternatingOpeningHour[];
 };

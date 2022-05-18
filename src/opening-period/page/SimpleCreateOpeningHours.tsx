@@ -6,7 +6,6 @@ import {
   Select,
   TextInput,
   TimeInput,
-  ToggleButton,
 } from 'hds-react';
 import React, { Fragment, useEffect, useState } from 'react';
 import {
@@ -129,7 +128,7 @@ const OpeningHoursTimeSpan = ({
           label="Alkaen"
           name={`${namePrefix}.start`}
           required
-          value={item?.start || '09:00'}
+          value={item?.start || ''}
         />
         <div className="opening-hours-time-span__range-divider">-</div>
         <TimeInput
@@ -141,7 +140,7 @@ const OpeningHoursTimeSpan = ({
           label="Päättyen"
           name={`${namePrefix}.end`}
           required
-          value={item?.end || '20:00'}
+          value={item?.end || ''}
         />
       </div>
       <div className="fullday-checkbox-container">
@@ -184,7 +183,7 @@ const OpeningHoursTimeSpan = ({
       />
       <div>
         {onDelete && (
-          <Button variant="danger" onClick={onDelete}>
+          <Button variant="danger" onClick={onDelete} fullWidth>
             Poista<span className="sr-only">{groupLabel}</span>
           </Button>
         )}
@@ -245,7 +244,7 @@ const OpeningHoursTimeSpans = ({
           className="link-button"
           onClick={(): void => append({})}
           type="button">
-          + Lisää tarkennettu aukioloaika
+          + Lisää tarkennus
         </button>
       </div>
     </>
@@ -256,8 +255,8 @@ const isOnlySelectedDay = (day: number, days: number[]): boolean =>
   days.length === 1 && days[0] === day;
 
 const defaultTimeSpan = {
-  start: '09:00',
-  end: '20:00',
+  start: null,
+  end: null,
   fullDay: false,
   resourceState: ResourceState.OPEN,
 };
@@ -281,7 +280,6 @@ const OpeningHours = ({
     { value: '2', label: 'Joka neljäs viikko' },
   ];
   const { control, watch } = useFormContext<OpeningHoursFormState>();
-  const open = watch(`${namePrefix}.isOpen`);
   const { append, fields, remove } = useFieldArray({
     control,
     name: `${namePrefix}.alternating`,
@@ -361,6 +359,7 @@ const OpeningHours = ({
                 position="bottom-right"
                 dismissible
                 autoClose
+                displayAutoCloseProgress={false}
                 closeButtonLabelText="Sulje ilmoitus"
                 onClose={(): void => setRemovedDay(null)}
                 style={{ zIndex: 100 }}>
@@ -391,34 +390,12 @@ const OpeningHours = ({
               )}
             />
           </div>
-          <div className="weekdays-state-toggle">
-            <Controller
-              control={control}
-              defaultValue={item.isOpen ?? true}
-              name={`${namePrefix}.isOpen`}
-              render={({ onChange, value }): JSX.Element => (
-                <ToggleButton
-                  id={`${namePrefix}-isOpen`}
-                  label="Auki"
-                  onChange={(): void => onChange(!value)}
-                  checked={value}
-                  theme={{
-                    '--toggle-button-color': 'var(--color-coat-of-arms)',
-                    '--toggle-button-hover-color':
-                      'var(--color-coat-of-arms-dark)',
-                  }}
-                />
-              )}
-            />
-          </div>
         </div>
       </div>
-      {open && (
-        <OpeningHoursTimeSpans
-          resourceStates={resourceStates}
-          namePrefix={`${namePrefix}.timeSpans`}
-        />
-      )}
+      <OpeningHoursTimeSpans
+        resourceStates={resourceStates}
+        namePrefix={`${namePrefix}.timeSpans`}
+      />
       {fields.map((field, i) => (
         <Fragment key={field.id}>
           <div className="alternating-opening-hour-container">
@@ -512,18 +489,13 @@ export default ({ resourceId }: { resourceId: string }): JSX.Element => {
     openingHours: [
       {
         days: [1, 2, 3, 4, 5],
-        isOpen: true,
         timeSpans: [defaultTimeSpan],
       },
       {
-        days: [6],
-        isOpen: false,
-        timeSpans: [defaultTimeSpan],
-      },
-      {
-        days: [7],
-        isOpen: false,
-        timeSpans: [defaultTimeSpan],
+        days: [6, 7],
+        timeSpans: [
+          { ...defaultTimeSpan, resourceState: ResourceState.CLOSED },
+        ],
       },
     ],
   };
@@ -569,7 +541,6 @@ export default ({ resourceId }: { resourceId: string }): JSX.Element => {
     const newIdx = currIndex + 1;
     const values = {
       days: [day],
-      isOpen: true,
       timeSpans: [defaultTimeSpan],
     };
     insert(newIdx, values, false);
