@@ -7,8 +7,8 @@ import {
 
 const sortOpeningHours = (openingHours: OpeningHours[]): OpeningHours[] =>
   [...openingHours].sort((a, b) => {
-    const day1 = a.days.sort()[0];
-    const day2 = b.days.sort()[0];
+    const day1 = a.weekdays.sort()[0];
+    const day2 = b.weekdays.sort()[0];
 
     return day1 - day2;
   });
@@ -57,7 +57,8 @@ const openingHoursRangeEqual = (
 const areConsecutiveDays = (
   openingHour1: OpeningHours,
   openingHour2: OpeningHours
-): boolean => openingHour2.days.sort()[0] - openingHour1.days.sort()[0] === 1;
+): boolean =>
+  openingHour2.weekdays.sort()[0] - openingHour1.weekdays.sort()[0] === 1;
 
 const groupByConsecutiveDays = (
   openingHours: OpeningHours[]
@@ -65,8 +66,8 @@ const groupByConsecutiveDays = (
   const individualDays: OpeningHours[] = [];
 
   openingHours.forEach((openingHour) => {
-    openingHour.days.forEach((day) => {
-      individualDays.push({ ...openingHour, days: [day] });
+    openingHour.weekdays.forEach((day) => {
+      individualDays.push({ ...openingHour, weekdays: [day] });
     });
   });
 
@@ -75,7 +76,7 @@ const groupByConsecutiveDays = (
 
   individualDays
     .sort((a, b) => {
-      return a.days[0] - b.days[0];
+      return a.weekdays[0] - b.weekdays[0];
     })
     .forEach((openingHour, idx, arr) => {
       groups[i].push(openingHour);
@@ -103,7 +104,7 @@ const groupByConsecutiveDays = (
       group.reduce((newOpeningHour, openingHour) => {
         return {
           ...openingHour,
-          days: [...newOpeningHour.days, ...openingHour.days],
+          weekdays: [...newOpeningHour.weekdays, ...openingHour.weekdays],
         };
       }),
     ];
@@ -119,5 +120,5 @@ export const sortTimeSpans = (
   timeSpans: OpeningHoursTimeSpan[]
 ): OpeningHoursTimeSpan[] =>
   [...timeSpans].sort((a, b) => {
-    return a.start ? a.start.localeCompare(b.start ?? '') : -1;
+    return a.start_time ? a.start_time.localeCompare(b.start_time ?? '') : -1;
   });

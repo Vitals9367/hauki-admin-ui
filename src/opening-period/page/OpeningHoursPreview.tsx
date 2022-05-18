@@ -27,10 +27,10 @@ const renderStartAndEndTimes = (
   timeSpan?: OpeningHoursTimeSpan
 ): JSX.Element => (
   <span className="opening-hours-preview-time-span">
-    {timeSpan?.resourceState !== ResourceState.CLOSED && timeSpan?.fullDay ? (
+    {timeSpan?.resource_state !== ResourceState.CLOSED && timeSpan?.full_day ? (
       '24h'
     ) : (
-      <TimeSpan start={timeSpan?.start} end={timeSpan?.end} />
+      <TimeSpan start={timeSpan?.start_time} end={timeSpan?.end_time} />
     )}
   </span>
 );
@@ -66,9 +66,9 @@ const resolveDescription = (
     return 'Tuntematon';
   }
 
-  return timeSpan.resourceState === ResourceState.OTHER
+  return timeSpan.resource_state === ResourceState.OTHER
     ? timeSpan.description?.fi!
-    : resourceStates.find((state) => state.value === timeSpan.resourceState)
+    : resourceStates.find((state) => state.value === timeSpan.resource_state)
         ?.label ?? 'Tuntematon';
 };
 
@@ -125,7 +125,7 @@ export default ({
                   <TimeSpanRow
                     key={`detail-${i}`}
                     label={createWeekdaysStringFromIndices(
-                      openingHour.days,
+                      openingHour.weekdays,
                       Language.FI
                     )}
                     resourceStates={resourceStates}

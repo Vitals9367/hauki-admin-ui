@@ -4,10 +4,10 @@ import { OpeningHours, OpeningHoursTimeSpan } from './types';
 const toTimeSpan = (days: number[]) => (
   timeSpan: OpeningHoursTimeSpan
 ): TimeSpan => ({
-  end_time: timeSpan.end,
-  full_day: timeSpan.fullDay,
-  resource_state: timeSpan.resourceState,
-  start_time: timeSpan.start,
+  end_time: timeSpan.end_time,
+  full_day: timeSpan.full_day,
+  resource_state: timeSpan.resource_state,
+  start_time: timeSpan.start_time,
   weekdays: days,
 });
 
@@ -16,7 +16,7 @@ const toTimeSpanGroup = (openingHours: OpeningHours[]): TimeSpanGroup => ({
   time_spans: openingHours.reduce(
     (acc: TimeSpan[], openingHour: OpeningHours) => [
       ...acc,
-      ...openingHour.timeSpans.map(toTimeSpan(openingHour.days)),
+      ...openingHour.timeSpans.map(toTimeSpan(openingHour.weekdays)),
     ],
     []
   ),

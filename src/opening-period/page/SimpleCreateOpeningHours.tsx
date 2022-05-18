@@ -68,7 +68,7 @@ const DayCheckbox = ({
   onChange: (checked: boolean) => void;
   checked?: boolean;
 }): JSX.Element => {
-  const id = `${namePrefix}-days-${currentDay}`;
+  const id = `${namePrefix}-weekdays-${currentDay}`;
 
   return (
     <label htmlFor={id} className="day-label">
@@ -107,8 +107,8 @@ const OpeningHoursTimeSpan = ({
   onDelete?: () => void;
 }): JSX.Element => {
   const { control, register, watch } = useFormContext();
-  const fullDay = watch(`${namePrefix}.fullDay`);
-  const resourceState = watch(`${namePrefix}.resourceState`);
+  const fullDay = watch(`${namePrefix}.full_day`);
+  const resourceState = watch(`${namePrefix}.resource_state`);
   const sanitizedResourceStateOptions: OptionType[] = resourceStates.filter(
     ({ value }) => value !== 'undefined'
   );
@@ -122,34 +122,34 @@ const OpeningHoursTimeSpan = ({
         <TimeInput
           ref={register()}
           disabled={disabled || fullDay}
-          id={`${namePrefix}-start`}
+          id={`${namePrefix}-start-time`}
           hoursLabel="tunnit"
           minutesLabel="minuutit"
           label="Alkaen"
-          name={`${namePrefix}.start`}
+          name={`${namePrefix}.start_time`}
           required
-          value={item?.start || ''}
+          value={item?.start_time || ''}
         />
         <div className="opening-hours-time-span__range-divider">-</div>
         <TimeInput
           ref={register()}
           disabled={disabled || fullDay}
-          id={`${namePrefix}-endDate`}
+          id={`${namePrefix}-end-time`}
           hoursLabel="tunnit"
           minutesLabel="minuutit"
           label="Päättyen"
-          name={`${namePrefix}.end`}
+          name={`${namePrefix}.end_time`}
           required
-          value={item?.end || ''}
+          value={item?.end_time || ''}
         />
       </div>
       <div className="fullday-checkbox-container">
         <Controller
-          defaultValue={item?.fullDay ?? false}
+          defaultValue={item?.full_day ?? false}
           render={(field): JSX.Element => (
             <Checkbox
-              id={`${namePrefix}-fullDay`}
-              name={`${namePrefix}.fullDay`}
+              id={`${namePrefix}-full-day`}
+              name={`${namePrefix}.full_day`}
               label="24 h"
               onChange={(e): void => {
                 field.onChange(e.target.checked);
@@ -158,12 +158,12 @@ const OpeningHoursTimeSpan = ({
             />
           )}
           control={control}
-          name={`${namePrefix}.fullDay`}
+          name={`${namePrefix}.full_day`}
         />
       </div>
       <Controller
-        defaultValue={item?.resourceState ?? ResourceState.OPEN}
-        name={`${namePrefix}.resourceState`}
+        defaultValue={item?.resource_state ?? ResourceState.OPEN}
+        name={`${namePrefix}.resource_state`}
         control={control}
         render={({ onChange, value }): JSX.Element => (
           <Select<OptionType>
@@ -251,13 +251,13 @@ const OpeningHoursTimeSpans = ({
   );
 };
 
-const isOnlySelectedDay = (day: number, days: number[]): boolean =>
-  days.length === 1 && days[0] === day;
+const isOnlySelectedDay = (day: number, weekdays: number[]): boolean =>
+  weekdays.length === 1 && weekdays[0] === day;
 
 const defaultTimeSpan = {
-  start: null,
-  end: null,
-  fullDay: false,
+  start_time: null,
+  end_time: null,
+  full_day: false,
   resourceState: ResourceState.OPEN,
 };
 
@@ -285,7 +285,7 @@ const OpeningHours = ({
     name: `${namePrefix}.alternating`,
   });
   const [removedDay, setRemovedDay] = React.useState<number | null>(null);
-  const days = watch(`${namePrefix}.days`, []) as number[];
+  const weekdays = watch(`${namePrefix}.weekdays`, []) as number[];
   const removedDayLabel = removedDay
     ? getWeekdayLongNameByIndexAndLang({
         weekdayIndex: removedDay,
@@ -293,8 +293,8 @@ const OpeningHours = ({
       })
     : '';
 
-  const groupDays = (daysToIterate: number[]): number[][] =>
-    daysToIterate.sort().reduce((acc: number[][], day): number[][] => {
+  const groupWeekdays = (weekdaysToIterate: number[]): number[][] =>
+    weekdaysToIterate.sort().reduce((acc: number[][], day): number[][] => {
       const lastSet = acc.length > 0 ? acc[acc.length - 1] : [];
       if (lastSet.length === 0) {
         return [[day]];
@@ -327,9 +327,9 @@ const OpeningHours = ({
       <div>
         <h3 className="opening-hours-container-title" role="status">
           {upperFirst(
-            item.days.length === 1
-              ? `${resolveDayTranslation(item.days[0], true)} aukioloajat`
-              : `${groupDays(item.days)
+            item.weekdays.length === 1
+              ? `${resolveDayTranslation(item.weekdays[0], true)} aukioloajat`
+              : `${groupWeekdays(item.weekdays)
                   .map((group) =>
                     group.length === 1
                       ? resolveDayTranslation(group[0], false)
@@ -344,12 +344,12 @@ const OpeningHours = ({
                   .join(', ')} aukioloajat`
           )}
         </h3>
-        <div id={`${namePrefix}-days`}>Päivä</div>
+        <div id={`${namePrefix}-weekdays`}>Päivä</div>
         <div className="weekdays-container">
           <div
             className="weekdays"
             role="group"
-            aria-labelledby={`${namePrefix}-days`}>
+            aria-labelledby={`${namePrefix}-weekdays`}>
             {removedDay && (
               <Notification
                 key={removedDay}
@@ -368,19 +368,22 @@ const OpeningHours = ({
             )}
             <Controller
               control={control}
-              defaultValue={item.days ?? []}
-              name={`${namePrefix}.days`}
+              defaultValue={item.weekdays ?? []}
+              name={`${namePrefix}.weekdays`}
               render={(): JSX.Element => (
                 <>
                   {[1, 2, 3, 4, 5, 6, 7].map((day) => (
                     <DayCheckbox
                       key={`${namePrefix}-${day}`}
-                      checked={days.includes(day)}
+                      checked={weekdays.includes(day)}
                       currentDay={day}
                       namePrefix={namePrefix}
                       onChange={(checked): void => {
                         onDayChange(day, checked);
-                        if (!isOnlySelectedDay(day, item.days) && !checked) {
+                        if (
+                          !isOnlySelectedDay(day, item.weekdays) &&
+                          !checked
+                        ) {
                           setRemovedDay(day);
                         }
                       }}
@@ -488,13 +491,13 @@ export default ({ resourceId }: { resourceId: string }): JSX.Element => {
   const defaultValues: { openingHours: TOpeningHours[] } = {
     openingHours: [
       {
-        days: [1, 2, 3, 4, 5],
+        weekdays: [1, 2, 3, 4, 5],
         timeSpans: [defaultTimeSpan],
       },
       {
-        days: [6, 7],
+        weekdays: [6, 7],
         timeSpans: [
-          { ...defaultTimeSpan, resourceState: ResourceState.CLOSED },
+          { ...defaultTimeSpan, resource_state: ResourceState.CLOSED },
         ],
       },
     ],
@@ -513,19 +516,19 @@ export default ({ resourceId }: { resourceId: string }): JSX.Element => {
   const [dropInRow, setDropInRow] = useState<number | undefined>();
 
   const allDayAreUncheckedForRow = (idx: number): boolean => {
-    const days = getValues(`openingHours[${idx}].days`) as number[];
+    const weekdays = getValues(`openingHours[${idx}].weekdays`) as number[];
 
-    return days.length === 0;
+    return weekdays.length === 0;
   };
 
   const setDay = (i: number, day: number, checked: boolean): void => {
-    const days = getValues(`openingHours[${i}].days`) as number[];
+    const weekdays = getValues(`openingHours[${i}].weekdays`) as number[];
     if (checked) {
-      setValue(`openingHours[${i}].days`, [...days, day]);
+      setValue(`openingHours[${i}].weekdays`, [...weekdays, day]);
     } else {
       setValue(
-        `openingHours[${i}].days`,
-        days.filter((d) => d !== day)
+        `openingHours[${i}].weekdays`,
+        weekdays.filter((d) => d !== day)
       );
     }
   };
@@ -534,13 +537,13 @@ export default ({ resourceId }: { resourceId: string }): JSX.Element => {
     fields.findIndex(
       (item, idx) =>
         idx !== i &&
-        (getValues(`openingHours[${idx}].days`) as number[]).includes(day)
+        (getValues(`openingHours[${idx}].weekdays`) as number[]).includes(day)
     );
 
   const addNewRow = (currIndex: number, day: number): void => {
     const newIdx = currIndex + 1;
     const values = {
-      days: [day],
+      weekdays: [day],
       timeSpans: [defaultTimeSpan],
     };
     insert(newIdx, values, false);
@@ -597,11 +600,11 @@ export default ({ resourceId }: { resourceId: string }): JSX.Element => {
                             }
                           }
                         } else {
-                          const days = (getValues(
-                            `openingHours[${i}].days`
+                          const weekdays = (getValues(
+                            `openingHours[${i}].weekdays`
                           ) as number[]).filter((d) => d !== day);
-                          if (days.length) {
-                            setValue(`openingHours[${i}].days`, days);
+                          if (weekdays.length) {
+                            setValue(`openingHours[${i}].weekdays`, weekdays);
                             addNewRow(i, day);
                           }
                         }
