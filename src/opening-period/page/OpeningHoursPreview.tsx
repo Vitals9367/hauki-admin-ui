@@ -2,7 +2,7 @@ import React, { Fragment } from 'react';
 import { Language, ResourceState } from '../../common/lib/types';
 import { createWeekdaysStringFromIndices } from '../../common/utils/date-time/format';
 import { OpeningHoursTimeSpan, OpeningHours, OptionType } from './types';
-import { groupOpeningHoursForPreview } from './preview-helpers';
+import { groupOpeningHoursForPreview, sortTimeSpans } from './preview-helpers';
 import './OpeningHoursPreview.scss';
 
 const TimeSpan = ({
@@ -30,18 +30,7 @@ const renderStartAndEndTimes = (
     {timeSpan?.resourceState !== ResourceState.CLOSED && timeSpan?.fullDay ? (
       '24h'
     ) : (
-      <TimeSpan
-        start={
-          timeSpan?.resourceState === ResourceState.CLOSED
-            ? null
-            : timeSpan?.start
-        }
-        end={
-          timeSpan?.resourceState === ResourceState.CLOSED
-            ? null
-            : timeSpan?.end
-        }
-      />
+      <TimeSpan start={timeSpan?.start} end={timeSpan?.end} />
     )}
   </span>
 );
@@ -129,7 +118,9 @@ export default ({
         {groupOpeningHoursForPreview(openingHours).map(
           (openingHour, openingHourIdx) => (
             <Fragment key={`timeSpans-${openingHourIdx}`}>
-              {openingHour.timeSpans?.map((openingHourTimeSpan, i) =>
+              {sortTimeSpans(
+                openingHour.timeSpans
+              ).map((openingHourTimeSpan, i) =>
                 i === 0 ? (
                   <TimeSpanRow
                     key={`detail-${i}`}

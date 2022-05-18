@@ -1,5 +1,9 @@
 import { isEqual } from 'lodash';
-import { AlternatingOpeningHour, OpeningHours } from './types';
+import {
+  AlternatingOpeningHour,
+  OpeningHours,
+  OpeningHoursTimeSpan,
+} from './types';
 
 const sortOpeningHours = (openingHours: OpeningHours[]): OpeningHours[] =>
   [...openingHours].sort((a, b) => {
@@ -110,3 +114,10 @@ const groupByConsecutiveDays = (
 export const groupOpeningHoursForPreview = (
   openingHours: OpeningHours[]
 ): OpeningHours[] => sortOpeningHours(groupByConsecutiveDays(openingHours));
+
+export const sortTimeSpans = (
+  timeSpans: OpeningHoursTimeSpan[]
+): OpeningHoursTimeSpan[] =>
+  [...timeSpans].sort((a, b) => {
+    return a.start ? a.start.localeCompare(b.start ?? '') : -1;
+  });
