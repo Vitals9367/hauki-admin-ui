@@ -19,6 +19,7 @@ import {
 import { useHistory } from 'react-router-dom';
 import { upperFirst } from 'lodash';
 import {
+  DatePeriod,
   Language,
   Resource,
   ResourceState,
@@ -37,6 +38,7 @@ import {
   OpeningHoursTimeSpan as TOpeningHoursTimeSpan,
   OptionType,
 } from './types';
+import { openingHoursToApiDatePeriod } from './form-helpers';
 
 type InflectLabels = {
   [language in Language]: {
@@ -565,11 +567,24 @@ export default ({ resourceId }: { resourceId: string }): JSX.Element => {
 
   const addNewRow = (currIndex: number, day: number): void => {
     const newIdx = currIndex + 1;
-    const values = { days: [day], isOpen: true, timeSpans: [] };
+    const values = {
+      days: [day],
+      isOpen: true,
+      timeSpans: [defaultTimeSpan],
+    };
     insert(newIdx, values, false);
     // FIXME: For some reason the normal array won't get added in the insert
     setValue(`openingHours[${newIdx}]`, values);
     setDropInRow(newIdx);
+  };
+
+  const onSubmit = (data: OpeningHoursFormState): Promise<DatePeriod> => {
+    if (!resource) {
+      throw new Error('Resource not found');
+    }
+    return api.postDatePeriod(
+      openingHoursToApiDatePeriod(resource?.id, data.openingHours)
+    );
   };
 
   const { openingHours } = watch();
@@ -577,64 +592,66 @@ export default ({ resourceId }: { resourceId: string }): JSX.Element => {
   return (
     (resource && datePeriodConfig && (
       <FormProvider {...form}>
-        <div className="opening-hours-page">
-          <div>
-            <div className="opening-hours-page__title">
-              <h1 data-test="resource-info" className="resource-info-title">
-                {resource?.name?.fi}
-              </h1>
-              <span>Osoite: {resource?.address.fi}</span>
-              <p className="opening-hour-forms-required-help-text">
-                Kaikki kentät jotka ovat merkitty{' '}
-                <span className="asterisk">*</span>:llä ovat pakollisia
-              </p>
-            </div>
-            <div className="opening-hours-form">
-              <section>
-                {fields.map((field, i) => (
-                  <OpeningHours
-                    key={field.id}
-                    dropIn={dropInRow === i}
-                    item={field as TOpeningHours}
-                    resourceStates={resourceStates}
-                    namePrefix={`openingHours[${i}]`}
-                    onDayChange={(day, checked): void => {
-                      setDropInRow(undefined);
-                      if (checked) {
-                        setDay(i, day, true);
-                        const prevId = findPreviousChecked(i, day);
-                        if (prevId >= 0) {
-                          setDay(prevId, day, false);
-                          if (allDayAreUncheckedForRow(prevId)) {
-                            remove(prevId);
+        <form onSubmit={form.handleSubmit(onSubmit)}>
+          <div className="opening-hours-page">
+            <div>
+              <div className="opening-hours-page__title">
+                <h1 data-test="resource-info" className="resource-info-title">
+                  {resource?.name?.fi}
+                </h1>
+                <span>Osoite: {resource?.address.fi}</span>
+                <p className="opening-hour-forms-required-help-text">
+                  Kaikki kentät jotka ovat merkitty{' '}
+                  <span className="asterisk">*</span>:llä ovat pakollisia
+                </p>
+              </div>
+              <div className="opening-hours-form">
+                <section>
+                  {fields.map((field, i) => (
+                    <OpeningHours
+                      key={field.id}
+                      dropIn={dropInRow === i}
+                      item={field as TOpeningHours}
+                      resourceStates={resourceStates}
+                      namePrefix={`openingHours[${i}]`}
+                      onDayChange={(day, checked): void => {
+                        setDropInRow(undefined);
+                        if (checked) {
+                          setDay(i, day, true);
+                          const prevId = findPreviousChecked(i, day);
+                          if (prevId >= 0) {
+                            setDay(prevId, day, false);
+                            if (allDayAreUncheckedForRow(prevId)) {
+                              remove(prevId);
+                            }
+                          }
+                        } else {
+                          const days = (getValues(
+                            `openingHours[${i}].days`
+                          ) as number[]).filter((d) => d !== day);
+                          if (days.length) {
+                            setValue(`openingHours[${i}].days`, days);
+                            addNewRow(i, day);
                           }
                         }
-                      } else {
-                        const days = (getValues(
-                          `openingHours[${i}].days`
-                        ) as number[]).filter((d) => d !== day);
-                        if (days.length) {
-                          setValue(`openingHours[${i}].days`, days);
-                          addNewRow(i, day);
-                        }
-                      }
-                    }}
-                  />
-                ))}
-              </section>
-              <div className="opening-hours-page__actions">
-                <Button onClick={returnToResourcePage}>Tallenna</Button>
-                <SecondaryButton onClick={returnToResourcePage}>
-                  Peruuta
-                </SecondaryButton>
+                      }}
+                    />
+                  ))}
+                </section>
+                <div className="opening-hours-page__actions">
+                  <Button type="submit">Tallenna</Button>
+                  <SecondaryButton onClick={returnToResourcePage}>
+                    Peruuta
+                  </SecondaryButton>
+                </div>
               </div>
             </div>
+            <Preview
+              openingHours={openingHours}
+              resourceStates={resourceStates}
+            />
           </div>
-          <Preview
-            openingHours={openingHours}
-            resourceStates={resourceStates}
-          />
-        </div>
+        </form>
       </FormProvider>
     )) || <h1>Ladataan...</h1>
   );
