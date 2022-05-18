@@ -9,8 +9,8 @@ const TimeSpan = ({
   start,
   end,
 }: {
-  start?: string;
-  end?: string;
+  start?: string | null;
+  end?: string | null;
 }): JSX.Element => (
   <>
     <span className="opening-hours-preview-time-span__time">
@@ -24,8 +24,8 @@ const TimeSpan = ({
 );
 
 const renderStartAndEndTimes = (
-  startTime?: string,
-  endTime?: string,
+  startTime?: string | null,
+  endTime?: string | null,
   fullDay?: boolean,
   isOpen?: boolean
 ): JSX.Element => (
@@ -34,8 +34,8 @@ const renderStartAndEndTimes = (
       '24h'
     ) : (
       <TimeSpan
-        start={isOpen ? startTime : undefined}
-        end={isOpen ? endTime : undefined}
+        start={isOpen ? startTime : null}
+        end={isOpen ? endTime : null}
       />
     )}
   </span>
@@ -133,7 +133,7 @@ export default ({
       </thead>
       <tbody>
         {/* For some reason when a new row gets inserted it first appears as undefined so need to filter those out */}
-        {groupOpeningHoursForPreview(openingHours.filter((o) => o)).map(
+        {groupOpeningHoursForPreview(openingHours).map(
           (openingHour, openingHourIdx) => (
             <Fragment key={`timeSpans-${openingHourIdx}`}>
               {openingHour.timeSpans?.map((openingHourTimeSpan, i) =>

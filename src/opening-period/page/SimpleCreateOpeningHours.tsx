@@ -253,6 +253,13 @@ const OpeningHoursTimeSpans = ({
 const isOnlySelectedDay = (day: number, days: number[]): boolean =>
   days.length === 1 && days[0] === day;
 
+const defaultTimeSpan = {
+  start: '09:00',
+  end: '20:00',
+  fullDay: false,
+  resourceState: ResourceState.OPEN,
+};
+
 const OpeningHours = ({
   dropIn,
   item,
@@ -445,14 +452,7 @@ const OpeningHours = ({
           className="link-button"
           onClick={(): void =>
             append({
-              timeSpans: [
-                {
-                  start: '09:00',
-                  end: '20:00',
-                  fullDay: false,
-                  resourceState: ResourceState.OPEN,
-                },
-              ],
+              timeSpans: [defaultTimeSpan],
             })
           }
           type="button">
@@ -511,17 +511,17 @@ export default ({ resourceId }: { resourceId: string }): JSX.Element => {
       {
         days: [1, 2, 3, 4, 5],
         isOpen: true,
-        timeSpans: [{}],
+        timeSpans: [defaultTimeSpan],
       },
       {
         days: [6],
         isOpen: false,
-        timeSpans: [{}],
+        timeSpans: [defaultTimeSpan],
       },
       {
         days: [7],
         isOpen: false,
-        timeSpans: [{}],
+        timeSpans: [defaultTimeSpan],
       },
     ],
   };
@@ -565,7 +565,7 @@ export default ({ resourceId }: { resourceId: string }): JSX.Element => {
 
   const addNewRow = (currIndex: number, day: number): void => {
     const newIdx = currIndex + 1;
-    const values = { days: [day], isOpen: true, timeSpans: [{}] };
+    const values = { days: [day], isOpen: true, timeSpans: [] };
     insert(newIdx, values, false);
     // FIXME: For some reason the normal array won't get added in the insert
     setValue(`openingHours[${newIdx}]`, values);

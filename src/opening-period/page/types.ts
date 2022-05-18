@@ -3,8 +3,8 @@ import { LanguageStrings, ResourceState } from '../../common/lib/types';
 export type OptionType = { value: string; label: string | null };
 
 export type OpeningHoursTimeSpan = {
-  start?: string;
-  end?: string;
+  start: string | null;
+  end: string | null;
   fullDay?: boolean;
   resourceState?: ResourceState;
   description?: LanguageStrings;
@@ -18,6 +18,6 @@ export type AlternatingOpeningHour = {
 export type OpeningHours = {
   days: number[];
   isOpen?: boolean;
-  timeSpans?: OpeningHoursTimeSpan[];
+  timeSpans: OpeningHoursTimeSpan[];
   alternating?: AlternatingOpeningHour[];
 };

@@ -101,15 +101,12 @@ const groupByConsecutiveDays = (
   return groups.reduce((result, group) => {
     return [
       ...result,
-      group.reduce(
-        (newOpeningHour, openingHour) => {
-          return {
-            ...openingHour,
-            days: [...newOpeningHour.days, ...openingHour.days],
-          };
-        },
-        { days: [] }
-      ),
+      group.reduce((newOpeningHour, openingHour) => {
+        return {
+          ...openingHour,
+          days: [...newOpeningHour.days, ...openingHour.days],
+        };
+      }),
     ];
   }, []);
 };
