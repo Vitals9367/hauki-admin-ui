@@ -56,9 +56,6 @@ const areConsecutiveDays = (
   openingHour2: OpeningHours
 ): boolean => openingHour2.days.sort()[0] - openingHour1.days.sort()[0] === 1;
 
-const isWeekend = (openingHour: OpeningHours): boolean =>
-  openingHour.days.includes(6) || openingHour.days.includes(7);
-
 const groupByConsecutiveDays = (
   openingHours: OpeningHours[]
 ): OpeningHours[] => {
@@ -87,7 +84,6 @@ const groupByConsecutiveDays = (
       const nextOpeningHour = arr[idx + 1];
 
       if (
-        !isWeekend(nextOpeningHour) &&
         areConsecutiveDays(openingHour, nextOpeningHour) &&
         openingHoursRangeEqual(openingHour, nextOpeningHour)
       ) {
