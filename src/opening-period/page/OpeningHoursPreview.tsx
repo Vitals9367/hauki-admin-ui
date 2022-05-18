@@ -2,7 +2,7 @@ import React, { Fragment } from 'react';
 import { Language, ResourceState } from '../../common/lib/types';
 import { createWeekdaysStringFromIndices } from '../../common/utils/date-time/format';
 import { OpeningHoursTimeSpan, OpeningHours, OptionType } from './types';
-import { groupOpeningHoursForPreview } from './utils';
+import { groupOpeningHoursForPreview } from './preview-helpers';
 import './OpeningHoursPreview.scss';
 
 const TimeSpan = ({
