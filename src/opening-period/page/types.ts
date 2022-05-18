@@ -21,7 +21,3 @@ export type OpeningHours = {
   timeSpans?: OpeningHoursTimeSpan[];
   alternating?: AlternatingOpeningHour[];
 };
-
-export type OpeningHoursFormState = {
-  openingHours: OpeningHours[];
-};

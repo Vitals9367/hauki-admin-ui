@@ -33,7 +33,6 @@ import { SecondaryButton } from '../../components/button/Button';
 import Preview from './OpeningHoursPreview';
 import './SimpleCreateOpeningHours.scss';
 import {
-  OpeningHoursFormState,
   OpeningHours as TOpeningHours,
   OpeningHoursTimeSpan as TOpeningHoursTimeSpan,
   OptionType,
@@ -51,6 +50,10 @@ const languageGenitiveInflects: InflectLabels = {
   },
   sv: {},
   en: {},
+};
+
+type OpeningHoursFormState = {
+  openingHours: TOpeningHours[];
 };
 
 const DayCheckbox = ({
