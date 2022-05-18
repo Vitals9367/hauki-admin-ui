@@ -126,6 +126,7 @@ const OpeningHoursTimeSpan = ({
           minutesLabel="minuutit"
           label="Alkaen"
           name={`${namePrefix}.start`}
+          required
           value={item?.start || '09:00'}
         />
         <div className="opening-hours-time-span__range-divider">-</div>
@@ -137,6 +138,7 @@ const OpeningHoursTimeSpan = ({
           minutesLabel="minuutit"
           label="Päättyen"
           name={`${namePrefix}.end`}
+          required
           value={item?.end || '20:00'}
         />
       </div>
