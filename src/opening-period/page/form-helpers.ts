@@ -1,5 +1,9 @@
 import { DatePeriod, TimeSpan, TimeSpanGroup } from '../../common/lib/types';
-import { OpeningHours, OpeningHoursTimeSpan } from './types';
+import {
+  OpeningHours,
+  OpeningHoursTimeSpan,
+  OpeningHourTimeSpanGroup,
+} from './types';
 
 const toTimeSpan = (days: number[]) => (
   timeSpan: OpeningHoursTimeSpan
@@ -11,16 +15,28 @@ const toTimeSpan = (days: number[]) => (
   weekdays: days,
 });
 
-const toTimeSpanGroup = (openingHours: OpeningHours[]): TimeSpanGroup => ({
-  rules: [],
-  time_spans: openingHours.reduce(
-    (acc: TimeSpan[], openingHour: OpeningHours) => [
-      ...acc,
-      ...openingHour.timeSpans.map(toTimeSpan(openingHour.weekdays)),
+const toTimeSpanGroup = (openingHours: OpeningHours[]): TimeSpanGroup[] =>
+  openingHours.reduce(
+    (allTimeSpanGroups: TimeSpanGroup[], openingHour: OpeningHours) => [
+      ...allTimeSpanGroups,
+      ...openingHour.timeSpanGroups.reduce(
+        (
+          timeSpanGroups: TimeSpanGroup[],
+          timeSpanGroup: OpeningHourTimeSpanGroup
+        ) => [
+          ...timeSpanGroups,
+          {
+            rules: [], // TODO: Map rules
+            time_spans: timeSpanGroup.timeSpans.map(
+              toTimeSpan(openingHour.weekdays)
+            ),
+          },
+        ],
+        []
+      ),
     ],
     []
-  ),
-});
+  );
 
 // eslint-disable-next-line import/prefer-default-export
 export const openingHoursToApiDatePeriod = (
@@ -41,5 +57,5 @@ export const openingHoursToApiDatePeriod = (
   override: false,
   resource,
   start_date: null,
-  time_span_groups: [toTimeSpanGroup(openingHours)],
+  time_span_groups: toTimeSpanGroup(openingHours),
 });

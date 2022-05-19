@@ -169,7 +169,7 @@ const OpeningHoursTimeSpan = ({
           <Select<OptionType>
             disabled={disabled}
             id={`${namePrefix}-resource-state`}
-            label="Tila"
+            label="Aukiolon tyyppi"
             options={sanitizedResourceStateOptions}
             className="opening-hours-resource-state-select"
             onChange={(option: OptionType): void => onChange(option.value)}
@@ -227,6 +227,8 @@ const OpeningHoursTimeSpans = ({
     name: `${namePrefix}`,
   });
 
+  console.log(namePrefix);
+
   return (
     <>
       {fields.map((field, i) => (
@@ -275,14 +277,15 @@ const OpeningHours = ({
   onDayChange: (day: number, checked: boolean) => void;
 }): JSX.Element => {
   const options = [
-    { value: '0', label: 'Joka toinen viikko' },
-    { value: '1', label: 'Joka kolmas viikko' },
-    { value: '2', label: 'Joka neljäs viikko' },
+    { value: '0', label: 'Joka viikko' },
+    { value: '1', label: 'Joka toinen viikko' },
+    { value: '2', label: 'Joka kolmas viikko' },
+    { value: '3', label: 'Joka neljäs viikko' },
   ];
   const { control, watch } = useFormContext<OpeningHoursFormState>();
-  const { append, fields, remove } = useFieldArray({
+  const { fields } = useFieldArray({
     control,
-    name: `${namePrefix}.alternating`,
+    name: `${namePrefix}.timeSpanGroups`,
   });
   const [removedDay, setRemovedDay] = React.useState<number | null>(null);
   const weekdays = watch(`${namePrefix}.weekdays`, []) as number[];
@@ -395,52 +398,30 @@ const OpeningHours = ({
           </div>
         </div>
       </div>
-      <OpeningHoursTimeSpans
-        resourceStates={resourceStates}
-        namePrefix={`${namePrefix}.timeSpans`}
-      />
       {fields.map((field, i) => (
         <Fragment key={field.id}>
-          <div className="alternating-opening-hour-container">
-            <Controller
-              defaultValue={options[0]}
-              name={`${namePrefix}.alternating[${i}].rule`}
-              control={control}
-              render={({ onChange, value }): JSX.Element => (
-                <Select<OptionType>
-                  className="alternating-opening-hours-select"
-                  defaultValue={options[0]}
-                  label="Toistuvuus"
-                  onChange={onChange}
-                  options={options}
-                  placeholder="Valitse"
-                  required
-                  value={value}
-                />
-              )}
-            />
-            <Button variant="danger" onClick={(): void => remove(i)}>
-              Poista
-            </Button>
-          </div>
+          <Controller
+            defaultValue={options[0]}
+            name={`${namePrefix}.timeSpanGroups[${i}].rule`}
+            control={control}
+            render={({ onChange, value }): JSX.Element => (
+              <Select<OptionType>
+                defaultValue={options[0]}
+                label="Toistuvuus"
+                onChange={onChange}
+                options={options}
+                placeholder="Valitse"
+                required
+                value={value}
+              />
+            )}
+          />
           <OpeningHoursTimeSpans
             resourceStates={resourceStates}
-            namePrefix={`${namePrefix}.alternating[${i}].timeSpans`}
+            namePrefix={`${namePrefix}.timeSpanGroups[${i}].timeSpans`}
           />
         </Fragment>
       ))}
-      <div className="opening-hours-actions-container">
-        <button
-          className="link-button"
-          onClick={(): void =>
-            append({
-              timeSpans: [defaultTimeSpan],
-            })
-          }
-          type="button">
-          + Lisää vuorotteleva aukioloaika
-        </button>
-      </div>
     </div>
   );
 };
@@ -492,12 +473,20 @@ export default ({ resourceId }: { resourceId: string }): JSX.Element => {
     openingHours: [
       {
         weekdays: [1, 2, 3, 4, 5],
-        timeSpans: [defaultTimeSpan],
+        timeSpanGroups: [
+          {
+            timeSpans: [defaultTimeSpan],
+          },
+        ],
       },
       {
         weekdays: [6, 7],
-        timeSpans: [
-          { ...defaultTimeSpan, resource_state: ResourceState.CLOSED },
+        timeSpanGroups: [
+          {
+            timeSpans: [
+              { ...defaultTimeSpan, resource_state: ResourceState.CLOSED },
+            ],
+          },
         ],
       },
     ],
@@ -544,7 +533,15 @@ export default ({ resourceId }: { resourceId: string }): JSX.Element => {
     const newIdx = currIndex + 1;
     const values = {
       weekdays: [day],
-      timeSpans: [defaultTimeSpan],
+      timeSpanGroups: [
+        {
+          rule: {
+            label: '0',
+            value: 'Joka viikko',
+          },
+          timeSpans: [defaultTimeSpan],
+        },
+      ],
     };
     insert(newIdx, values, false);
     // FIXME: For some reason the normal array won't get added in the insert
@@ -563,6 +560,8 @@ export default ({ resourceId }: { resourceId: string }): JSX.Element => {
 
   const { openingHours } = watch();
 
+  console.log(openingHours);
+
   return (
     (resource && datePeriodConfig && (
       <FormProvider {...form}>
@@ -579,45 +578,43 @@ export default ({ resourceId }: { resourceId: string }): JSX.Element => {
                   <span className="asterisk">*</span>:llä ovat pakollisia
                 </p>
               </div>
-              <div className="opening-hours-form">
-                <section>
-                  {fields.map((field, i) => (
-                    <OpeningHours
-                      key={field.id}
-                      dropIn={dropInRow === i}
-                      item={field as TOpeningHours}
-                      resourceStates={resourceStates}
-                      namePrefix={`openingHours[${i}]`}
-                      onDayChange={(day, checked): void => {
-                        setDropInRow(undefined);
-                        if (checked) {
-                          setDay(i, day, true);
-                          const prevId = findPreviousChecked(i, day);
-                          if (prevId >= 0) {
-                            setDay(prevId, day, false);
-                            if (allDayAreUncheckedForRow(prevId)) {
-                              remove(prevId);
-                            }
-                          }
-                        } else {
-                          const weekdays = (getValues(
-                            `openingHours[${i}].weekdays`
-                          ) as number[]).filter((d) => d !== day);
-                          if (weekdays.length) {
-                            setValue(`openingHours[${i}].weekdays`, weekdays);
-                            addNewRow(i, day);
+              <section className="opening-hours-section">
+                {fields.map((field, i) => (
+                  <OpeningHours
+                    key={field.id}
+                    dropIn={dropInRow === i}
+                    item={field as TOpeningHours}
+                    resourceStates={resourceStates}
+                    namePrefix={`openingHours[${i}]`}
+                    onDayChange={(day, checked): void => {
+                      setDropInRow(undefined);
+                      if (checked) {
+                        setDay(i, day, true);
+                        const prevId = findPreviousChecked(i, day);
+                        if (prevId >= 0) {
+                          setDay(prevId, day, false);
+                          if (allDayAreUncheckedForRow(prevId)) {
+                            remove(prevId);
                           }
                         }
-                      }}
-                    />
-                  ))}
-                </section>
-                <div className="opening-hours-page__actions">
-                  <Button type="submit">Tallenna</Button>
-                  <SecondaryButton onClick={returnToResourcePage}>
-                    Peruuta
-                  </SecondaryButton>
-                </div>
+                      } else {
+                        const weekdays = (getValues(
+                          `openingHours[${i}].weekdays`
+                        ) as number[]).filter((d) => d !== day);
+                        if (weekdays.length) {
+                          setValue(`openingHours[${i}].weekdays`, weekdays);
+                          addNewRow(i, day);
+                        }
+                      }
+                    }}
+                  />
+                ))}
+              </section>
+              <div className="opening-hours-page__actions">
+                <Button type="submit">Tallenna</Button>
+                <SecondaryButton onClick={returnToResourcePage}>
+                  Peruuta
+                </SecondaryButton>
               </div>
             </div>
             <Preview

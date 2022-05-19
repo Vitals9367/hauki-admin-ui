@@ -36,17 +36,19 @@ const renderStartAndEndTimes = (
 );
 
 const PreviewRow = ({
+  className,
   timeClassname,
   label,
   time,
   description,
 }: {
+  className: string;
   timeClassname?: string;
   label?: string;
   time?: JSX.Element | string | null | undefined;
   description?: string;
 }): JSX.Element => (
-  <tr>
+  <tr className={className}>
     <td className="opening-hours-preview-table__day-column">{label}</td>
     <td
       className={`opening-hours-preview-table__time-span-column ${
@@ -73,15 +75,18 @@ const resolveDescription = (
 };
 
 const TimeSpanRow = ({
+  className,
   label,
   resourceStates,
   timeSpan,
 }: {
+  className: string;
   label?: string;
   resourceStates: OptionType[];
   timeSpan?: OpeningHoursTimeSpan;
 }): JSX.Element => (
   <PreviewRow
+    className={className}
     description={resolveDescription(resourceStates, timeSpan)}
     label={label}
     time={renderStartAndEndTimes(timeSpan)}
@@ -108,55 +113,72 @@ export default ({
           <th
             className="opening-hours-preview-table__time-span-column"
             scope="col">
-            Aukiolo
+            Kellonaika
           </th>
-          <th scope="col">Tila</th>
+          <th scope="col">Aukiolon tyyppi</th>
         </tr>
       </thead>
       <tbody>
         {/* For some reason when a new row gets inserted it first appears as undefined so need to filter those out */}
         {groupOpeningHoursForPreview(openingHours).map(
           (openingHour, openingHourIdx) => (
-            <Fragment key={`timeSpans-${openingHourIdx}`}>
-              {sortTimeSpans(
-                openingHour.timeSpans
-              ).map((openingHourTimeSpan, i) =>
-                i === 0 ? (
-                  <TimeSpanRow
-                    key={`detail-${i}`}
-                    label={createWeekdaysStringFromIndices(
-                      openingHour.weekdays,
-                      Language.FI
+            <Fragment key={`time-spans-${openingHourIdx}`}>
+              {openingHour.timeSpanGroups?.map(
+                (timeSpanGroup, timeSpanGroupIdx) => (
+                  <Fragment key={`time-span-group-${timeSpanGroupIdx}`}>
+                    {sortTimeSpans(timeSpanGroup.timeSpans).map(
+                      (timeSpan, timeSpanIdx) => {
+                        const rowClass =
+                          openingHourIdx % 2 === 0
+                            ? 'time-span-row--even'
+                            : 'time-span-row--odd';
+
+                        return (
+                          <Fragment key={`time-span-${timeSpanIdx}`}>
+                            {timeSpanIdx === 0 ? (
+                              <>
+                                {timeSpanGroup.rule?.label !==
+                                  'Joka viikko' && (
+                                  <PreviewRow
+                                    className={rowClass}
+                                    label={createWeekdaysStringFromIndices(
+                                      openingHour.weekdays,
+                                      Language.FI
+                                    )}
+                                    timeClassname="time-span-rule-label"
+                                    time={timeSpanGroup.rule?.label}
+                                  />
+                                )}
+                                <TimeSpanRow
+                                  key={`time-span-${timeSpanIdx}`}
+                                  className={rowClass}
+                                  label={
+                                    timeSpanGroup.rule?.label === 'Joka viikko'
+                                      ? createWeekdaysStringFromIndices(
+                                          openingHour.weekdays,
+                                          Language.FI
+                                        )
+                                      : ''
+                                  }
+                                  resourceStates={resourceStates}
+                                  timeSpan={timeSpan}
+                                />
+                              </>
+                            ) : (
+                              <TimeSpanRow
+                                key={`time-span-${timeSpanIdx}`}
+                                className={rowClass}
+                                resourceStates={resourceStates}
+                                timeSpan={timeSpan}
+                              />
+                            )}
+                          </Fragment>
+                        );
+                      }
                     )}
-                    resourceStates={resourceStates}
-                    timeSpan={openingHourTimeSpan}
-                  />
-                ) : (
-                  <TimeSpanRow
-                    key={`detail-${i}`}
-                    resourceStates={resourceStates}
-                    timeSpan={openingHourTimeSpan}
-                  />
+                  </Fragment>
                 )
               )}
-              {openingHour.alternating?.map((alternating, variableId) => (
-                <Fragment key={`variable-${variableId}`}>
-                  {alternating.timeSpans?.map((detail, detailIdx) => (
-                    <Fragment key={`alternating-detail-${detailIdx}`}>
-                      {detailIdx === 0 && (
-                        <PreviewRow
-                          timeClassname="alternating-time-span-label"
-                          time={alternating.rule?.label}
-                        />
-                      )}
-                      <TimeSpanRow
-                        resourceStates={resourceStates}
-                        timeSpan={detail}
-                      />
-                    </Fragment>
-                  ))}
-                </Fragment>
-              ))}
             </Fragment>
           )
         )}
