@@ -35,6 +35,7 @@ import './SimpleCreateOpeningHours.scss';
 import {
   OpeningHours as TOpeningHours,
   OpeningHoursTimeSpan as TOpeningHoursTimeSpan,
+  OpeningHourTimeSpanGroup,
   OptionType,
 } from './types';
 import { openingHoursToApiDatePeriod } from './form-helpers';
@@ -227,8 +228,6 @@ const OpeningHoursTimeSpans = ({
     name: `${namePrefix}`,
   });
 
-  console.log(namePrefix);
-
   return (
     <>
       {fields.map((field, i) => (
@@ -278,12 +277,12 @@ const OpeningHours = ({
 }): JSX.Element => {
   const options = [
     { value: '0', label: 'Joka viikko' },
-    { value: '1', label: 'Joka toinen viikko' },
-    { value: '2', label: 'Joka kolmas viikko' },
-    { value: '3', label: 'Joka neljäs viikko' },
+    { value: '1', label: 'Parilliset viikot' },
+    { value: '2', label: 'Parittomat viikot' },
+    // { value: '3', label: 'Joka neljäs viikko' },
   ];
   const { control, watch } = useFormContext<OpeningHoursFormState>();
-  const { fields } = useFieldArray({
+  const { append, fields } = useFieldArray<OpeningHourTimeSpanGroup>({
     control,
     name: `${namePrefix}.timeSpanGroups`,
   });
@@ -403,14 +402,22 @@ const OpeningHours = ({
       {fields.map((field, i) => (
         <Fragment key={field.id}>
           <Controller
-            defaultValue={options[0]}
+            defaultValue={field.rule || options[0]}
             name={`${namePrefix}.timeSpanGroups[${i}].rule`}
             control={control}
             render={({ onChange, value }): JSX.Element => (
               <Select<OptionType>
                 defaultValue={options[0]}
                 label="Toistuvuus"
-                onChange={onChange}
+                onChange={(rule: OptionType) => {
+                  if (i === 0 && fields.length === 1) {
+                    append({
+                      rule: options[2],
+                      timeSpans: [defaultTimeSpan],
+                    });
+                  }
+                  onChange(rule);
+                }}
                 options={options}
                 placeholder="Valitse"
                 required
@@ -538,8 +545,8 @@ export default ({ resourceId }: { resourceId: string }): JSX.Element => {
       timeSpanGroups: [
         {
           rule: {
-            label: '0',
-            value: 'Joka viikko',
+            value: '0',
+            label: 'Joka viikko',
           },
           timeSpans: [defaultTimeSpan],
         },
@@ -561,6 +568,8 @@ export default ({ resourceId }: { resourceId: string }): JSX.Element => {
   };
 
   const { openingHours } = watch();
+
+  console.log(openingHours);
 
   return (
     (resource && datePeriodConfig && (

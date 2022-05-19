@@ -121,34 +121,37 @@ export default ({
       <tbody>
         {/* For some reason when a new row gets inserted it first appears as undefined so need to filter those out */}
         {groupOpeningHoursForPreview(openingHours).map(
-          (openingHour, openingHourIdx) => (
-            <Fragment key={`time-spans-${openingHourIdx}`}>
-              {openingHour.timeSpanGroups?.map(
-                (timeSpanGroup, timeSpanGroupIdx) => (
-                  <Fragment key={`time-span-group-${timeSpanGroupIdx}`}>
-                    {sortTimeSpans(timeSpanGroup.timeSpans).map(
-                      (timeSpan, timeSpanIdx) => {
-                        const rowClass =
-                          openingHourIdx % 2 === 0
-                            ? 'time-span-row--even'
-                            : 'time-span-row--odd';
+          (openingHour, openingHourIdx) => {
+            const rowClass =
+              openingHourIdx % 2 === 0
+                ? 'time-span-row--even'
+                : 'time-span-row--odd';
 
-                        return (
+            return (
+              <Fragment key={`time-spans-${openingHourIdx}`}>
+                {openingHour.timeSpanGroups?.map(
+                  (timeSpanGroup, timeSpanGroupIdx) => (
+                    <Fragment key={`time-span-group-${timeSpanGroupIdx}`}>
+                      {timeSpanGroup.rule?.label !== 'Joka viikko' && (
+                        <PreviewRow
+                          className={rowClass}
+                          label={
+                            timeSpanGroupIdx === 0
+                              ? createWeekdaysStringFromIndices(
+                                  openingHour.weekdays,
+                                  Language.FI
+                                )
+                              : ''
+                          }
+                          timeClassname="time-span-rule-label"
+                          time={timeSpanGroup.rule?.label}
+                        />
+                      )}
+                      {sortTimeSpans(timeSpanGroup.timeSpans).map(
+                        (timeSpan, timeSpanIdx) => (
                           <Fragment key={`time-span-${timeSpanIdx}`}>
                             {timeSpanIdx === 0 ? (
                               <>
-                                {timeSpanGroup.rule?.label !==
-                                  'Joka viikko' && (
-                                  <PreviewRow
-                                    className={rowClass}
-                                    label={createWeekdaysStringFromIndices(
-                                      openingHour.weekdays,
-                                      Language.FI
-                                    )}
-                                    timeClassname="time-span-rule-label"
-                                    time={timeSpanGroup.rule?.label}
-                                  />
-                                )}
                                 <TimeSpanRow
                                   key={`time-span-${timeSpanIdx}`}
                                   className={rowClass}
@@ -173,14 +176,14 @@ export default ({
                               />
                             )}
                           </Fragment>
-                        );
-                      }
-                    )}
-                  </Fragment>
-                )
-              )}
-            </Fragment>
-          )
+                        )
+                      )}
+                    </Fragment>
+                  )
+                )}
+              </Fragment>
+            );
+          }
         )}
       </tbody>
     </table>
