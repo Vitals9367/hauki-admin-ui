@@ -570,7 +570,7 @@ export default ({ resourceId }: { resourceId: string }): JSX.Element => {
         <form onSubmit={form.handleSubmit(onSubmit)}>
           <div className="opening-hours-page">
             <div className="opening-hours-page__content">
-              <section>
+              <section className="opening-hours-section">
                 {fields.map((field, i) => (
                   <OpeningHours
                     key={field.id}
