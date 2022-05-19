@@ -29,7 +29,7 @@ import {
   getWeekdayLongNameByIndexAndLang,
   getWeekdayShortNameByIndexAndLang,
 } from '../../common/utils/date-time/format';
-import { SecondaryButton } from '../../components/button/Button';
+import { PrimaryButton, SecondaryButton } from '../../components/button/Button';
 import Preview from './OpeningHoursPreview';
 import './SimpleCreateOpeningHours.scss';
 import {
@@ -347,7 +347,9 @@ const OpeningHours = ({
                   .join(', ')} aukioloajat`
           )}
         </h3>
-        <div id={`${namePrefix}-weekdays`}>Päivä</div>
+        <div id={`${namePrefix}-weekdays`} className="weekdays-label">
+          Päivä tai päiväryhmä
+        </div>
         <div className="weekdays-container">
           <div
             className="weekdays"
@@ -566,57 +568,57 @@ export default ({ resourceId }: { resourceId: string }): JSX.Element => {
     (resource && datePeriodConfig && (
       <FormProvider {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)}>
-          <div className="opening-hours-page">
+          <div className="opening-hours-page__title">
             <div>
-              <div className="opening-hours-page__title">
-                <h1 data-test="resource-info" className="resource-info-title">
-                  {resource?.name?.fi}
-                </h1>
-                <span>Osoite: {resource?.address.fi}</span>
-                <p className="opening-hour-forms-required-help-text">
-                  Kaikki kentät jotka ovat merkitty{' '}
-                  <span className="asterisk">*</span>:llä ovat pakollisia
-                </p>
-              </div>
-              <section className="opening-hours-section">
-                {fields.map((field, i) => (
-                  <OpeningHours
-                    key={field.id}
-                    dropIn={dropInRow === i}
-                    item={field as TOpeningHours}
-                    resourceStates={resourceStates}
-                    namePrefix={`openingHours[${i}]`}
-                    onDayChange={(day, checked): void => {
-                      setDropInRow(undefined);
-                      if (checked) {
-                        setDay(i, day, true);
-                        const prevId = findPreviousChecked(i, day);
-                        if (prevId >= 0) {
-                          setDay(prevId, day, false);
-                          if (allDayAreUncheckedForRow(prevId)) {
-                            remove(prevId);
-                          }
-                        }
-                      } else {
-                        const weekdays = (getValues(
-                          `openingHours[${i}].weekdays`
-                        ) as number[]).filter((d) => d !== day);
-                        if (weekdays.length) {
-                          setValue(`openingHours[${i}].weekdays`, weekdays);
-                          addNewRow(i, day);
+              <h1 data-test="resource-info" className="resource-info-title">
+                {resource?.name?.fi}
+              </h1>
+              {/* <span>Osoite: {resource?.address.fi}</span>
+            <p className="opening-hour-forms-required-help-text">
+              Kaikki kentät jotka ovat merkitty{' '}
+              <span className="asterisk">*</span>:llä ovat pakollisia
+            </p> */}
+            </div>
+            <div className="opening-hours-page__actions">
+              <PrimaryButton type="submit">Tallenna muutokset</PrimaryButton>
+              <SecondaryButton onClick={returnToResourcePage}>
+                Peruuta ja palaa
+              </SecondaryButton>
+            </div>
+          </div>
+          <div className="opening-hours-page__content">
+            <section>
+              {fields.map((field, i) => (
+                <OpeningHours
+                  key={field.id}
+                  dropIn={dropInRow === i}
+                  item={field as TOpeningHours}
+                  resourceStates={resourceStates}
+                  namePrefix={`openingHours[${i}]`}
+                  onDayChange={(day, checked): void => {
+                    setDropInRow(undefined);
+                    if (checked) {
+                      setDay(i, day, true);
+                      const prevId = findPreviousChecked(i, day);
+                      if (prevId >= 0) {
+                        setDay(prevId, day, false);
+                        if (allDayAreUncheckedForRow(prevId)) {
+                          remove(prevId);
                         }
                       }
-                    }}
-                  />
-                ))}
-              </section>
-              <div className="opening-hours-page__actions">
-                <Button type="submit">Tallenna</Button>
-                <SecondaryButton onClick={returnToResourcePage}>
-                  Peruuta
-                </SecondaryButton>
-              </div>
-            </div>
+                    } else {
+                      const weekdays = (getValues(
+                        `openingHours[${i}].weekdays`
+                      ) as number[]).filter((d) => d !== day);
+                      if (weekdays.length) {
+                        setValue(`openingHours[${i}].weekdays`, weekdays);
+                        addNewRow(i, day);
+                      }
+                    }
+                  }}
+                />
+              ))}
+            </section>
             <Preview
               openingHours={openingHours}
               resourceStates={resourceStates}

@@ -44,15 +44,15 @@
 }
 
 .opening-hours-page__title {
+  justify-content: space-between;
   background: #fff;
   display: flex;
-  flex-direction: column;
   gap: 0.75rem;
   left: 0;
   padding: 1rem 2rem;
   position: sticky;
   right: 0;
-  top: 2px;
+  top: 0;
   z-index: 100;
 }
 
@@ -60,7 +60,6 @@
   background: #fff;
   display: flex;
   gap: 1rem;
-  padding: 2rem 2rem;
 }
 
 .opening-hours-resource-state-select {
@@ -119,10 +118,6 @@
   font-weight: bold;
 }
 
-.opening-hours-section {
-  padding-top: 10px;
-}
-
 .opening-hours-preview-table {
   border-collapse: separate;
   border-spacing: 0;
@@ -139,4 +134,14 @@
 
 .time-span-row--odd {
   background: #fafafb;
+}
+
+.opening-hours-page__content {
+  display: flex;
+  gap: 10px;
+  padding-top: 10px;
+}
+
+.weekdays-label {
+  padding: 5px 0;
 }
