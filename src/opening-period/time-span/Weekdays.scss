@@ -18,7 +18,6 @@ label.day-label {
   cursor: pointer;
   margin-right: $spacing-s;
   margin-top: 0;
-
   input[type='checkbox'] {
     position: absolute;
     opacity: 0;
@@ -30,6 +29,14 @@ label.day-label {
   & input[type='checkbox']:checked ~ .day-option {
     background-color: var(--color-coat-of-arms);
     color: white;
+    transition-property: background-color, border-color, color;
+    transition-duration: 85ms;
+    transition-timing-function: ease-out;
+  }
+
+  & input[type='checkbox']:checked ~ .day-option:hover {
+    background-color: var(--color-coat-of-arms-dark);
+    border-color: var(--color-coat-of-arms-dark);
   }
 
   & input[type='checkbox']:focus ~ .day-option {
