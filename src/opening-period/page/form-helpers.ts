@@ -1,8 +1,14 @@
-import { DatePeriod, TimeSpan, TimeSpanGroup } from '../../common/lib/types';
+import { omit } from 'lodash/fp';
+import {
+  DatePeriod,
+  TimeSpan,
+  TimeSpanGroup,
+  Weekdays,
+} from '../../common/lib/types';
 import {
   OpeningHours,
   OpeningHoursTimeSpan,
-  OpeningHourTimeSpanGroup,
+  OpeningHoursTimeSpanGroup,
 } from './types';
 
 const toTimeSpan = (days: number[]) => (
@@ -22,7 +28,7 @@ const toTimeSpanGroup = (openingHours: OpeningHours[]): TimeSpanGroup[] =>
       ...openingHour.timeSpanGroups.reduce(
         (
           timeSpanGroups: TimeSpanGroup[],
-          timeSpanGroup: OpeningHourTimeSpanGroup
+          timeSpanGroup: OpeningHoursTimeSpanGroup
         ) => [
           ...timeSpanGroups,
           {
@@ -59,3 +65,54 @@ export const openingHoursToApiDatePeriod = (
   start_date: null,
   time_span_groups: toTimeSpanGroup(openingHours),
 });
+
+const weekDaysMatch = (weekdays1: Weekdays, weekdays2: Weekdays): boolean =>
+  weekdays1.every((weekday) => weekdays2.includes(weekday));
+
+const apiTimeSpanToTimeSpan: (
+  timeSpan: TimeSpan
+) => OpeningHoursTimeSpan = omit(['weekdays']);
+
+const apiTimeSpanGroupToTimeSpanGroup = (
+  apiTimeSpanGroup: TimeSpanGroup
+): OpeningHoursTimeSpanGroup => ({
+  timeSpans: apiTimeSpanGroup.time_spans.map(apiTimeSpanToTimeSpan),
+});
+
+export const apiDatePeriodToOpeningHours = (
+  datePeriod: DatePeriod
+): OpeningHours[] =>
+  datePeriod.time_span_groups.reduce(
+    (openingHours: OpeningHours[], timeSpanGroup: TimeSpanGroup) => {
+      const found = openingHours.find((openingHour) => {
+        return weekDaysMatch(
+          openingHour.weekdays,
+          timeSpanGroup.time_spans[0].weekdays ?? []
+        );
+      });
+
+      if (found) {
+        return openingHours.map((openingHour) => {
+          if (openingHour === found) {
+            return {
+              ...openingHour,
+              timeSpanGroups: [
+                ...openingHour.timeSpanGroups,
+                apiTimeSpanGroupToTimeSpanGroup(timeSpanGroup),
+              ],
+            };
+          }
+          return openingHour;
+        });
+      }
+
+      return [
+        ...openingHours,
+        {
+          weekdays: timeSpanGroup.time_spans[0].weekdays ?? [],
+          timeSpanGroups: [apiTimeSpanGroupToTimeSpanGroup(timeSpanGroup)],
+        },
+      ];
+    },
+    []
+  );

@@ -35,7 +35,7 @@ import './SimpleCreateOpeningHours.scss';
 import {
   OpeningHours as TOpeningHours,
   OpeningHoursTimeSpan as TOpeningHoursTimeSpan,
-  OpeningHourTimeSpanGroup,
+  OpeningHoursTimeSpanGroup,
   OptionType,
 } from './types';
 import { openingHoursToApiDatePeriod } from './form-helpers';
@@ -282,7 +282,7 @@ const OpeningHours = ({
     // { value: '3', label: 'Joka neljäs viikko' },
   ];
   const { control, watch } = useFormContext<OpeningHoursFormState>();
-  const { append, fields } = useFieldArray<OpeningHourTimeSpanGroup>({
+  const { append, fields } = useFieldArray<OpeningHoursTimeSpanGroup>({
     control,
     name: `${namePrefix}.timeSpanGroups`,
   });

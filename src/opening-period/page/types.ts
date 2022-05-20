@@ -10,12 +10,12 @@ export type OpeningHoursTimeSpan = {
   start_time: string | null;
 };
 
-export type OpeningHourTimeSpanGroup = {
+export type OpeningHoursTimeSpanGroup = {
   rule?: OptionType;
   timeSpans: OpeningHoursTimeSpan[];
 };
 
 export type OpeningHours = {
   weekdays: number[];
-  timeSpanGroups: OpeningHourTimeSpanGroup[];
+  timeSpanGroups: OpeningHoursTimeSpanGroup[];
 };
