@@ -6,7 +6,7 @@ import {
   TextInput,
   TimeInput,
 } from 'hds-react';
-import React, { Fragment, useEffect, useState } from 'react';
+import React, { Fragment, useEffect, useRef, useState } from 'react';
 import {
   Controller,
   FormProvider,
@@ -229,6 +229,7 @@ const OpeningHoursTimeSpans = ({
     control,
     name: `${namePrefix}`,
   });
+  const ref = useRef<HTMLButtonElement>(null);
 
   return (
     <>
@@ -239,11 +240,20 @@ const OpeningHoursTimeSpans = ({
           item={field as TOpeningHoursTimeSpan}
           resourceStates={resourceStates}
           namePrefix={`${namePrefix}[${i}]`}
-          onDelete={i === 0 ? undefined : (): void => remove(i)}
+          onDelete={
+            i === 0
+              ? undefined
+              : (): void => {
+                  // eslint-disable-next-line no-unused-expressions
+                  ref.current?.focus();
+                  remove(i);
+                }
+          }
         />
       ))}
       <div className="opening-hours-actions-container">
         <button
+          ref={ref}
           className="link-button"
           onClick={(): void => append({})}
           type="button">
