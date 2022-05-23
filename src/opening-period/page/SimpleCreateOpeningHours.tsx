@@ -529,6 +529,7 @@ export default ({ resourceId }: { resourceId: string }): JSX.Element => {
     name: 'openingHours',
   });
   const [dropInRow, setDropInRow] = useState<number | undefined>();
+  const [isSaving, setSaving] = useState(false);
 
   const allDayAreUncheckedForRow = (idx: number): boolean => {
     const weekdays = getValues(`openingHours[${idx}].weekdays`) as number[];
@@ -579,13 +580,15 @@ export default ({ resourceId }: { resourceId: string }): JSX.Element => {
     if (!resource) {
       throw new Error('Resource not found');
     }
+    setSaving(true);
     api
       .postDatePeriod(
         openingHoursToApiDatePeriod(resource?.id, data.openingHours)
       )
       .then(() => {
         returnToResourcePage();
-      });
+      })
+      .finally(() => setSaving(false));
   };
 
   const { openingHours } = watch();
@@ -645,7 +648,12 @@ export default ({ resourceId }: { resourceId: string }): JSX.Element => {
             </p> */}
               </div>
               <div className="opening-hours-page__actions">
-                <PrimaryButton type="submit">Tallenna muutokset</PrimaryButton>
+                <PrimaryButton
+                  isLoading={isSaving}
+                  loadingText="Tallentaa aukioloaikoja"
+                  type="submit">
+                  Tallenna muutokset
+                </PrimaryButton>
                 <SecondaryButton onClick={returnToResourcePage}>
                   Peruuta ja palaa
                 </SecondaryButton>
