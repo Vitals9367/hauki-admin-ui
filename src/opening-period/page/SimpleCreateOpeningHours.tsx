@@ -530,6 +530,7 @@ export default ({ resourceId }: { resourceId: string }): JSX.Element => {
   });
   const [dropInRow, setDropInRow] = useState<number | undefined>();
   const [isSaving, setSaving] = useState(false);
+  const [savingFailed, setSavingFailed] = useState(false);
 
   const allDayAreUncheckedForRow = (idx: number): boolean => {
     const weekdays = getValues(`openingHours[${idx}].weekdays`) as number[];
@@ -587,6 +588,9 @@ export default ({ resourceId }: { resourceId: string }): JSX.Element => {
       )
       .then(() => {
         returnToResourcePage();
+      })
+      .catch(() => {
+        setSavingFailed(true);
       })
       .finally(() => setSaving(false));
   };
@@ -657,6 +661,20 @@ export default ({ resourceId }: { resourceId: string }): JSX.Element => {
                 <SecondaryButton onClick={returnToResourcePage}>
                   Peruuta ja palaa
                 </SecondaryButton>
+                {savingFailed && (
+                  <Notification
+                    label="Tallennus epäonnistui"
+                    position="bottom-right"
+                    dismissible
+                    autoClose
+                    displayAutoCloseProgress={false}
+                    closeButtonLabelText="Sulje ilmoitus"
+                    onClose={() => setSavingFailed(false)}
+                    style={{ zIndex: 100 }}
+                    type="error">
+                    Aukioloaikojen tallennus epäonnistui
+                  </Notification>
+                )}
               </div>
             </div>
           </div>
