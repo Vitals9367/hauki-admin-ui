@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/ban-ts-ignore */
 import {
-  Button,
   Checkbox,
   Notification,
   Select,
@@ -184,9 +183,12 @@ const OpeningHoursTimeSpan = ({
       />
       <div>
         {onDelete && (
-          <Button variant="danger" onClick={onDelete} fullWidth>
+          <button
+            className="link-button link-button--time-span"
+            onClick={onDelete}
+            type="button">
             Poista<span className="sr-only">{groupLabel}</span>
-          </Button>
+          </button>
         )}
       </div>
       {resourceState === ResourceState.OTHER && (
