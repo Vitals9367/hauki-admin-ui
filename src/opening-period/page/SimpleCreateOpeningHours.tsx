@@ -575,13 +575,17 @@ export default ({ resourceId }: { resourceId: string }): JSX.Element => {
     setDropInRow(newIdx);
   };
 
-  const onSubmit = (data: OpeningHoursFormState): Promise<DatePeriod> => {
+  const onSubmit = (data: OpeningHoursFormState): void => {
     if (!resource) {
       throw new Error('Resource not found');
     }
-    return api.postDatePeriod(
-      openingHoursToApiDatePeriod(resource?.id, data.openingHours)
-    );
+    api
+      .postDatePeriod(
+        openingHoursToApiDatePeriod(resource?.id, data.openingHours)
+      )
+      .then(() => {
+        returnToResourcePage();
+      });
   };
 
   const { openingHours } = watch();
