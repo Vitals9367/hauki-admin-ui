@@ -581,8 +581,6 @@ export default ({ resourceId }: { resourceId: string }): JSX.Element => {
 
   const { openingHours } = watch();
 
-  console.log(openingHours);
-
   return (
     (resource && datePeriodConfig && (
       <FormProvider {...form}>
