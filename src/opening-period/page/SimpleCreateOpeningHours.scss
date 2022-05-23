@@ -158,3 +158,13 @@
 .link-button--time-span {
   margin-bottom: 5px;
 }
+
+.opening-hours-group {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.rule-select {
+  width: 200px;
+}

@@ -333,31 +333,27 @@ const OpeningHours = ({
       : translatedDay;
   };
 
+  const weekdayGroup = upperFirst(
+    item.weekdays.length === 1
+      ? `${resolveDayTranslation(item.weekdays[0], true)} aukioloajat`
+      : `${groupWeekdays(item.weekdays)
+          .map((group) =>
+            group.length === 1
+              ? resolveDayTranslation(group[0], false)
+              : `${resolveDayTranslation(
+                  group[0],
+                  false
+                )}-${resolveDayTranslation(group[group.length - 1], false)}`
+          )
+          .join(', ')} aukioloajat`
+  );
+
   return (
     <div
       className={`opening-hours-container ${
         dropIn ? 'opening-hours-container--drop-in' : ''
       }`}>
       <div>
-        <h3 className="opening-hours-container-title" role="status">
-          {upperFirst(
-            item.weekdays.length === 1
-              ? `${resolveDayTranslation(item.weekdays[0], true)} aukioloajat`
-              : `${groupWeekdays(item.weekdays)
-                  .map((group) =>
-                    group.length === 1
-                      ? resolveDayTranslation(group[0], false)
-                      : `${resolveDayTranslation(
-                          group[0],
-                          false
-                        )}-${resolveDayTranslation(
-                          group[group.length - 1],
-                          false
-                        )}`
-                  )
-                  .join(', ')} aukioloajat`
-          )}
-        </h3>
         <div id={`${namePrefix}-weekdays`} className="weekdays-label">
           Päivä tai päiväryhmä
         </div>
@@ -411,38 +407,47 @@ const OpeningHours = ({
           </div>
         </div>
       </div>
-      {fields.map((field, i) => (
-        <Fragment key={field.id}>
-          <Controller
-            defaultValue={field.rule || options[0]}
-            name={`${namePrefix}.timeSpanGroups[${i}].rule`}
-            control={control}
-            render={({ onChange, value }): JSX.Element => (
-              <Select<OptionType>
-                defaultValue={options[0]}
-                label="Toistuvuus"
-                onChange={(rule: OptionType) => {
-                  if (i === 0 && fields.length === 1) {
-                    append({
-                      rule: options[2],
-                      timeSpans: [defaultTimeSpan],
-                    });
-                  }
-                  onChange(rule);
-                }}
-                options={options}
-                placeholder="Valitse"
-                required
-                value={value}
-              />
-            )}
-          />
-          <OpeningHoursTimeSpans
-            resourceStates={resourceStates}
-            namePrefix={`${namePrefix}.timeSpanGroups[${i}].timeSpans`}
-          />
-        </Fragment>
-      ))}
+      <div
+        className="opening-hours-group"
+        aria-labelledby={`${namePrefix}-opening-hours-group`}
+        role="group">
+        <span className="sr-only" id={`${namePrefix}-opening-hours-group`}>
+          {weekdayGroup}
+        </span>
+        {fields.map((field, i) => (
+          <Fragment key={field.id}>
+            <Controller
+              defaultValue={field.rule || options[0]}
+              name={`${namePrefix}.timeSpanGroups[${i}].rule`}
+              control={control}
+              render={({ onChange, value }): JSX.Element => (
+                <Select<OptionType>
+                  className="rule-select"
+                  defaultValue={options[0]}
+                  label="Toistuvuus"
+                  onChange={(rule: OptionType) => {
+                    if (i === 0 && fields.length === 1) {
+                      append({
+                        rule: options[2],
+                        timeSpans: [defaultTimeSpan],
+                      });
+                    }
+                    onChange(rule);
+                  }}
+                  options={options}
+                  placeholder="Valitse"
+                  required
+                  value={value}
+                />
+              )}
+            />
+            <OpeningHoursTimeSpans
+              resourceStates={resourceStates}
+              namePrefix={`${namePrefix}.timeSpanGroups[${i}].timeSpans`}
+            />
+          </Fragment>
+        ))}
+      </div>
     </div>
   );
 };
