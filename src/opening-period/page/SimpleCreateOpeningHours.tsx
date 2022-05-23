@@ -17,7 +17,6 @@ import {
 import { useHistory } from 'react-router-dom';
 import { upperFirst } from 'lodash';
 import {
-  DatePeriod,
   Language,
   Resource,
   ResourceState,
