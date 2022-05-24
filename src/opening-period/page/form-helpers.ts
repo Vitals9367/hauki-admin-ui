@@ -14,10 +14,10 @@ import {
 const toTimeSpan = (days: number[]) => (
   timeSpan: OpeningHoursTimeSpan
 ): TimeSpan => ({
-  end_time: timeSpan.end_time,
+  end_time: timeSpan.end_time || null,
   full_day: timeSpan.full_day,
   resource_state: timeSpan.resource_state,
-  start_time: timeSpan.start_time,
+  start_time: timeSpan.start_time || null,
   weekdays: days,
 });
 
