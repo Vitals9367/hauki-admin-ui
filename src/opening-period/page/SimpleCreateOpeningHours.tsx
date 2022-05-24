@@ -37,6 +37,7 @@ import {
   OptionType,
 } from './types';
 import { openingHoursToApiDatePeriod } from './form-helpers';
+import toast from '../../components/notification/Toast';
 
 type InflectLabels = {
   [language in Language]: {
@@ -529,7 +530,6 @@ export default ({ resourceId }: { resourceId: string }): JSX.Element => {
   });
   const [dropInRow, setDropInRow] = useState<number | undefined>();
   const [isSaving, setSaving] = useState(false);
-  const [savingFailed, setSavingFailed] = useState(false);
 
   const allDayAreUncheckedForRow = (idx: number): boolean => {
     const weekdays = getValues(`openingHours[${idx}].weekdays`) as number[];
@@ -586,10 +586,19 @@ export default ({ resourceId }: { resourceId: string }): JSX.Element => {
         openingHoursToApiDatePeriod(resource?.id, data.openingHours)
       )
       .then(() => {
+        toast.success({
+          dataTestId: 'opening-period-form-success',
+          label: 'Tallennus onnistui',
+          text: 'Aukiolon tallennus onnistui',
+        });
         returnToResourcePage();
       })
       .catch(() => {
-        setSavingFailed(true);
+        toast.error({
+          dataTestId: 'opening-period-form-error',
+          label: 'Tallennus epäonnistui',
+          text: 'Aukiolon tallennus epäonnistui',
+        });
       })
       .finally(() => setSaving(false));
   };
@@ -660,20 +669,6 @@ export default ({ resourceId }: { resourceId: string }): JSX.Element => {
                 <SecondaryButton onClick={returnToResourcePage}>
                   Peruuta ja palaa
                 </SecondaryButton>
-                {savingFailed && (
-                  <Notification
-                    label="Tallennus epäonnistui"
-                    position="bottom-right"
-                    dismissible
-                    autoClose
-                    displayAutoCloseProgress={false}
-                    closeButtonLabelText="Sulje ilmoitus"
-                    onClose={() => setSavingFailed(false)}
-                    style={{ zIndex: 100 }}
-                    type="error">
-                    Aukioloaikojen tallennus epäonnistui
-                  </Notification>
-                )}
               </div>
             </div>
           </div>
