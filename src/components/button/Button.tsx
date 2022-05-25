@@ -77,23 +77,25 @@ export function PrimaryButton({
   );
 }
 
-export function SupplementaryButton({
-  children,
-  dataTest,
-  onClick,
-  className = '',
-  type = 'button',
-  iconLeft,
-}: ButtonProps): JSX.Element {
-  return (
-    <HDSButton
-      type={type}
-      data-test={dataTest}
-      className={`button-common supplementary-button ${className}`}
-      variant="supplementary"
-      onClick={onClick}
-      iconLeft={iconLeft}>
-      {children}
-    </HDSButton>
-  );
-}
+export const SupplementaryButton = React.forwardRef<
+  HTMLButtonElement,
+  ButtonProps
+>(
+  (
+    { children, dataTest, onClick, className = '', type = 'button', iconLeft },
+    ref
+  ): JSX.Element => {
+    return (
+      <HDSButton
+        ref={ref}
+        type={type}
+        data-test={dataTest}
+        className={`button-common supplementary-button ${className}`}
+        variant="supplementary"
+        onClick={onClick}
+        iconLeft={iconLeft}>
+        {children}
+      </HDSButton>
+    );
+  }
+);

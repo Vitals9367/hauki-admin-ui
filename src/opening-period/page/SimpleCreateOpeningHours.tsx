@@ -1,6 +1,8 @@
 /* eslint-disable @typescript-eslint/ban-ts-ignore */
 import {
   Checkbox,
+  IconPlusCircle,
+  IconTrash,
   Notification,
   Select,
   TextInput,
@@ -27,7 +29,11 @@ import {
   getWeekdayLongNameByIndexAndLang,
   getWeekdayShortNameByIndexAndLang,
 } from '../../common/utils/date-time/format';
-import { PrimaryButton, SecondaryButton } from '../../components/button/Button';
+import {
+  PrimaryButton,
+  SecondaryButton,
+  SupplementaryButton,
+} from '../../components/button/Button';
 import Preview from './OpeningHoursPreview';
 import './SimpleCreateOpeningHours.scss';
 import {
@@ -183,12 +189,13 @@ const OpeningHoursTimeSpan = ({
       />
       <div>
         {onDelete && (
-          <button
-            className="link-button link-button--time-span"
+          <SupplementaryButton
+            className="remove-time-span-button"
+            iconLeft={<IconTrash />}
             onClick={onDelete}
             type="button">
-            Poista<span className="sr-only">{groupLabel}</span>
-          </button>
+            Poista rivi<span className="sr-only">{groupLabel}</span>
+          </SupplementaryButton>
         )}
       </div>
       {resourceState === ResourceState.OTHER && (
@@ -252,13 +259,16 @@ const OpeningHoursTimeSpans = ({
         />
       ))}
       <div className="opening-hours-actions-container">
-        <button
+        <SupplementaryButton
           ref={ref}
-          className="link-button"
+          className="add-time-span-button "
+          iconLeft={<IconPlusCircle className="add-time-span-button__icon" />}
           onClick={(): void => append({})}
           type="button">
-          + Lisää tarkennus
-        </button>
+          <span className="add-time-span-button__text">
+            Lisää aukiolomääritys
+          </span>
+        </SupplementaryButton>
       </div>
     </>
   );
