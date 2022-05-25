@@ -33,7 +33,7 @@ export const options = {
     requestOpeningHours: {
       executor: 'constant-vus',
       exec: 'requestOpeningHours',
-      vus: 100,
+      vus: 30,
       duration: '1m',
     },
   },
