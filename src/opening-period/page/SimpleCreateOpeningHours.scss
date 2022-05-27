@@ -39,7 +39,7 @@
 
 .opening-hours-page {
   display: flex;
-  gap: 10px;
+  gap: 25px;
 }
 
 .opening-hours-page__title {
@@ -129,7 +129,7 @@
 
 .opening-hours-page__content {
   display: flex;
-  gap: 10px;
+  gap: 25px;
 }
 
 .weekdays-label {
@@ -138,13 +138,13 @@
 
 .opening-hours-page {
   display: flex;
-  flex-direction: column-reverse;
+  flex-direction: column;
 }
 
 .opening-hours-section {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 25px;
 }
 
 .opening-hours-group {

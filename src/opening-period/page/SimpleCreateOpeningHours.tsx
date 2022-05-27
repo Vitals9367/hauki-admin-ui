@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/ban-ts-ignore */
 import {
+  Accordion,
   Checkbox,
   IconPlusCircle,
   IconTrash,
@@ -620,6 +621,32 @@ export default ({ resourceId }: { resourceId: string }): JSX.Element => {
       <FormProvider {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)}>
           <div className="opening-hours-page">
+            <div className="opening-hours-page__title">
+              <div>
+                <h1 data-test="resource-info" className="resource-info-title">
+                  {resource?.name?.fi}
+                </h1>
+                {/* <span>Osoite: {resource?.address.fi}</span>
+            <p className="opening-hour-forms-required-help-text">
+              Kaikki kentät jotka ovat merkitty{' '}
+              <span className="asterisk">*</span>:llä ovat pakollisia
+            </p> */}
+              </div>
+              <div className="opening-hours-page__actions">
+                <PrimaryButton
+                  isLoading={isSaving}
+                  loadingText="Tallentaa aukioloaikoja"
+                  type="submit">
+                  Tallenna muutokset
+                </PrimaryButton>
+                <SecondaryButton onClick={returnToResourcePage}>
+                  Peruuta ja palaa
+                </SecondaryButton>
+              </div>
+            </div>
+            <Accordion card heading="Ohjeet">
+              WIP
+            </Accordion>
             <div className="opening-hours-page__content">
               <section className="opening-hours-section">
                 {fields.map((field, i) => (
@@ -657,29 +684,6 @@ export default ({ resourceId }: { resourceId: string }): JSX.Element => {
                 openingHours={openingHours}
                 resourceStates={resourceStates}
               />
-            </div>
-            <div className="opening-hours-page__title">
-              <div>
-                <h1 data-test="resource-info" className="resource-info-title">
-                  {resource?.name?.fi}
-                </h1>
-                {/* <span>Osoite: {resource?.address.fi}</span>
-            <p className="opening-hour-forms-required-help-text">
-              Kaikki kentät jotka ovat merkitty{' '}
-              <span className="asterisk">*</span>:llä ovat pakollisia
-            </p> */}
-              </div>
-              <div className="opening-hours-page__actions">
-                <PrimaryButton
-                  isLoading={isSaving}
-                  loadingText="Tallentaa aukioloaikoja"
-                  type="submit">
-                  Tallenna muutokset
-                </PrimaryButton>
-                <SecondaryButton onClick={returnToResourcePage}>
-                  Peruuta ja palaa
-                </SecondaryButton>
-              </div>
             </div>
           </div>
         </form>
