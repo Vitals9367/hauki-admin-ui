@@ -139,20 +139,22 @@
   width: 200px;
 }
 
+.custom-supplementary-button {
+  --background-color: transparent;
+  --background-color-hover: transparent;
+  --background-color-hover-focus: transparent;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
 .remove-time-span-button {
   margin-bottom: 4px;
 }
 
 .add-time-span-button {
-  padding: 0;
-}
-
-.add-time-span-button__text {
-  margin-left: -10px;
-}
-
-.add-time-span-button__icon {
-  margin-left: -40px;
+  margin-left: -25px;
 }
 
 .sort-weekdays-container {

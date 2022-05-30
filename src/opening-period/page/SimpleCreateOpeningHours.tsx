@@ -10,7 +10,7 @@ import {
   TextInput,
   TimeInput,
 } from 'hds-react';
-import React, { Fragment, useEffect, useRef, useState } from 'react';
+import React, { Fragment, ReactNode, useEffect, useRef, useState } from 'react';
 import {
   Controller,
   FormProvider,
@@ -64,6 +64,35 @@ const languageGenitiveInflects: InflectLabels = {
 type OpeningHoursFormState = {
   openingHours: TOpeningHours[];
 };
+
+type CustomSupplementaryButtonProps = {
+  children: ReactNode;
+  onClick?: () => void;
+  dataTest?: string;
+  className?: string;
+  iconLeft?: ReactNode;
+  iconRight?: ReactNode;
+  disabled?: boolean;
+  type?: 'button';
+};
+
+const CustomSupplementaryButton = React.forwardRef<
+  HTMLButtonElement,
+  CustomSupplementaryButtonProps
+>(
+  ({ children, className = '', ...rest }, ref): JSX.Element => {
+    return (
+      <SupplementaryButton
+        {...{
+          className: `custom-supplementary-button ${className || ''}`,
+          ref,
+        }}
+        {...rest}>
+        {children}
+      </SupplementaryButton>
+    );
+  }
+);
 
 const DayCheckbox = ({
   currentDay,
@@ -191,13 +220,12 @@ const OpeningHoursTimeSpan = ({
       />
       <div>
         {onDelete && (
-          <SupplementaryButton
+          <CustomSupplementaryButton
             className="remove-time-span-button"
             iconLeft={<IconTrash />}
-            onClick={onDelete}
-            type="button">
+            onClick={onDelete}>
             Poista rivi<span className="sr-only">{groupLabel}</span>
-          </SupplementaryButton>
+          </CustomSupplementaryButton>
         )}
       </div>
       {resourceState === ResourceState.OTHER && (
@@ -261,16 +289,16 @@ const OpeningHoursTimeSpans = ({
         />
       ))}
       <div className="opening-hours-actions-container">
-        <SupplementaryButton
+        <CustomSupplementaryButton
           ref={ref}
-          className="add-time-span-button "
+          className="add-time-span-button"
           iconLeft={<IconPlusCircle className="add-time-span-button__icon" />}
           onClick={(): void => append({})}
           type="button">
           <span className="add-time-span-button__text">
             Lisää aukiolomääritys
           </span>
-        </SupplementaryButton>
+        </CustomSupplementaryButton>
       </div>
     </>
   );
