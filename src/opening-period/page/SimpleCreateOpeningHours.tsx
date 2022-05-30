@@ -3,6 +3,7 @@ import {
   Accordion,
   Checkbox,
   IconPlusCircle,
+  IconSort,
   IconTrash,
   Notification,
   Select,
@@ -43,7 +44,7 @@ import {
   OpeningHoursTimeSpanGroup,
   OptionType,
 } from './types';
-import { openingHoursToApiDatePeriod } from './form-helpers';
+import { openingHoursToApiDatePeriod, sortOpeningHours } from './form-helpers';
 import toast from '../../components/notification/Toast';
 
 type InflectLabels = {
@@ -589,7 +590,7 @@ export default ({ resourceId }: { resourceId: string }): JSX.Element => {
     shouldUnregister: false,
   });
 
-  const { control, getValues, setValue, watch } = form;
+  const { control, getValues, reset, setValue, watch } = form;
   const { insert, fields, remove } = useFieldArray<TOpeningHours>({
     control,
     name: 'openingHours',
@@ -748,10 +749,22 @@ export default ({ resourceId }: { resourceId: string }): JSX.Element => {
                   />
                 ))}
               </section>
-              <Preview
-                openingHours={openingHours}
-                resourceStates={resourceStates}
-              />
+              <div className="aside">
+                <Preview
+                  openingHours={openingHours}
+                  resourceStates={resourceStates}
+                />
+                <div className="sort-weekdays-container">
+                  <SupplementaryButton
+                    iconLeft={<IconSort />}
+                    onClick={() => {
+                      setDropInRow(undefined);
+                      reset({ openingHours: sortOpeningHours(openingHours) });
+                    }}>
+                    Järjestä päiväryhmät viikonpäivien mukaan
+                  </SupplementaryButton>
+                </div>
+              </div>
             </div>
           </div>
         </form>

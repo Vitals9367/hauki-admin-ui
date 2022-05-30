@@ -128,6 +128,7 @@
 
 .opening-hours-section {
   display: flex;
+  flex: 1;
   flex-direction: column;
   gap: 25px;
 }
@@ -156,4 +157,17 @@
 
 .add-time-span-button__icon {
   margin-left: -40px;
+}
+
+.sort-weekdays-container {
+  background: #fff;
+}
+
+.aside {
+  align-self: flex-start;
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+  position: sticky;
+  top: 115px;
 }

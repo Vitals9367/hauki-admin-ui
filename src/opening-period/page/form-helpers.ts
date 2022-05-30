@@ -11,6 +11,16 @@ import {
   OpeningHoursTimeSpanGroup,
 } from './types';
 
+export const sortOpeningHours = (
+  openingHours: OpeningHours[]
+): OpeningHours[] =>
+  [...openingHours].sort((a, b) => {
+    const day1 = a.weekdays.sort()[0];
+    const day2 = b.weekdays.sort()[0];
+
+    return day1 - day2;
+  });
+
 const toTimeSpan = (days: number[]) => (
   timeSpan: OpeningHoursTimeSpan
 ): TimeSpan => ({

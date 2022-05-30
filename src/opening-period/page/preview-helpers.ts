@@ -1,13 +1,6 @@
 import { isEqual } from 'lodash';
+import { sortOpeningHours } from './form-helpers';
 import { OpeningHours, OpeningHoursTimeSpan } from './types';
-
-const sortOpeningHours = (openingHours: OpeningHours[]): OpeningHours[] =>
-  [...openingHours].sort((a, b) => {
-    const day1 = a.weekdays.sort()[0];
-    const day2 = b.weekdays.sort()[0];
-
-    return day1 - day2;
-  });
 
 const openingHoursRangeEqual = (
   o1: OpeningHours,
