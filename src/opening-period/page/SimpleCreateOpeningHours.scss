@@ -9,21 +9,6 @@
   display: flex;
 }
 
-@keyframes dropIn {
-  from {
-    margin-top: -50px;
-    opacity: 0.2;
-  }
-  to {
-    opacity: 1;
-  }
-}
-
-.opening-hours-container--drop-in {
-  animation-name: dropIn;
-  animation-duration: 0.5s;
-}
-
 .opening-hours-container {
   align-items: flex-start;
   background: #fff;

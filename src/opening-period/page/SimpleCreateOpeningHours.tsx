@@ -287,16 +287,22 @@ const defaultTimeSpan = {
 
 const OpeningHours = ({
   dropIn,
+  remove: fadeOut,
   item,
+  offsetTop = 0,
   resourceStates,
   namePrefix,
   onDayChange,
+  onRemove,
 }: {
   dropIn: boolean;
+  remove: boolean;
   item: TOpeningHours;
   namePrefix: string;
+  offsetTop?: number;
   resourceStates: OptionType[];
-  onDayChange: (day: number, checked: boolean) => void;
+  onDayChange: (day: number, checked: boolean, offsetTop: number) => void;
+  onRemove: () => void;
 }): JSX.Element => {
   const options = [
     { value: '0', label: 'Joka viikko' },
@@ -304,12 +310,58 @@ const OpeningHours = ({
     { value: '2', label: 'Parittomat viikot' },
     // { value: '3', label: 'Joka neljäs viikko' },
   ];
+
   const { control, watch } = useFormContext<OpeningHoursFormState>();
   const { append, fields } = useFieldArray<OpeningHoursTimeSpanGroup>({
     control,
     name: `${namePrefix}.timeSpanGroups`,
   });
   const [removedDay, setRemovedDay] = React.useState<number | null>(null);
+  const ref = useRef<any>();
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (dropIn) {
+      const dropInAnimation = [
+        {
+          marginTop: `-${
+            ref.current.getBoundingClientRect().top - offsetTop
+          }px`,
+        },
+        { marginTop: 0 },
+      ];
+
+      ref.current.animate(dropInAnimation, {
+        duration: 700,
+        iterations: 1,
+      });
+    }
+  }, [dropIn, offsetTop, ref]);
+
+  useEffect(() => {
+    if (fadeOut) {
+      if (containerRef.current) {
+        containerRef.current.style.height = `${containerRef.current?.offsetHeight}px`;
+        containerRef.current
+          .animate(
+            [
+              { height: containerRef.current?.offsetHeight },
+              {
+                height: 0,
+                opacity: 0,
+              },
+            ],
+            {
+              duration: 350,
+              iterations: 1,
+              fill: 'forwards',
+            }
+          )
+          .addEventListener('finish', onRemove);
+      }
+    }
+  }, [offsetTop, fadeOut, onRemove]);
+
   const weekdays = watch(`${namePrefix}.weekdays`, []) as number[];
   const removedDayLabel = removedDay
     ? getWeekdayLongNameByIndexAndLang({
@@ -360,104 +412,107 @@ const OpeningHours = ({
   );
 
   return (
-    <div
-      className={`opening-hours-container ${
-        dropIn ? 'opening-hours-container--drop-in' : ''
-      }`}>
-      <div>
-        <div id={`${namePrefix}-weekdays`} className="weekdays-label">
-          Päivä tai päiväryhmä
-        </div>
-        <div className="weekdays-container">
-          <div
-            className="weekdays"
-            role="group"
-            aria-labelledby={`${namePrefix}-weekdays`}>
-            {removedDay && (
-              <Notification
-                key={removedDay}
-                label={`${upperFirst(
-                  removedDayLabel
-                )}-päivä siirretty omaksi riviksi`}
-                position="bottom-right"
-                dismissible
-                autoClose
-                displayAutoCloseProgress={false}
-                closeButtonLabelText="Sulje ilmoitus"
-                onClose={(): void => setRemovedDay(null)}
-                style={{ zIndex: 100 }}>
-                {`Juuri poistettu ${removedDayLabel} siirrettiin omaksi rivikseen.`}
-              </Notification>
-            )}
-            <Controller
-              control={control}
-              defaultValue={item.weekdays ?? []}
-              name={`${namePrefix}.weekdays`}
-              render={(): JSX.Element => (
-                <>
-                  {[1, 2, 3, 4, 5, 6, 7].map((day) => (
-                    <DayCheckbox
-                      key={`${namePrefix}-${day}`}
-                      checked={weekdays.includes(day)}
-                      currentDay={day}
-                      namePrefix={namePrefix}
-                      onChange={(checked): void => {
-                        onDayChange(day, checked);
-                        if (
-                          !isOnlySelectedDay(day, item.weekdays) &&
-                          !checked
-                        ) {
-                          setRemovedDay(day);
-                        }
-                      }}
-                    />
-                  ))}
-                </>
+    <div ref={containerRef} style={{ zIndex: fadeOut ? 1 : 2 }}>
+      <div ref={ref} className="opening-hours-container">
+        <div>
+          <div id={`${namePrefix}-weekdays`} className="weekdays-label">
+            Päivä tai päiväryhmä
+          </div>
+          <div className="weekdays-container">
+            <div
+              className="weekdays"
+              role="group"
+              aria-labelledby={`${namePrefix}-weekdays`}>
+              {removedDay && (
+                <Notification
+                  key={removedDay}
+                  label={`${upperFirst(
+                    removedDayLabel
+                  )}-päivä siirretty omaksi riviksi`}
+                  position="bottom-right"
+                  dismissible
+                  autoClose
+                  displayAutoCloseProgress={false}
+                  closeButtonLabelText="Sulje ilmoitus"
+                  onClose={(): void => setRemovedDay(null)}
+                  style={{ zIndex: 100 }}>
+                  {`Juuri poistettu ${removedDayLabel} siirrettiin omaksi rivikseen.`}
+                </Notification>
               )}
-            />
+              <Controller
+                control={control}
+                defaultValue={item.weekdays ?? []}
+                name={`${namePrefix}.weekdays`}
+                render={(): JSX.Element => (
+                  <>
+                    {[1, 2, 3, 4, 5, 6, 7].map((day) => (
+                      <DayCheckbox
+                        key={`${namePrefix}-${day}`}
+                        checked={weekdays.includes(day)}
+                        currentDay={day}
+                        namePrefix={namePrefix}
+                        onChange={(checked): void => {
+                          onDayChange(
+                            day,
+                            checked,
+                            ref.current?.getBoundingClientRect().top
+                          );
+                          if (
+                            !isOnlySelectedDay(day, item.weekdays) &&
+                            !checked
+                          ) {
+                            setRemovedDay(day);
+                          }
+                        }}
+                      />
+                    ))}
+                  </>
+                )}
+              />
+            </div>
           </div>
         </div>
-      </div>
-      <div
-        className="opening-hours-group"
-        aria-labelledby={`${namePrefix}-opening-hours-group`}
-        role="group">
-        <span className="sr-only" id={`${namePrefix}-opening-hours-group`}>
-          {weekdayGroup}
-        </span>
-        {fields.map((field, i) => (
-          <Fragment key={field.id}>
-            <Controller
-              defaultValue={field.rule || options[0]}
-              name={`${namePrefix}.timeSpanGroups[${i}].rule`}
-              control={control}
-              render={({ onChange, value }): JSX.Element => (
-                <Select<OptionType>
-                  className="rule-select"
-                  defaultValue={options[0]}
-                  label="Toistuvuus"
-                  onChange={(rule: OptionType) => {
-                    if (i === 0 && fields.length === 1) {
-                      append({
-                        rule: options[2],
-                        timeSpans: [defaultTimeSpan],
-                      });
-                    }
-                    onChange(rule);
-                  }}
-                  options={options}
-                  placeholder="Valitse"
-                  required
-                  value={value}
-                />
-              )}
-            />
-            <OpeningHoursTimeSpans
-              resourceStates={resourceStates}
-              namePrefix={`${namePrefix}.timeSpanGroups[${i}].timeSpans`}
-            />
-          </Fragment>
-        ))}
+        <div
+          className="opening-hours-group"
+          aria-labelledby={`${namePrefix}-opening-hours-group`}
+          role="group">
+          <span className="sr-only" id={`${namePrefix}-opening-hours-group`}>
+            {weekdayGroup}
+          </span>
+          {fields.map((field, i) => (
+            <Fragment key={field.id}>
+              <Controller
+                defaultValue={field.rule || options[0]}
+                name={`${namePrefix}.timeSpanGroups[${i}].rule`}
+                control={control}
+                render={({ onChange, value }): JSX.Element => (
+                  <Select<OptionType>
+                    className="rule-select"
+                    defaultValue={options[0]}
+                    label="Toistuvuus"
+                    onChange={(rule: OptionType) => {
+                      if (i === 0 && fields.length === 1) {
+                        append({
+                          rule: options[2],
+                          timeSpans: [defaultTimeSpan],
+                        });
+                      }
+                      onChange(rule);
+                    }}
+                    options={options}
+                    placeholder="Valitse"
+                    required
+                    value={value}
+                  />
+                )}
+              />
+              <OpeningHoursTimeSpans
+                resourceStates={resourceStates}
+                namePrefix={`${namePrefix}.timeSpanGroups[${i}].timeSpans`}
+              />
+            </Fragment>
+          ))}
+        </div>
       </div>
     </div>
   );
@@ -539,8 +594,10 @@ export default ({ resourceId }: { resourceId: string }): JSX.Element => {
     control,
     name: 'openingHours',
   });
-  const [dropInRow, setDropInRow] = useState<number | undefined>();
+  const [dropInRow, setDropInRow] = useState<number>();
+  const [rowToBeRemoved, setRowToBeRemoved] = useState<string[]>([]);
   const [isSaving, setSaving] = useState(false);
+  const offsetTop = useRef<number>();
 
   const allDayAreUncheckedForRow = (idx: number): boolean => {
     const weekdays = getValues(`openingHours[${idx}].weekdays`) as number[];
@@ -653,10 +710,13 @@ export default ({ resourceId }: { resourceId: string }): JSX.Element => {
                   <OpeningHours
                     key={field.id}
                     dropIn={dropInRow === i}
+                    remove={rowToBeRemoved.includes(field.id!)}
+                    offsetTop={offsetTop.current}
                     item={field as TOpeningHours}
                     resourceStates={resourceStates}
                     namePrefix={`openingHours[${i}]`}
-                    onDayChange={(day, checked): void => {
+                    onDayChange={(day, checked, newOffsetTop: number): void => {
+                      offsetTop.current = newOffsetTop;
                       setDropInRow(undefined);
                       if (checked) {
                         setDay(i, day, true);
@@ -664,7 +724,10 @@ export default ({ resourceId }: { resourceId: string }): JSX.Element => {
                         if (prevId >= 0) {
                           setDay(prevId, day, false);
                           if (allDayAreUncheckedForRow(prevId)) {
-                            remove(prevId);
+                            setRowToBeRemoved((state) => [
+                              ...state,
+                              fields[prevId].id!,
+                            ]);
                           }
                         }
                       } else {
@@ -676,6 +739,11 @@ export default ({ resourceId }: { resourceId: string }): JSX.Element => {
                           addNewRow(i, day);
                         }
                       }
+                    }}
+                    onRemove={(): void => {
+                      remove(
+                        fields.findIndex((f) => rowToBeRemoved.includes(f.id!))
+                      );
                     }}
                   />
                 ))}
