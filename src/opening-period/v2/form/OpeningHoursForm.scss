@@ -78,11 +78,16 @@
   grid-column: 1/5;
   display: flex;
   justify-content: space-between;
-  order: 2;
 }
 
-.remove-time-span {
-  order: 1;
+.opening-hours-and-details-container--with-extra-fields {
+  & > .opening-hours-time-span__description-container {
+    order: 2;
+  }
+
+  & > .remove-time-span {
+    order: 1;
+  }
 }
 
 .opening-hours-actions-container {
