@@ -193,16 +193,6 @@ const OpeningHoursTimeSpan = ({
           />
         )}
       />
-      <div>
-        {onDelete && (
-          <SupplementaryButton
-            className="remove-time-span-button"
-            iconLeft={<IconTrash />}
-            onClick={onDelete}>
-            Poista rivi<span className="sr-only">{groupLabel}</span>
-          </SupplementaryButton>
-        )}
-      </div>
       {resourceState === ResourceState.OTHER && (
         <div className="opening-hours-time-span__description-container">
           <TextInput
@@ -225,6 +215,16 @@ const OpeningHoursTimeSpan = ({
           />
         </div>
       )}
+      <div className="remove-time-span">
+        {onDelete && (
+          <SupplementaryButton
+            className="remove-time-span-button"
+            iconLeft={<IconTrash />}
+            onClick={onDelete}>
+            Poista rivi<span className="sr-only">{groupLabel}</span>
+          </SupplementaryButton>
+        )}
+      </div>
     </div>
   );
 };

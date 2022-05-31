@@ -78,6 +78,11 @@
   grid-column: 1/5;
   display: flex;
   justify-content: space-between;
+  order: 2;
+}
+
+.remove-time-span {
+  order: 1;
 }
 
 .opening-hours-actions-container {
@@ -137,10 +142,6 @@
 
 .rule-select {
   width: 200px;
-}
-
-.remove-time-span-button {
-  margin-bottom: 4px;
 }
 
 .add-time-span-button {
