@@ -139,16 +139,6 @@
   width: 200px;
 }
 
-.custom-supplementary-button {
-  --background-color: transparent;
-  --background-color-hover: transparent;
-  --background-color-hover-focus: transparent;
-
-  &:hover {
-    text-decoration: underline;
-  }
-}
-
 .remove-time-span-button {
   margin-bottom: 4px;
 }

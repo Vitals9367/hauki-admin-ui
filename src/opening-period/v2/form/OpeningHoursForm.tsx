@@ -10,7 +10,7 @@ import {
   TextInput,
   TimeInput,
 } from 'hds-react';
-import React, { Fragment, ReactNode, useEffect, useRef, useState } from 'react';
+import React, { Fragment, useEffect, useRef, useState } from 'react';
 import {
   Controller,
   FormProvider,
@@ -65,38 +65,9 @@ const languageGenitiveInflects: InflectLabels = {
   en: {},
 };
 
-type CustomSupplementaryButtonProps = {
-  children: ReactNode;
-  onClick?: () => void;
-  dataTest?: string;
-  className?: string;
-  iconLeft?: ReactNode;
-  iconRight?: ReactNode;
-  disabled?: boolean;
-  type?: 'button';
-};
-
 type OpeningHoursFormState = {
   openingHours: TOpeningHours[];
 };
-
-const CustomSupplementaryButton = React.forwardRef<
-  HTMLButtonElement,
-  CustomSupplementaryButtonProps
->(
-  ({ children, className = '', ...rest }, ref): JSX.Element => {
-    return (
-      <SupplementaryButton
-        {...{
-          className: `custom-supplementary-button ${className || ''}`,
-          ref,
-        }}
-        {...rest}>
-        {children}
-      </SupplementaryButton>
-    );
-  }
-);
 
 const DayCheckbox = ({
   currentDay,
@@ -224,12 +195,12 @@ const OpeningHoursTimeSpan = ({
       />
       <div>
         {onDelete && (
-          <CustomSupplementaryButton
+          <SupplementaryButton
             className="remove-time-span-button"
             iconLeft={<IconTrash />}
             onClick={onDelete}>
             Poista rivi<span className="sr-only">{groupLabel}</span>
-          </CustomSupplementaryButton>
+          </SupplementaryButton>
         )}
       </div>
       {resourceState === ResourceState.OTHER && (
@@ -293,7 +264,7 @@ const OpeningHoursTimeSpans = ({
         />
       ))}
       <div className="opening-hours-actions-container">
-        <CustomSupplementaryButton
+        <SupplementaryButton
           ref={ref}
           className="add-time-span-button"
           iconLeft={<IconPlusCircle className="add-time-span-button__icon" />}
@@ -302,7 +273,7 @@ const OpeningHoursTimeSpans = ({
           <span className="add-time-span-button__text">
             Lisää aukiolomääritys
           </span>
-        </CustomSupplementaryButton>
+        </SupplementaryButton>
       </div>
     </>
   );
@@ -785,14 +756,14 @@ const SimpleCreateOpeningHours = ({
                   resourceStates={resourceStates}
                 />
                 <div className="sort-weekdays-container">
-                  <CustomSupplementaryButton
+                  <SupplementaryButton
                     iconLeft={<IconSort />}
                     onClick={() => {
                       setDropInRow(undefined);
                       reset({ openingHours: sortOpeningHours(openingHours) });
                     }}>
                     Järjestä päiväryhmät viikonpäivien mukaan
-                  </CustomSupplementaryButton>
+                  </SupplementaryButton>
                 </div>
               </div>
             </div>
