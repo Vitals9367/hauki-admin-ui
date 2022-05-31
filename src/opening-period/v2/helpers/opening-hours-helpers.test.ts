@@ -13,12 +13,14 @@ const openingHours = [
       {
         timeSpans: [
           {
+            description: undefined,
             end_time: '16:00',
             full_day: false,
             resource_state: ResourceState.OPEN,
             start_time: '08:00',
           },
           {
+            description: undefined,
             end_time: '17:00',
             full_day: false,
             resource_state: ResourceState.SELF_SERVICE,
@@ -34,20 +36,18 @@ const openingHours = [
       {
         timeSpans: [
           {
+            description: undefined,
             end_time: '16:00',
             full_day: false,
             resource_state: ResourceState.OPEN,
             start_time: '10:00',
           },
-        ],
-      },
-      {
-        timeSpans: [
           {
-            end_time: '',
+            description: undefined,
+            end_time: '16:00',
             full_day: false,
             resource_state: ResourceState.CLOSED,
-            start_time: '',
+            start_time: '17:00',
           },
         ],
       },
@@ -59,10 +59,11 @@ const openingHours = [
       {
         timeSpans: [
           {
-            end_time: '',
+            description: undefined,
+            end_time: null,
             full_day: false,
             resource_state: ResourceState.OPEN,
-            start_time: '',
+            start_time: null,
           },
         ],
       },
@@ -71,6 +72,7 @@ const openingHours = [
 ];
 
 const datePeriod = {
+  id: undefined,
   description: { en: '', fi: '', sv: '' },
   end_date: null,
   name: { en: '', fi: 'Normaali aukiolo', sv: '' },
@@ -95,11 +97,6 @@ const datePeriod = {
           start_time: '16:00',
           weekdays: [1, 2, 3, 4, 5],
         },
-      ],
-    },
-    {
-      rules: [],
-      time_spans: [
         {
           end_time: '16:00',
           full_day: false,
@@ -107,28 +104,18 @@ const datePeriod = {
           start_time: '10:00',
           weekdays: [6],
         },
-      ],
-    },
-    {
-      rules: [],
-      time_spans: [
         {
-          end_time: '',
+          end_time: '16:00',
           full_day: false,
           resource_state: ResourceState.CLOSED,
-          start_time: '',
+          start_time: '17:00',
           weekdays: [6],
         },
-      ],
-    },
-    {
-      rules: [],
-      time_spans: [
         {
-          end_time: '',
+          end_time: null,
           full_day: false,
           resource_state: ResourceState.OPEN,
-          start_time: '',
+          start_time: null,
           weekdays: [7],
         },
       ],

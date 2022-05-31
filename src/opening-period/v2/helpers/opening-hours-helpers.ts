@@ -10,6 +10,46 @@ import {
   OpeningHoursTimeSpanGroup,
 } from '../types';
 
+function update<T>(
+  predicate: (data: T) => boolean,
+  fn: (data: T) => Partial<T>,
+  arr: T[]
+): T[] {
+  let found = false;
+  const result = arr.map((elem) => {
+    if (predicate(elem)) {
+      found = true;
+      return {
+        ...elem,
+        ...fn(elem),
+      };
+    }
+
+    return elem;
+  });
+
+  if (!found) {
+    return arr;
+  }
+
+  return result;
+}
+
+function updateOr<T>(
+  predicate: (data: T) => boolean,
+  fn: (data: T) => Partial<T>,
+  defaultValues: T,
+  arr: T[]
+): T[] {
+  const result = update(predicate, fn, arr);
+
+  if (result === arr) {
+    return [...arr, defaultValues];
+  }
+
+  return result;
+}
+
 export const sortOpeningHours = (
   openingHours: OpeningHours[]
 ): OpeningHours[] =>
@@ -30,26 +70,35 @@ const toTimeSpan = (days: number[]) => (
   weekdays: days,
 });
 
-const toTimeSpanGroup = (openingHours: OpeningHours[]): TimeSpanGroup[] =>
+const toTimeSpanGroups = (openingHours: OpeningHours[]): TimeSpanGroup[] =>
   openingHours.reduce(
-    (allTimeSpanGroups: TimeSpanGroup[], openingHour: OpeningHours) => [
-      ...allTimeSpanGroups,
-      ...openingHour.timeSpanGroups.reduce(
+    (result: TimeSpanGroup[], openingHour: OpeningHours) =>
+      openingHour.timeSpanGroups.reduce(
         (
-          timeSpanGroups: TimeSpanGroup[],
-          timeSpanGroup: OpeningHoursTimeSpanGroup
-        ) => [
-          ...timeSpanGroups,
-          {
-            rules: [], // TODO: Map rules
-            time_spans: timeSpanGroup.timeSpans.map(
-              toTimeSpan(openingHour.weekdays)
-            ),
-          },
-        ],
-        []
+          apiTimeSpanGroups: TimeSpanGroup[],
+          uitTimeSpanGroup: OpeningHoursTimeSpanGroup
+        ) =>
+          updateOr(
+            // TODO: Add proper predicate when the rules are mapped correctly
+            () => true,
+            (apiTimeSpanGroup) => ({
+              time_spans: [
+                ...apiTimeSpanGroup.time_spans,
+                ...uitTimeSpanGroup.timeSpans.map(
+                  toTimeSpan(openingHour.weekdays)
+                ),
+              ],
+            }),
+            {
+              rules: [], // TODO: Map rules
+              time_spans: uitTimeSpanGroup.timeSpans.map(
+                toTimeSpan(openingHour.weekdays)
+              ),
+            },
+            apiTimeSpanGroups
+          ),
+        result
       ),
-    ],
     []
   );
 
@@ -74,7 +123,7 @@ export const openingHoursToApiDatePeriod = (
   override: false,
   resource,
   start_date: null,
-  time_span_groups: toTimeSpanGroup(openingHours),
+  time_span_groups: toTimeSpanGroups(openingHours),
 });
 
 const weekDaysMatch = (weekdays1: Weekdays, weekdays2: Weekdays): boolean =>
@@ -88,46 +137,39 @@ const apiTimeSpanToTimeSpan = (timeSpan: TimeSpan): OpeningHoursTimeSpan => ({
   start_time: timeSpan.start_time ? timeSpan.start_time.substring(0, 5) : null,
 });
 
-const apiTimeSpanGroupToTimeSpanGroup = (
-  apiTimeSpanGroup: TimeSpanGroup
-): OpeningHoursTimeSpanGroup => ({
-  timeSpans: apiTimeSpanGroup.time_spans.map(apiTimeSpanToTimeSpan),
-});
-
 export const apiDatePeriodToOpeningHours = (
   datePeriod: DatePeriod
 ): OpeningHours[] =>
   datePeriod.time_span_groups.reduce(
-    (openingHours: OpeningHours[], timeSpanGroup: TimeSpanGroup) => {
-      const found = openingHours.find((openingHour) => {
-        return weekDaysMatch(
-          openingHour.weekdays,
-          timeSpanGroup.time_spans[0].weekdays ?? []
-        );
-      });
-
-      if (found) {
-        return openingHours.map((openingHour) => {
-          if (openingHour === found) {
-            return {
-              ...openingHour,
+    // eslint-disable-next-line @typescript-eslint/naming-convention
+    (result: OpeningHours[], { time_spans }: TimeSpanGroup) =>
+      time_spans.reduce(
+        (openingHours, timeSpan) =>
+          updateOr(
+            (openingHour) =>
+              weekDaysMatch(openingHour.weekdays, timeSpan.weekdays ?? []),
+            (openingHour) => ({
+              timeSpanGroups: update(
+                // TODO: Add proper predicate when the rules are mapped correctly
+                () => true,
+                (timeSpanGroup) => ({
+                  timeSpans: [
+                    ...timeSpanGroup.timeSpans,
+                    apiTimeSpanToTimeSpan(timeSpan),
+                  ],
+                }),
+                openingHour.timeSpanGroups
+              ),
+            }),
+            {
+              weekdays: timeSpan.weekdays ?? [],
               timeSpanGroups: [
-                ...openingHour.timeSpanGroups,
-                apiTimeSpanGroupToTimeSpanGroup(timeSpanGroup),
+                { timeSpans: [apiTimeSpanToTimeSpan(timeSpan)] },
               ],
-            };
-          }
-          return openingHour;
-        });
-      }
-
-      return [
-        ...openingHours,
-        {
-          weekdays: timeSpanGroup.time_spans[0].weekdays ?? [],
-          timeSpanGroups: [apiTimeSpanGroupToTimeSpanGroup(timeSpanGroup)],
-        },
-      ];
-    },
+            },
+            openingHours
+          ),
+        result
+      ),
     []
   );
