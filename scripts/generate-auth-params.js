@@ -1,20 +1,22 @@
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const crypto = require('crypto');
 
-const key = process.env.HAUKI_KEY;
-const username = process.env.HAUKI_USER || 'admin@hel.fi';
-const resource = process.env.HAUKI_RESOURCE || 'tprek:8215';
+// __ENV is for k6
+// eslint-disable-next-line no-undef
+// eslint-disable-next-line dot-notation
+const env = global['__ENV'] || process.env;
+
+const key = env.HAUKI_KEY;
+const username = env.HAUKI_USER || 'admin@hel.fi';
+const resource = env.HAUKI_RESOURCE || 'tprek:8215';
 const organization =
-  process.env.HAUKI_ORGANIZATION ||
-  'tprek:dc7d39db-b35a-4612-a921-1b7b24b0baa3';
-const source = process.env.HAUKI_SOURCE || 'tprek';
+  env.HAUKI_ORGANIZATION || 'tprek:dc7d39db-b35a-4612-a921-1b7b24b0baa3';
+const source = env.HAUKI_SOURCE || 'tprek';
 const now = new Date();
 const createdAt = now.toJSON();
 const validUntil =
-  process.env.HAUKI_VALID_UNTIL ||
-  new Date(now.setDate(now.getDate() + 7)).toJSON();
-const hasOrganizationRights =
-  process.env.HAUKI_HAS_ORGANIZATION_RIGHTS || 'true';
+  env.HAUKI_VALID_UNTIL || new Date(now.setDate(now.getDate() + 7)).toJSON();
+const hasOrganizationRights = env.HAUKI_HAS_ORGANIZATION_RIGHTS || 'true';
 
 const signatureStr = `${source}${username}${createdAt}${validUntil}${organization}${resource}${hasOrganizationRights}`;
 
