@@ -721,14 +721,14 @@ const SimpleCreateOpeningHours = ({
                   resourceStates={resourceStates}
                 />
                 <div className="sort-weekdays-container">
-                  <SupplementaryButton
+                  <CustomSupplementaryButton
                     iconLeft={<IconSort />}
                     onClick={() => {
                       setDropInRow(undefined);
                       reset({ openingHours: sortOpeningHours(openingHours) });
                     }}>
                     Järjestä päiväryhmät viikonpäivien mukaan
-                  </SupplementaryButton>
+                  </CustomSupplementaryButton>
                 </div>
               </div>
             </div>
