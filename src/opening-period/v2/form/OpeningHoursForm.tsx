@@ -563,28 +563,33 @@ const SimpleCreateOpeningHours = ({
   resource: Resource;
 }): JSX.Element => {
   const defaultValues = {
-    openingHours: datePeriod
-      ? apiDatePeriodToOpeningHours(datePeriod)
-      : [
-          {
-            weekdays: [1, 2, 3, 4, 5],
-            timeSpanGroups: [
-              {
-                timeSpans: [defaultTimeSpan],
-              },
-            ],
-          },
-          {
-            weekdays: [6, 7],
-            timeSpanGroups: [
-              {
-                timeSpans: [
-                  { ...defaultTimeSpan, resource_state: ResourceState.CLOSED },
-                ],
-              },
-            ],
-          },
-        ],
+    openingHours: sortOpeningHours(
+      datePeriod
+        ? apiDatePeriodToOpeningHours(datePeriod)
+        : [
+            {
+              weekdays: [1, 2, 3, 4, 5],
+              timeSpanGroups: [
+                {
+                  timeSpans: [defaultTimeSpan],
+                },
+              ],
+            },
+            {
+              weekdays: [6, 7],
+              timeSpanGroups: [
+                {
+                  timeSpans: [
+                    {
+                      ...defaultTimeSpan,
+                      resource_state: ResourceState.CLOSED,
+                    },
+                  ],
+                },
+              ],
+            },
+          ]
+    ),
   };
 
   const history = useHistory();
