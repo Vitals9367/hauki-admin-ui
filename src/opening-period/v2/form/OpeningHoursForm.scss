@@ -58,6 +58,21 @@
   gap: 10px;
 }
 
+.opening-hours-and-details-container--with-extra-fields {
+  @extend .opening-hours-and-details-container;
+
+  & > .opening-hours-time-span__description-container {
+    display: flex;
+    grid-column: 1/5;
+    justify-content: space-between;
+    order: 2;
+  }
+
+  & > .remove-time-span {
+    order: 1;
+  }
+}
+
 .opening-hours-time-span {
   align-items: flex-end;
   display: flex;
@@ -72,22 +87,6 @@
 
 .opening-hours-time-span__range-divider {
   margin-top: 1.5rem;
-}
-
-.opening-hours-time-span__description-container {
-  grid-column: 1/5;
-  display: flex;
-  justify-content: space-between;
-}
-
-.opening-hours-and-details-container--with-extra-fields {
-  & > .opening-hours-time-span__description-container {
-    order: 2;
-  }
-
-  & > .remove-time-span {
-    order: 1;
-  }
 }
 
 .opening-hours-actions-container {

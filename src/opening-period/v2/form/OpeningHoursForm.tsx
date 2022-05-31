@@ -127,11 +127,11 @@ const OpeningHoursTimeSpan = ({
 
   return (
     <div
-      className={`opening-hours-and-details-container ${
+      className={
         resourceState === ResourceState.OTHER
           ? 'opening-hours-and-details-container--with-extra-fields'
-          : ''
-      }`}
+          : 'opening-hours-and-details-container'
+      }
       role="group"
       aria-label={groupLabel}>
       <div className="opening-hours-time-span__range">
