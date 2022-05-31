@@ -349,6 +349,7 @@ const OpeningHours = ({
     if (fadeOut) {
       if (containerRef.current) {
         const currentOffsetHeightPixels = `${containerRef.current?.offsetHeight}px`;
+        containerRef.current.style.height = currentOffsetHeightPixels;
         setIsMoving(true);
         containerRef.current
           .animate(
