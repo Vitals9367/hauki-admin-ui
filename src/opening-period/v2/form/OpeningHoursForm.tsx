@@ -321,6 +321,7 @@ const OpeningHours = ({
     name: `${namePrefix}.timeSpanGroups`,
   });
   const [removedDay, setRemovedDay] = React.useState<number | null>(null);
+  const [isMoving, setIsMoving] = React.useState<boolean>(false);
   const ref = useRef<any>();
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -334,22 +335,27 @@ const OpeningHours = ({
         },
         { marginTop: 0 },
       ];
-
-      ref.current.animate(dropInAnimation, {
-        duration: 700,
-        iterations: 1,
-      });
+      setIsMoving(true);
+      ref.current
+        .animate(dropInAnimation, {
+          duration: 600,
+          iterations: 1,
+          easing: 'ease',
+        })
+        .addEventListener('finish', () => setIsMoving(false));
     }
-  }, [dropIn, offsetTop, ref]);
+  }, [dropIn, offsetTop, ref, setIsMoving]);
 
   useEffect(() => {
     if (fadeOut) {
       if (containerRef.current) {
-        containerRef.current.style.height = `${containerRef.current?.offsetHeight}px`;
+        const currentOffsetHeightPixels = `${containerRef.current?.offsetHeight}px`;
+        containerRef.current.style.height = currentOffsetHeightPixels;
+        setIsMoving(true);
         containerRef.current
           .animate(
             [
-              { height: containerRef.current?.offsetHeight },
+              { height: currentOffsetHeightPixels },
               {
                 height: 0,
                 opacity: 0,
@@ -361,10 +367,13 @@ const OpeningHours = ({
               fill: 'forwards',
             }
           )
-          .addEventListener('finish', onRemove);
+          .addEventListener('finish', () => {
+            setIsMoving(false);
+            onRemove();
+          });
       }
     }
-  }, [offsetTop, fadeOut, onRemove]);
+  }, [offsetTop, fadeOut, onRemove, setIsMoving]);
 
   const weekdays = watch(`${namePrefix}.weekdays`, []) as number[];
   const removedDayLabel = removedDay
@@ -416,7 +425,7 @@ const OpeningHours = ({
   );
 
   return (
-    <div ref={containerRef} style={{ zIndex: fadeOut ? 1 : 2 }}>
+    <div ref={containerRef} style={{ zIndex: isMoving ? 1 : undefined }}>
       <div ref={ref} className="opening-hours-container">
         <div>
           <div id={`${namePrefix}-weekdays`} className="weekdays-label">
