@@ -338,8 +338,9 @@ const OpeningHours = ({
       setIsMoving(true);
       ref.current
         .animate(dropInAnimation, {
-          duration: 700,
+          duration: 600,
           iterations: 1,
+          easing: 'ease',
         })
         .addEventListener('finish', () => setIsMoving(false));
     }
