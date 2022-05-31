@@ -23,7 +23,7 @@ import './App.scss';
 import PrivateResourceRoute from './resource/PrivateResourceRoute';
 import ResourcePage from './resource/page/ResourcePage';
 import CreateNewOpeningPeriodPage from './opening-period/v2/page/CreateNewOpeningPeriodPage';
-import EditOpeningPeriodPage from './opening-period/page/EditOpeningPeriodPage';
+import EditOpeningPeriodPage from './opening-period/v2/page/EditOpeningPeriodPage';
 
 type OptionalAuthTokens = AuthTokens | undefined;
 

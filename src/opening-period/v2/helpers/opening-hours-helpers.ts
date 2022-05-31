@@ -1,4 +1,3 @@
-import { omit } from 'lodash/fp';
 import {
   DatePeriod,
   TimeSpan,
@@ -57,7 +56,8 @@ const toTimeSpanGroup = (openingHours: OpeningHours[]): TimeSpanGroup[] =>
 // eslint-disable-next-line import/prefer-default-export
 export const openingHoursToApiDatePeriod = (
   resource: number,
-  openingHours: OpeningHours[]
+  openingHours: OpeningHours[],
+  id?: number
 ): DatePeriod => ({
   description: {
     en: '',
@@ -65,6 +65,7 @@ export const openingHoursToApiDatePeriod = (
     sv: '',
   },
   end_date: null,
+  id,
   name: {
     en: '',
     fi: 'Normaali aukiolo',
@@ -79,9 +80,13 @@ export const openingHoursToApiDatePeriod = (
 const weekDaysMatch = (weekdays1: Weekdays, weekdays2: Weekdays): boolean =>
   weekdays1.every((weekday) => weekdays2.includes(weekday));
 
-const apiTimeSpanToTimeSpan: (
-  timeSpan: TimeSpan
-) => OpeningHoursTimeSpan = omit(['weekdays']);
+const apiTimeSpanToTimeSpan = (timeSpan: TimeSpan): OpeningHoursTimeSpan => ({
+  description: timeSpan.description,
+  end_time: timeSpan.end_time ? timeSpan.end_time.substring(0, 5) : null,
+  full_day: timeSpan.full_day,
+  resource_state: timeSpan.resource_state,
+  start_time: timeSpan.start_time ? timeSpan.start_time.substring(0, 5) : null,
+});
 
 const apiTimeSpanGroupToTimeSpanGroup = (
   apiTimeSpanGroup: TimeSpanGroup

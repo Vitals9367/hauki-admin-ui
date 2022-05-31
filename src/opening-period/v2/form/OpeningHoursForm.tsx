@@ -19,7 +19,9 @@ import {
   useFormContext,
 } from 'react-hook-form';
 import { upperFirst } from 'lodash';
+import { useHistory } from 'react-router-dom';
 import {
+  DatePeriod,
   Language,
   Resource,
   ResourceState,
@@ -38,12 +40,16 @@ import Preview from '../preview/OpeningHoursPreview';
 import './OpeningHoursForm.scss';
 import {
   OpeningHours as TOpeningHours,
-  OpeningHoursFormState,
   OpeningHoursTimeSpan as TOpeningHoursTimeSpan,
   OpeningHoursTimeSpanGroup,
   OptionType,
 } from '../types';
-import { sortOpeningHours } from '../helpers/opening-hours-helpers';
+import {
+  apiDatePeriodToOpeningHours,
+  openingHoursToApiDatePeriod,
+  sortOpeningHours,
+} from '../helpers/opening-hours-helpers';
+import toast from '../../../components/notification/Toast';
 
 type InflectLabels = {
   [language in Language]: {
@@ -68,6 +74,10 @@ type CustomSupplementaryButtonProps = {
   iconRight?: ReactNode;
   disabled?: boolean;
   type?: 'button';
+};
+
+type OpeningHoursFormState = {
+  openingHours: TOpeningHours[];
 };
 
 const CustomSupplementaryButton = React.forwardRef<
@@ -542,43 +552,46 @@ const OpeningHours = ({
 };
 
 const SimpleCreateOpeningHours = ({
+  datePeriod,
   datePeriodConfig,
-  isSaving,
-  onCancel,
-  onSubmit,
+  submitFn,
   resource,
-  resourceStates,
 }: {
+  datePeriod?: DatePeriod;
   datePeriodConfig: UiDatePeriodConfig;
-  isSaving: boolean;
-  onCancel: () => void;
-  onSubmit: (values: OpeningHoursFormState) => void;
+  submitFn: (values: DatePeriod) => Promise<DatePeriod>;
   resource: Resource;
-  resourceStates: OptionType[];
 }): JSX.Element => {
-  const defaultValues: { openingHours: TOpeningHours[] } = {
-    openingHours: [
-      {
-        weekdays: [1, 2, 3, 4, 5],
-        timeSpanGroups: [
+  const defaultValues = {
+    openingHours: datePeriod
+      ? apiDatePeriodToOpeningHours(datePeriod)
+      : [
           {
-            timeSpans: [defaultTimeSpan],
+            weekdays: [1, 2, 3, 4, 5],
+            timeSpanGroups: [
+              {
+                timeSpans: [defaultTimeSpan],
+              },
+            ],
           },
-        ],
-      },
-      {
-        weekdays: [6, 7],
-        timeSpanGroups: [
           {
-            timeSpans: [
-              { ...defaultTimeSpan, resource_state: ResourceState.CLOSED },
+            weekdays: [6, 7],
+            timeSpanGroups: [
+              {
+                timeSpans: [
+                  { ...defaultTimeSpan, resource_state: ResourceState.CLOSED },
+                ],
+              },
             ],
           },
         ],
-      },
-    ],
   };
 
+  const history = useHistory();
+  const [isSaving, setSaving] = useState(false);
+  const [dropInRow, setDropInRow] = useState<number>();
+  const [rowToBeRemoved, setRowToBeRemoved] = useState<string[]>([]);
+  const offsetTop = useRef<number>();
   const form = useForm<OpeningHoursFormState>({
     defaultValues,
     shouldUnregister: false,
@@ -589,9 +602,55 @@ const SimpleCreateOpeningHours = ({
     control,
     name: 'openingHours',
   });
-  const [dropInRow, setDropInRow] = useState<number>();
-  const [rowToBeRemoved, setRowToBeRemoved] = useState<string[]>([]);
-  const offsetTop = useRef<number>();
+
+  const returnToResourcePage = (): void =>
+    history.push(`/resource/${resource.id}`);
+
+  const onSubmit = (values: OpeningHoursFormState): void => {
+    if (!resource) {
+      throw new Error('Resource not found');
+    }
+    setSaving(true);
+    submitFn(
+      openingHoursToApiDatePeriod(
+        resource?.id,
+        values.openingHours,
+        datePeriod?.id
+      )
+    )
+      .then(() => {
+        toast.success({
+          dataTestId: 'opening-period-form-success',
+          label: 'Tallennus onnistui',
+          text: 'Aukiolon tallennus onnistui',
+        });
+        returnToResourcePage();
+      })
+      .catch(() => {
+        toast.error({
+          dataTestId: 'opening-period-form-error',
+          label: 'Tallennus epäonnistui',
+          text: 'Aukiolon tallennus epäonnistui',
+        });
+      })
+      .finally(() => setSaving(false));
+  };
+
+  let resourceStates = datePeriodConfig
+    ? datePeriodConfig.resourceState.options.map((translatedApiChoice) => ({
+        value: translatedApiChoice.value,
+        label: translatedApiChoice.label.fi,
+      }))
+    : [];
+
+  resourceStates = [
+    ...resourceStates,
+    // TODO: This needs to be returned from the server
+    {
+      label: 'Muu, mikä?',
+      value: ResourceState.OTHER,
+    },
+  ];
 
   const allDayAreUncheckedForRow = (idx: number): boolean => {
     const weekdays = getValues(`openingHours[${idx}].weekdays`) as number[];
@@ -663,7 +722,7 @@ const SimpleCreateOpeningHours = ({
                   type="submit">
                   Tallenna muutokset
                 </PrimaryButton>
-                <SecondaryButton onClick={onCancel}>
+                <SecondaryButton onClick={returnToResourcePage}>
                   Peruuta ja palaa
                 </SecondaryButton>
               </div>
