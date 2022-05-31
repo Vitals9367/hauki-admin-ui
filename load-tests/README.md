@@ -17,5 +17,5 @@ This script works as a wrapper for the k6 command and ensures that the proper au
 ## How to run Hauki scenarios
 
 ```bash
-./load-tests/run.sh hauki-scenarios.js
+./run.sh hauki-scenarios.js
 ```
