@@ -22,7 +22,7 @@ import HaukiNavigation from './components/navigation/HaukiNavigation';
 import './App.scss';
 import PrivateResourceRoute from './resource/PrivateResourceRoute';
 import ResourcePage from './resource/page/ResourcePage';
-import SimpleCreateOpeningHours from './opening-period/page/SimpleCreateOpeningHours';
+import CreateNewOpeningPeriodPage from './opening-period/v2/page/CreateNewOpeningPeriodPage';
 import EditOpeningPeriodPage from './opening-period/page/EditOpeningPeriodPage';
 
 type OptionalAuthTokens = AuthTokens | undefined;
@@ -135,7 +135,9 @@ export default function App(): JSX.Element {
                   <>
                     <HaukiNavigation />
                     <Main id="main">
-                      <SimpleCreateOpeningHours resourceId={match.params.id} />
+                      <CreateNewOpeningPeriodPage
+                        resourceId={match.params.id}
+                      />
                     </Main>
                   </>
                 )}
@@ -152,7 +154,9 @@ export default function App(): JSX.Element {
                   <>
                     <HaukiNavigation />
                     <Main id="main">
-                      <SimpleCreateOpeningHours resourceId={match.params.id} />
+                      <CreateNewOpeningPeriodPage
+                        resourceId={match.params.id}
+                      />
                     </Main>
                   </>
                 )}

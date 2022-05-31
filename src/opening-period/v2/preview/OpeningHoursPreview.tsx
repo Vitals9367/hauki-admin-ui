@@ -1,7 +1,12 @@
 import React, { Fragment } from 'react';
-import { Language, ResourceState } from '../../common/lib/types';
-import { createWeekdaysStringFromIndices } from '../../common/utils/date-time/format';
-import { OpeningHoursTimeSpan, OpeningHours, OptionType } from './types';
+import { Language, ResourceState } from '../../../common/lib/types';
+import { createWeekdaysStringFromIndices } from '../../../common/utils/date-time/format';
+import {
+  OpeningHoursTimeSpan,
+  OpeningHours,
+  OptionType,
+  OpeningHoursTimeSpanGroup,
+} from '../types';
 import { groupOpeningHoursForPreview, sortTimeSpans } from './preview-helpers';
 import './OpeningHoursPreview.scss';
 
@@ -130,7 +135,10 @@ export default ({
             return (
               <Fragment key={`time-spans-${openingHourIdx}`}>
                 {openingHour.timeSpanGroups?.map(
-                  (timeSpanGroup, timeSpanGroupIdx) => (
+                  (
+                    timeSpanGroup: OpeningHoursTimeSpanGroup,
+                    timeSpanGroupIdx: number
+                  ) => (
                     <Fragment key={`time-span-group-${timeSpanGroupIdx}`}>
                       {timeSpanGroup.rule?.label !== 'Joka viikko' && (
                         <PreviewRow

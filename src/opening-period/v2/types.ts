@@ -19,3 +19,7 @@ export type OpeningHours = {
   weekdays: number[];
   timeSpanGroups: OpeningHoursTimeSpanGroup[];
 };
+
+export type OpeningHoursFormState = {
+  openingHours: OpeningHours[];
+};

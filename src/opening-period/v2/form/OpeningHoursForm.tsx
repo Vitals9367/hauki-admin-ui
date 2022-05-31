@@ -18,34 +18,32 @@ import {
   useForm,
   useFormContext,
 } from 'react-hook-form';
-import { useHistory } from 'react-router-dom';
 import { upperFirst } from 'lodash';
 import {
   Language,
   Resource,
   ResourceState,
   UiDatePeriodConfig,
-} from '../../common/lib/types';
-import api from '../../common/utils/api/api';
+} from '../../../common/lib/types';
 import {
   getWeekdayLongNameByIndexAndLang,
   getWeekdayShortNameByIndexAndLang,
-} from '../../common/utils/date-time/format';
+} from '../../../common/utils/date-time/format';
 import {
   PrimaryButton,
   SecondaryButton,
   SupplementaryButton,
-} from '../../components/button/Button';
-import Preview from './OpeningHoursPreview';
-import './SimpleCreateOpeningHours.scss';
+} from '../../../components/button/Button';
+import Preview from '../preview/OpeningHoursPreview';
+import './OpeningHoursForm.scss';
 import {
   OpeningHours as TOpeningHours,
+  OpeningHoursFormState,
   OpeningHoursTimeSpan as TOpeningHoursTimeSpan,
   OpeningHoursTimeSpanGroup,
   OptionType,
-} from './types';
-import { openingHoursToApiDatePeriod, sortOpeningHours } from './form-helpers';
-import toast from '../../components/notification/Toast';
+} from '../types';
+import { sortOpeningHours } from '../helpers/opening-hours-helpers';
 
 type InflectLabels = {
   [language in Language]: {
@@ -59,10 +57,6 @@ const languageGenitiveInflects: InflectLabels = {
   },
   sv: {},
   en: {},
-};
-
-type OpeningHoursFormState = {
-  openingHours: TOpeningHours[];
 };
 
 type CustomSupplementaryButtonProps = {
@@ -547,49 +541,21 @@ const OpeningHours = ({
   );
 };
 
-export default ({ resourceId }: { resourceId: string }): JSX.Element => {
-  const [resource, setResource] = useState<Resource>();
-  const [datePeriodConfig, setDatePeriodConfig] = useState<
-    UiDatePeriodConfig
-  >();
-  const history = useHistory();
-  const returnToResourcePage = (): void =>
-    history.push(`/resource/${resourceId}`);
-
-  let resourceStates = datePeriodConfig
-    ? datePeriodConfig.resourceState.options.map((translatedApiChoice) => ({
-        value: translatedApiChoice.value,
-        label: translatedApiChoice.label.fi,
-      }))
-    : [];
-
-  resourceStates = [
-    ...resourceStates,
-    // TODO: This needs to be returned from the server
-    {
-      label: 'Muu, mikä?',
-      value: ResourceState.OTHER,
-    },
-  ];
-
-  useEffect((): void => {
-    const fetchData = async (): Promise<void> => {
-      try {
-        const [apiResource, uiDatePeriodOptions] = await Promise.all([
-          api.getResource(resourceId),
-          api.getDatePeriodFormConfig(),
-        ]);
-        setResource(apiResource);
-        setDatePeriodConfig(uiDatePeriodOptions);
-      } catch (e) {
-        // eslint-disable-next-line no-console
-        console.error('Add date-period - data initialization error:', e);
-      }
-    };
-
-    fetchData();
-  }, [resourceId]);
-
+const SimpleCreateOpeningHours = ({
+  datePeriodConfig,
+  isSaving,
+  onCancel,
+  onSubmit,
+  resource,
+  resourceStates,
+}: {
+  datePeriodConfig: UiDatePeriodConfig;
+  isSaving: boolean;
+  onCancel: () => void;
+  onSubmit: (values: OpeningHoursFormState) => void;
+  resource: Resource;
+  resourceStates: OptionType[];
+}): JSX.Element => {
   const defaultValues: { openingHours: TOpeningHours[] } = {
     openingHours: [
       {
@@ -625,7 +591,6 @@ export default ({ resourceId }: { resourceId: string }): JSX.Element => {
   });
   const [dropInRow, setDropInRow] = useState<number>();
   const [rowToBeRemoved, setRowToBeRemoved] = useState<string[]>([]);
-  const [isSaving, setSaving] = useState(false);
   const offsetTop = useRef<number>();
 
   const allDayAreUncheckedForRow = (idx: number): boolean => {
@@ -673,33 +638,6 @@ export default ({ resourceId }: { resourceId: string }): JSX.Element => {
     setDropInRow(newIdx);
   };
 
-  const onSubmit = (data: OpeningHoursFormState): void => {
-    if (!resource) {
-      throw new Error('Resource not found');
-    }
-    setSaving(true);
-    api
-      .postDatePeriod(
-        openingHoursToApiDatePeriod(resource?.id, data.openingHours)
-      )
-      .then(() => {
-        toast.success({
-          dataTestId: 'opening-period-form-success',
-          label: 'Tallennus onnistui',
-          text: 'Aukiolon tallennus onnistui',
-        });
-        returnToResourcePage();
-      })
-      .catch(() => {
-        toast.error({
-          dataTestId: 'opening-period-form-error',
-          label: 'Tallennus epäonnistui',
-          text: 'Aukiolon tallennus epäonnistui',
-        });
-      })
-      .finally(() => setSaving(false));
-  };
-
   const { openingHours } = watch();
 
   return (
@@ -725,7 +663,7 @@ export default ({ resourceId }: { resourceId: string }): JSX.Element => {
                   type="submit">
                   Tallenna muutokset
                 </PrimaryButton>
-                <SecondaryButton onClick={returnToResourcePage}>
+                <SecondaryButton onClick={onCancel}>
                   Peruuta ja palaa
                 </SecondaryButton>
               </div>
@@ -800,3 +738,5 @@ export default ({ resourceId }: { resourceId: string }): JSX.Element => {
     )) || <h1>Ladataan...</h1>
   );
 };
+
+export default SimpleCreateOpeningHours;

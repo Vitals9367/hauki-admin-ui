@@ -4,12 +4,12 @@ import {
   TimeSpan,
   TimeSpanGroup,
   Weekdays,
-} from '../../common/lib/types';
+} from '../../../common/lib/types';
 import {
   OpeningHours,
   OpeningHoursTimeSpan,
   OpeningHoursTimeSpanGroup,
-} from './types';
+} from '../types';
 
 export const sortOpeningHours = (
   openingHours: OpeningHours[]
