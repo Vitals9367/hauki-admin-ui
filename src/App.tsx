@@ -22,8 +22,8 @@ import HaukiNavigation from './components/navigation/HaukiNavigation';
 import './App.scss';
 import PrivateResourceRoute from './resource/PrivateResourceRoute';
 import ResourcePage from './resource/page/ResourcePage';
-import CreateNewOpeningPeriodPage from './opening-period/v2/page/CreateNewOpeningPeriodPage';
-import EditOpeningPeriodPage from './opening-period/v2/page/EditOpeningPeriodPage';
+import CreateNewOpeningPeriodPage from './opening-period/v2/pages/CreateNewOpeningPeriodPage';
+import EditOpeningPeriodPage from './opening-period/v2/pages/EditOpeningPeriodPage';
 
 type OptionalAuthTokens = AuthTokens | undefined;
 

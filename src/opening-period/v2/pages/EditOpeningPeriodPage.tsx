@@ -1,52 +1,63 @@
 import React, { useEffect, useState } from 'react';
-import {
-  Resource,
-  UiDatePeriodConfig,
-  DatePeriod,
-} from '../../../common/lib/types';
 import api from '../../../common/utils/api/api';
-import OpeningHoursForm from '../form/OpeningHoursForm';
+import {
+  DatePeriod,
+  UiDatePeriodConfig,
+  Resource,
+} from '../../../common/lib/types';
+import OpeningHoursForm from '../components/form/OpeningHoursForm';
 
-export default function CreateNewOpeningPeriodPage({
+export default function EditOpeningPeriodPage({
   resourceId,
+  datePeriodId,
 }: {
   resourceId: string;
+  datePeriodId: string;
 }): JSX.Element {
+  const id = parseInt(datePeriodId, 10);
   const [resource, setResource] = useState<Resource>();
   const [datePeriodConfig, setDatePeriodConfig] = useState<
     UiDatePeriodConfig
   >();
+  const [datePeriod, setDatePeriod] = useState<DatePeriod>();
+
+  const submitFn = (updatedDatePeriod: DatePeriod): Promise<DatePeriod> =>
+    api.patchDatePeriod(updatedDatePeriod);
 
   useEffect((): void => {
     const fetchData = async (): Promise<void> => {
       try {
-        const [apiResource, uiDatePeriodOptions] = await Promise.all([
+        const [
+          apiResource,
+          apiDatePeriod,
+          uiDatePeriodOptions,
+        ] = await Promise.all([
           api.getResource(resourceId),
+          api.getDatePeriod(id),
           api.getDatePeriodFormConfig(),
         ]);
         setResource(apiResource);
+        setDatePeriod(apiDatePeriod);
         setDatePeriodConfig(uiDatePeriodOptions);
       } catch (e) {
         // eslint-disable-next-line no-console
-        console.error('Add date-period - data initialization error:', e);
+        console.error('Edit date-period - data initialization error:', e);
       }
     };
 
     fetchData();
-  }, [resourceId]);
+  }, [id, resourceId]);
 
   if (!resource || !datePeriodConfig) {
     return <h1>Ladataan...</h1>;
   }
 
-  const submitFn = (data: DatePeriod): Promise<DatePeriod> =>
-    api.postDatePeriod(data);
-
   return (
     <OpeningHoursForm
+      datePeriod={datePeriod}
       datePeriodConfig={datePeriodConfig}
-      submitFn={submitFn}
       resource={resource}
+      submitFn={submitFn}
     />
   );
 }

@@ -1,6 +1,6 @@
 import { isEqual } from 'lodash';
-import { sortOpeningHours } from '../helpers/opening-hours-helpers';
-import { OpeningHours, OpeningHoursTimeSpan } from '../types';
+import { sortOpeningHours } from '../../helpers/opening-hours-helpers';
+import { OpeningHours, OpeningHoursTimeSpan } from '../../types';
 
 const openingHoursRangeEqual = (
   o1: OpeningHours,

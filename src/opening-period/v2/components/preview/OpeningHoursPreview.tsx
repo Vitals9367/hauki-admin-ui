@@ -1,12 +1,12 @@
 import React, { Fragment } from 'react';
-import { Language, ResourceState } from '../../../common/lib/types';
-import { createWeekdaysStringFromIndices } from '../../../common/utils/date-time/format';
+import { Language, ResourceState } from '../../../../common/lib/types';
+import { createWeekdaysStringFromIndices } from '../../../../common/utils/date-time/format';
 import {
   OpeningHoursTimeSpan,
   OpeningHours,
   OptionType,
   OpeningHoursTimeSpanGroup,
-} from '../types';
+} from '../../types';
 import { groupOpeningHoursForPreview, sortTimeSpans } from './preview-helpers';
 import './OpeningHoursPreview.scss';
 
