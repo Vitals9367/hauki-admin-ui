@@ -56,8 +56,8 @@ const OpeningHours = ({
     { value: '2', label: 'Parittomat viikot' },
   ];
 
-  const { control, watch } = useFormContext<OpeningHoursFormState>();
-  const { append, fields } = useFieldArray<OpeningHoursTimeSpanGroup>({
+  const { control, setValue, watch } = useFormContext<OpeningHoursFormState>();
+  const { append, fields, remove } = useFieldArray<OpeningHoursTimeSpanGroup>({
     control,
     name: `${namePrefix}.timeSpanGroups`,
   });
@@ -244,14 +244,27 @@ const OpeningHours = ({
                     className="rule-select"
                     defaultValue={options[0]}
                     label="Toistuvuus"
-                    onChange={(rule: OptionType) => {
-                      if (i === 0 && fields.length === 1) {
+                    onChange={(rule: OptionType): void => {
+                      onChange(rule);
+
+                      const pair = {
+                        idx: i === 0 ? 1 : 0,
+                        newValue: rule.value === '1' ? options[2] : options[1],
+                      };
+
+                      if (fields.length === 1) {
                         append({
-                          rule: options[2],
+                          rule: pair.newValue,
                           timeSpans: [defaultTimeSpan],
                         });
+                      } else if (rule.value === '0') {
+                        remove(pair.idx);
+                      } else {
+                        setValue(
+                          `${namePrefix}.timeSpanGroups[${pair.idx}].rule`,
+                          pair.newValue
+                        );
                       }
-                      onChange(rule);
                     }}
                     options={options}
                     placeholder="Valitse"
