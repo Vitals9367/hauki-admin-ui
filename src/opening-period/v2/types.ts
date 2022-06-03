@@ -23,3 +23,13 @@ export type OpeningHours = {
 export type OpeningHoursFormState = {
   openingHours: OpeningHours[];
 };
+
+export type PreviewOpeningHours = {
+  timeSpans: OpeningHoursTimeSpan[];
+  weekdays: number[];
+};
+
+export type PreviewRow = {
+  rule?: OptionType;
+  openingHours: PreviewOpeningHours[];
+};

@@ -1,14 +1,17 @@
 import React, { Fragment } from 'react';
 import { Language, ResourceState } from '../../../../common/lib/types';
 import { createWeekdaysStringFromIndices } from '../../../../common/utils/date-time/format';
-import {
-  OpeningHoursTimeSpan,
-  OpeningHours,
-  OptionType,
-  OpeningHoursTimeSpanGroup,
-} from '../../types';
-import { groupOpeningHoursForPreview, sortTimeSpans } from './preview-helpers';
+import { OpeningHoursTimeSpan, OpeningHours, OptionType } from '../../types';
+import { groupOpeningHoursForPreview } from './preview-helpers';
 import './OpeningHoursPreview.scss';
+import { byWeekdays } from '../../helpers/opening-hours-helpers';
+
+const sortTimeSpans = (
+  timeSpans: OpeningHoursTimeSpan[]
+): OpeningHoursTimeSpan[] =>
+  [...timeSpans].sort((a, b) => {
+    return a.start_time ? a.start_time.localeCompare(b.start_time ?? '') : 1;
+  });
 
 const TimeSpan = ({
   start,
@@ -106,56 +109,42 @@ export default ({
   resourceStates: OptionType[];
 }): JSX.Element => (
   <div className="opening-hours-preview-container">
-    <table className="opening-hours-preview-table">
-      <caption className="opening-hours-preview-table__caption">
-        Esikatselu
-      </caption>
-      <thead className="opening-hours-preview-table__header">
-        <tr>
-          <th className="opening-hours-preview-table__day-column" scope="col">
-            Päivä
-          </th>
-          <th
-            className="opening-hours-preview-table__time-span-column"
-            scope="col">
-            Kellonaika
-          </th>
-          <th scope="col">Aukiolon tyyppi</th>
-        </tr>
-      </thead>
-      <tbody>
-        {/* For some reason when a new row gets inserted it first appears as undefined so need to filter those out */}
-        {groupOpeningHoursForPreview(openingHours).map(
-          (openingHour, openingHourIdx) => {
-            const rowClass =
-              openingHourIdx % 2 === 0
-                ? 'time-span-row--even'
-                : 'time-span-row--odd';
+    <h2 className="opening-hours-preview-title">Esikatselu</h2>
+    {groupOpeningHoursForPreview(openingHours)
+      .sort((a, b) => a.rule?.value.localeCompare(b.rule?.value ?? '') ?? 0)
+      .map((previewRow) => (
+        <div className="opening-hours-preview-table-container">
+          <table className="opening-hours-preview-table">
+            <caption className="opening-hours-preview-table__caption">
+              {previewRow.rule?.value === '0' ? '' : previewRow.rule?.label}
+            </caption>
+            <thead className="opening-hours-preview-table__header">
+              <tr>
+                <th
+                  className="opening-hours-preview-table__day-column"
+                  scope="col">
+                  Päivä
+                </th>
+                <th
+                  className="opening-hours-preview-table__time-span-column"
+                  scope="col">
+                  Kellonaika
+                </th>
+                <th scope="col">Aukiolon tyyppi</th>
+              </tr>
+            </thead>
+            <tbody>
+              {previewRow.openingHours
+                .sort(byWeekdays)
+                .map((openingHour, openingHourIdx) => {
+                  const rowClass =
+                    openingHourIdx % 2 === 0
+                      ? 'time-span-row--odd'
+                      : 'time-span-row--even';
 
-            return (
-              <Fragment key={`time-spans-${openingHourIdx}`}>
-                {openingHour.timeSpanGroups?.map(
-                  (
-                    timeSpanGroup: OpeningHoursTimeSpanGroup,
-                    timeSpanGroupIdx: number
-                  ) => (
-                    <Fragment key={`time-span-group-${timeSpanGroupIdx}`}>
-                      {timeSpanGroup.rule?.label !== 'Joka viikko' && (
-                        <PreviewRow
-                          className={rowClass}
-                          label={
-                            timeSpanGroupIdx === 0
-                              ? createWeekdaysStringFromIndices(
-                                  openingHour.weekdays,
-                                  Language.FI
-                                )
-                              : ''
-                          }
-                          timeClassname="time-span-rule-label"
-                          time={timeSpanGroup.rule?.label}
-                        />
-                      )}
-                      {sortTimeSpans(timeSpanGroup.timeSpans).map(
+                  return (
+                    <Fragment key={`opening-hours-${openingHourIdx}`}>
+                      {sortTimeSpans(openingHour.timeSpans).map(
                         (timeSpan, timeSpanIdx) => (
                           <Fragment key={`time-span-${timeSpanIdx}`}>
                             {timeSpanIdx === 0 ? (
@@ -163,14 +152,10 @@ export default ({
                                 <TimeSpanRow
                                   key={`time-span-${timeSpanIdx}`}
                                   className={rowClass}
-                                  label={
-                                    timeSpanGroup.rule?.label === 'Joka viikko'
-                                      ? createWeekdaysStringFromIndices(
-                                          openingHour.weekdays,
-                                          Language.FI
-                                        )
-                                      : ''
-                                  }
+                                  label={createWeekdaysStringFromIndices(
+                                    openingHour.weekdays,
+                                    Language.FI
+                                  )}
                                   resourceStates={resourceStates}
                                   timeSpan={timeSpan}
                                 />
@@ -187,13 +172,11 @@ export default ({
                         )
                       )}
                     </Fragment>
-                  )
-                )}
-              </Fragment>
-            );
-          }
-        )}
-      </tbody>
-    </table>
+                  );
+                })}
+            </tbody>
+          </table>
+        </div>
+      ))}
   </div>
 );

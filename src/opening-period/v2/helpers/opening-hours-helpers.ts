@@ -4,61 +4,22 @@ import {
   TimeSpanGroup,
   Weekdays,
 } from '../../../common/lib/types';
+import { updateBy, updateByOr } from '../../../common/utils/fp/list';
 import {
   OpeningHours,
   OpeningHoursTimeSpan,
   OpeningHoursTimeSpanGroup,
 } from '../types';
 
-function update<T>(
-  predicate: (data: T) => boolean,
-  fn: (data: T) => Partial<T>,
-  arr: T[]
-): T[] {
-  let found = false;
-  const result = arr.map((elem) => {
-    if (predicate(elem)) {
-      found = true;
-      return {
-        ...elem,
-        ...fn(elem),
-      };
-    }
+export const byWeekdays = (
+  a: { weekdays: number[] },
+  b: { weekdays: number[] }
+): number => {
+  const day1 = a.weekdays.sort()[0];
+  const day2 = b.weekdays.sort()[0];
 
-    return elem;
-  });
-
-  if (!found) {
-    return arr;
-  }
-
-  return result;
-}
-
-function updateOr<T>(
-  predicate: (data: T) => boolean,
-  fn: (data: T) => Partial<T>,
-  defaultValues: T,
-  arr: T[]
-): T[] {
-  const result = update(predicate, fn, arr);
-
-  if (result === arr) {
-    return [...arr, defaultValues];
-  }
-
-  return result;
-}
-
-export const sortOpeningHours = (
-  openingHours: OpeningHours[]
-): OpeningHours[] =>
-  [...openingHours].sort((a, b) => {
-    const day1 = a.weekdays.sort()[0];
-    const day2 = b.weekdays.sort()[0];
-
-    return day1 - day2;
-  });
+  return day1 - day2;
+};
 
 const toTimeSpan = (days: number[]) => (
   timeSpan: OpeningHoursTimeSpan
@@ -78,7 +39,7 @@ const toTimeSpanGroups = (openingHours: OpeningHours[]): TimeSpanGroup[] =>
           apiTimeSpanGroups: TimeSpanGroup[],
           uitTimeSpanGroup: OpeningHoursTimeSpanGroup
         ) =>
-          updateOr(
+          updateByOr(
             // TODO: Add proper predicate when the rules are mapped correctly
             () => true,
             (apiTimeSpanGroup) => ({
@@ -145,11 +106,11 @@ export const apiDatePeriodToOpeningHours = (
     (result: OpeningHours[], { time_spans }: TimeSpanGroup) =>
       time_spans.reduce(
         (openingHours, timeSpan) =>
-          updateOr(
+          updateByOr(
             (openingHour) =>
               weekDaysMatch(openingHour.weekdays, timeSpan.weekdays ?? []),
             (openingHour) => ({
-              timeSpanGroups: update(
+              timeSpanGroups: updateBy(
                 // TODO: Add proper predicate when the rules are mapped correctly
                 () => true,
                 (timeSpanGroup) => ({

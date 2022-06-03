@@ -1,7 +1,13 @@
 .opening-hours-preview-container {
-  background: #fff;
+  display: flex;
+  flex-direction: column;
   justify-self: flex-start;
-  padding: 1rem;
+  gap: 25px;
+}
+
+.opening-hours-preview-table-container {
+  background: #fff;
+  padding: 10px;
 }
 
 .opening-hours-preview-table {
@@ -10,8 +16,7 @@
 }
 
 .opening-hours-preview-table__caption {
-  font-size: 1.5rem;
-  font-weight: bold;
+  font-size: 1.25rem;
   margin-bottom: 1rem;
   text-align: left;
 }
@@ -53,4 +58,9 @@ td::first-letter {
 
 .time-span-rule-label {
   font-weight: bold;
+}
+
+.opening-hours-preview-title {
+  margin-bottom: 0;
+  margin-left: 10px;
 }

@@ -22,8 +22,8 @@ import {
 } from '../../types';
 import {
   apiDatePeriodToOpeningHours,
+  byWeekdays,
   openingHoursToApiDatePeriod,
-  sortOpeningHours,
 } from '../../helpers/opening-hours-helpers';
 import toast from '../../../../components/notification/Toast';
 import OpeningHours from '../opening-hours/OpeningHours';
@@ -41,33 +41,32 @@ const OpeningHoursForm = ({
   resource: Resource;
 }): JSX.Element => {
   const defaultValues = {
-    openingHours: sortOpeningHours(
-      datePeriod
-        ? apiDatePeriodToOpeningHours(datePeriod)
-        : [
-            {
-              weekdays: [1, 2, 3, 4, 5],
-              timeSpanGroups: [
-                {
-                  timeSpans: [defaultTimeSpan],
-                },
-              ],
-            },
-            {
-              weekdays: [6, 7],
-              timeSpanGroups: [
-                {
-                  timeSpans: [
-                    {
-                      ...defaultTimeSpan,
-                      resource_state: ResourceState.CLOSED,
-                    },
-                  ],
-                },
-              ],
-            },
-          ]
-    ),
+    openingHours: (datePeriod
+      ? apiDatePeriodToOpeningHours(datePeriod)
+      : [
+          {
+            weekdays: [1, 2, 3, 4, 5],
+            timeSpanGroups: [
+              {
+                timeSpans: [defaultTimeSpan],
+              },
+            ],
+          },
+          {
+            weekdays: [6, 7],
+            timeSpanGroups: [
+              {
+                timeSpans: [
+                  {
+                    ...defaultTimeSpan,
+                    resource_state: ResourceState.CLOSED,
+                  },
+                ],
+              },
+            ],
+          },
+        ]
+    ).sort(byWeekdays),
   };
 
   const history = useHistory();
@@ -267,7 +266,7 @@ const OpeningHoursForm = ({
                     iconLeft={<IconSort />}
                     onClick={(): void => {
                       setDropInRow(undefined);
-                      reset({ openingHours: sortOpeningHours(openingHours) });
+                      reset({ openingHours: openingHours.sort(byWeekdays) });
                     }}>
                     Järjestä päiväryhmät viikonpäivien mukaan
                   </SupplementaryButton>
