@@ -10,6 +10,7 @@ import {
   OpeningHoursFormState,
   OpeningHoursTimeSpanGroup,
   OptionType,
+  Rule,
 } from '../../types';
 import DayCheckbox from './DayCheckbox';
 import { defaultTimeSpan } from '../../constants';
@@ -40,6 +41,7 @@ const OpeningHours = ({
   namePrefix,
   onDayChange,
   onRemove,
+  rules,
 }: {
   dropIn: boolean;
   remove: boolean;
@@ -47,15 +49,10 @@ const OpeningHours = ({
   namePrefix: string;
   offsetTop?: number;
   resourceStates: OptionType[];
+  rules: OptionType<Rule>[];
   onDayChange: (day: number, checked: boolean, offsetTop: number) => void;
   onRemove: () => void;
 }): JSX.Element => {
-  const options = [
-    { value: '0', label: 'Joka viikko' },
-    { value: '1', label: 'Parilliset viikot' },
-    { value: '2', label: 'Parittomat viikot' },
-  ];
-
   const { control, setValue, watch } = useFormContext<OpeningHoursFormState>();
   const { append, fields, remove } = useFieldArray<OpeningHoursTimeSpanGroup>({
     control,
@@ -236,20 +233,26 @@ const OpeningHours = ({
           {fields.map((field, i) => (
             <Fragment key={field.id}>
               <Controller
-                defaultValue={field.rule || options[0]}
+                defaultValue={field.rule || 'week_every'}
                 name={`${namePrefix}.timeSpanGroups[${i}].rule`}
                 control={control}
                 render={({ onChange, value }): JSX.Element => (
-                  <Select<OptionType>
+                  <Select<OptionType<Rule>>
                     className="rule-select"
-                    defaultValue={options[0]}
+                    defaultValue={rules[0]}
                     label="Toistuvuus"
-                    onChange={(rule: OptionType): void => {
-                      onChange(rule);
+                    onChange={(rule: OptionType<Rule>): void => {
+                      onChange(rule.value);
 
-                      const pair = {
-                        idx: i === 0 ? 1 : 0,
-                        newValue: rule.value === '1' ? options[2] : options[1],
+                      const counterparts: { [key in Rule]: Rule } = {
+                        week_even: 'week_odd',
+                        week_odd: 'week_even',
+                        week_every: 'week_every',
+                      };
+
+                      const pair: { idx: number; newValue: Rule } = {
+                        idx: i === 0 ? 1 : 0, // We allow only two rules to exists at a time
+                        newValue: counterparts[rule.value],
                       };
 
                       if (fields.length === 1) {
@@ -257,7 +260,7 @@ const OpeningHours = ({
                           rule: pair.newValue,
                           timeSpans: [defaultTimeSpan],
                         });
-                      } else if (rule.value === '0') {
+                      } else if (rule.value === 'week_every') {
                         remove(pair.idx);
                       } else {
                         setValue(
@@ -266,10 +269,10 @@ const OpeningHours = ({
                         );
                       }
                     }}
-                    options={options}
+                    options={rules}
                     placeholder="Valitse"
                     required
-                    value={value}
+                    value={rules.find((rule) => rule.value === value)}
                   />
                 )}
               />

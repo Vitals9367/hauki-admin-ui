@@ -93,69 +93,79 @@ const TimeSpanRow = ({
   />
 );
 
-export default ({
+const OpeningHoursPreview = ({
   openingHours,
   resourceStates,
+  rules,
 }: {
   openingHours: OpeningHours[];
   resourceStates: OptionType[];
+  rules: OptionType[];
 }): JSX.Element => (
   <div className="opening-hours-preview-container">
     <h2 className="opening-hours-preview-title">Esikatselu</h2>
-    {openingHoursToPreviewRows(openingHours).map((previewRow) => (
-      <div className="opening-hours-preview-table-container">
-        <table className="opening-hours-preview-table">
-          <caption className="opening-hours-preview-table__caption">
-            {previewRow.rule?.value === '0' ? '' : previewRow.rule?.label}
-          </caption>
-          <thead className="opening-hours-preview-table__header">
-            <tr>
-              <th
-                className="opening-hours-preview-table__day-column"
-                scope="col">
-                Päivä
-              </th>
-              <th
-                className="opening-hours-preview-table__time-span-column"
-                scope="col">
-                Kellonaika
-              </th>
-              <th scope="col">Aukiolon tyyppi</th>
-            </tr>
-          </thead>
-          <tbody>
-            {previewRow.openingHours.map((openingHour, openingHourIdx) => {
-              const rowClass =
-                openingHourIdx % 2 === 0
-                  ? 'time-span-row--odd'
-                  : 'time-span-row--even';
+    {openingHoursToPreviewRows(openingHours).map(
+      (previewRow, previewRowIdx) => (
+        <div
+          key={`preview-row-${previewRowIdx}`}
+          className="opening-hours-preview-table-container">
+          <table className="opening-hours-preview-table">
+            <caption className="opening-hours-preview-table__caption">
+              {previewRow.rule === 'week_every'
+                ? ''
+                : rules.find((rule) => rule.value === previewRow.rule)?.label}
+            </caption>
+            <thead className="opening-hours-preview-table__header">
+              <tr>
+                <th
+                  className="opening-hours-preview-table__day-column"
+                  scope="col">
+                  Päivä
+                </th>
+                <th
+                  className="opening-hours-preview-table__time-span-column"
+                  scope="col">
+                  Kellonaika
+                </th>
+                <th scope="col">Aukiolon tyyppi</th>
+              </tr>
+            </thead>
+            <tbody>
+              {previewRow.openingHours.map((openingHour, openingHourIdx) => {
+                const rowClass =
+                  openingHourIdx % 2 === 0
+                    ? 'time-span-row--odd'
+                    : 'time-span-row--even';
 
-              return (
-                <Fragment key={`opening-hours-${openingHourIdx}`}>
-                  {openingHour.timeSpans.map((timeSpan, timeSpanIdx) => (
-                    <Fragment key={`time-span-${timeSpanIdx}`}>
-                      <TimeSpanRow
-                        key={`time-span-row-${timeSpanIdx}`}
-                        className={rowClass}
-                        label={
-                          timeSpanIdx === 0
-                            ? createWeekdaysStringFromIndices(
-                                openingHour.weekdays,
-                                Language.FI
-                              )
-                            : ''
-                        }
-                        resourceStates={resourceStates}
-                        timeSpan={timeSpan}
-                      />
-                    </Fragment>
-                  ))}
-                </Fragment>
-              );
-            })}
-          </tbody>
-        </table>
-      </div>
-    ))}
+                return (
+                  <Fragment key={`opening-hours-${openingHourIdx}`}>
+                    {openingHour.timeSpans.map((timeSpan, timeSpanIdx) => (
+                      <Fragment key={`time-span-${timeSpanIdx}`}>
+                        <TimeSpanRow
+                          key={`time-span-row-${timeSpanIdx}`}
+                          className={rowClass}
+                          label={
+                            timeSpanIdx === 0
+                              ? createWeekdaysStringFromIndices(
+                                  openingHour.weekdays,
+                                  Language.FI
+                                )
+                              : ''
+                          }
+                          resourceStates={resourceStates}
+                          timeSpan={timeSpan}
+                        />
+                      </Fragment>
+                    ))}
+                  </Fragment>
+                );
+              })}
+            </tbody>
+          </table>
+        </div>
+      )
+    )}
   </div>
 );
+
+export default OpeningHoursPreview;

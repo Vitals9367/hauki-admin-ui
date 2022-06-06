@@ -6,10 +6,13 @@ import {
   OpeningHoursTimeSpan,
   PreviewOpeningHours,
   PreviewRow,
+  Rule,
 } from '../../types';
 
+const ruleOrder: Rule[] = ['week_every', 'week_even', 'week_odd'];
+
 const byRule = (a: PreviewRow, b: PreviewRow): number =>
-  a.rule?.value.localeCompare(b.rule?.value ?? '') ?? 0;
+  ruleOrder.indexOf(a.rule) - ruleOrder.indexOf(b.rule);
 
 const byStartTime = (
   a: OpeningHoursTimeSpan,
@@ -95,8 +98,7 @@ export const openingHoursToPreviewRows = (
         openingHour.timeSpanGroups.reduce(
           (previewRows: PreviewRow[], timeSpanGroup) =>
             updateByOr(
-              (previewRow) =>
-                previewRow.rule?.value === timeSpanGroup.rule?.value,
+              (previewRow) => previewRow.rule === timeSpanGroup.rule,
               (previewRow) => ({
                 ...previewRow,
                 openingHours: [
@@ -124,12 +126,12 @@ export const openingHoursToPreviewRows = (
     )
     // Merge rows with 'Joka viikko' days
     .map((previewRow, idx, arr) => {
-      if (previewRow.rule?.value !== '0') {
+      if (previewRow.rule !== 'week_every') {
         return {
           ...previewRow,
           openingHours: [
             ...previewRow.openingHours,
-            ...(arr.find((elem) => elem.rule?.value === '0')?.openingHours ??
+            ...(arr.find((elem) => elem.rule === 'week_every')?.openingHours ??
               []),
           ],
         };
@@ -143,7 +145,7 @@ export const openingHoursToPreviewRows = (
     }))
     // If user has selected some other rule than 'Joka viikko' it will be removed from the list
     .filter((previewRow, idx, arr) => {
-      if (arr.length > 1 && previewRow.rule?.value === '0') {
+      if (arr.length > 1 && previewRow.rule === 'week_every') {
         return false;
       }
       return true;

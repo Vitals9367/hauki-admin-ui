@@ -19,6 +19,7 @@ import './OpeningHoursForm.scss';
 import {
   OpeningHours as TOpeningHours,
   OpeningHoursFormState,
+  Rule,
 } from '../../types';
 import {
   apiDatePeriodToOpeningHours,
@@ -40,7 +41,7 @@ const OpeningHoursForm = ({
   submitFn: (values: DatePeriod) => Promise<DatePeriod>;
   resource: Resource;
 }): JSX.Element => {
-  const defaultValues = {
+  const defaultValues: OpeningHoursFormState = {
     openingHours: (datePeriod
       ? apiDatePeriodToOpeningHours(datePeriod)
       : [
@@ -48,6 +49,7 @@ const OpeningHoursForm = ({
             weekdays: [1, 2, 3, 4, 5],
             timeSpanGroups: [
               {
+                rule: 'week_every' as const,
                 timeSpans: [defaultTimeSpan],
               },
             ],
@@ -56,6 +58,7 @@ const OpeningHoursForm = ({
             weekdays: [6, 7],
             timeSpanGroups: [
               {
+                rule: 'week_every' as const,
                 timeSpans: [
                   {
                     ...defaultTimeSpan,
@@ -134,6 +137,12 @@ const OpeningHoursForm = ({
     },
   ];
 
+  const rules: { value: Rule; label: string }[] = [
+    { value: 'week_every', label: 'Joka viikko' },
+    { value: 'week_even', label: 'Parilliset viikot' },
+    { value: 'week_odd', label: 'Parittomat viikot' },
+  ];
+
   const allDayAreUncheckedForRow = (idx: number): boolean => {
     const weekdays = getValues(`openingHours[${idx}].weekdays`) as number[];
 
@@ -165,10 +174,7 @@ const OpeningHoursForm = ({
       weekdays: [day],
       timeSpanGroups: [
         {
-          rule: {
-            value: '0',
-            label: 'Joka viikko',
-          },
+          rule: 'week_every' as const,
           timeSpans: [defaultTimeSpan],
         },
       ],
@@ -222,8 +228,13 @@ const OpeningHoursForm = ({
                     offsetTop={offsetTop.current}
                     item={field as TOpeningHours}
                     resourceStates={resourceStates}
+                    rules={rules}
                     namePrefix={`openingHours[${i}]`}
-                    onDayChange={(day, checked, newOffsetTop: number): void => {
+                    onDayChange={(
+                      day: number,
+                      checked: boolean,
+                      newOffsetTop: number
+                    ): void => {
                       offsetTop.current = newOffsetTop;
                       setDropInRow(undefined);
                       if (checked) {
@@ -260,6 +271,7 @@ const OpeningHoursForm = ({
                 <Preview
                   openingHours={openingHours}
                   resourceStates={resourceStates}
+                  rules={rules}
                 />
                 <div className="sort-weekdays-container">
                   <SupplementaryButton

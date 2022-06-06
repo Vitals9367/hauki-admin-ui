@@ -127,8 +127,12 @@ export const apiDatePeriodToOpeningHours = (
             }),
             {
               weekdays: timeSpan.weekdays ?? [],
+
               timeSpanGroups: [
-                { timeSpans: [apiTimeSpanToTimeSpan(timeSpan)] },
+                {
+                  rule: 'week_every',
+                  timeSpans: [apiTimeSpanToTimeSpan(timeSpan)],
+                },
               ],
             },
             openingHours

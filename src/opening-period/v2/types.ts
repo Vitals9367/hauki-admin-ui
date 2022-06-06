@@ -1,6 +1,6 @@
 import { LanguageStrings, ResourceState } from '../../common/lib/types';
 
-export type OptionType = { value: string; label: string | null };
+export type OptionType<T = string> = { value: T; label: string | null };
 
 export type OpeningHoursTimeSpan = {
   description?: LanguageStrings;
@@ -11,7 +11,7 @@ export type OpeningHoursTimeSpan = {
 };
 
 export type OpeningHoursTimeSpanGroup = {
-  rule?: OptionType;
+  rule: Rule;
   timeSpans: OpeningHoursTimeSpan[];
 };
 
@@ -30,6 +30,8 @@ export type PreviewOpeningHours = {
 };
 
 export type PreviewRow = {
-  rule?: OptionType;
+  rule: Rule;
   openingHours: PreviewOpeningHours[];
 };
+
+export type Rule = 'week_every' | 'week_odd' | 'week_even';
