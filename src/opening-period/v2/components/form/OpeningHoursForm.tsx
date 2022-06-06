@@ -256,7 +256,7 @@ const OpeningHoursForm = ({
               />
             </div>
             <div className="opening-hours-validity-container">
-              <h2>Aukiolon voimassaoloaika</h2>
+              <h3>Aukiolon voimassaoloaika</h3>
               <div className="opening-hours-validity-scheduled-container">
                 <div>
                   <RadioButton
