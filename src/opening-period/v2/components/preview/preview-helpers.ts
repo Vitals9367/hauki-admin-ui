@@ -98,6 +98,7 @@ export const openingHoursToPreviewRows = (
               (previewRow) =>
                 previewRow.rule?.value === timeSpanGroup.rule?.value,
               (previewRow) => ({
+                ...previewRow,
                 openingHours: [
                   ...previewRow.openingHours,
                   {

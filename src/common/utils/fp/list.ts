@@ -1,6 +1,6 @@
 export function updateBy<T>(
   predicate: (data: T) => boolean,
-  fn: (data: T) => Partial<T>,
+  fn: (data: T) => T,
   arr: T[]
 ): T[] {
   let found = false;
@@ -25,7 +25,7 @@ export function updateBy<T>(
 
 export function updateByOr<T>(
   predicate: (data: T) => boolean,
-  fn: (data: T) => Partial<T>,
+  fn: (data: T) => T,
   defaultValues: T,
   arr: T[]
 ): T[] {

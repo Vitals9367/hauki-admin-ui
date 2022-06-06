@@ -43,6 +43,7 @@ const toTimeSpanGroups = (openingHours: OpeningHours[]): TimeSpanGroup[] =>
             // TODO: Add proper predicate when the rules are mapped correctly
             () => true,
             (apiTimeSpanGroup) => ({
+              ...apiTimeSpanGroup,
               time_spans: [
                 ...apiTimeSpanGroup.time_spans,
                 ...uitTimeSpanGroup.timeSpans.map(
@@ -110,10 +111,12 @@ export const apiDatePeriodToOpeningHours = (
             (openingHour) =>
               weekDaysMatch(openingHour.weekdays, timeSpan.weekdays ?? []),
             (openingHour) => ({
+              ...openingHour,
               timeSpanGroups: updateBy(
                 // TODO: Add proper predicate when the rules are mapped correctly
                 () => true,
                 (timeSpanGroup) => ({
+                  ...timeSpanGroup,
                   timeSpans: [
                     ...timeSpanGroup.timeSpans,
                     apiTimeSpanToTimeSpan(timeSpan),
