@@ -80,7 +80,8 @@ const groupByConsecutiveDays = (
     .map((openingHour: PreviewOpeningHours) => ({
       ...openingHour,
       timeSpans: openingHour.timeSpans.sort(byStartTime),
-    }));
+    }))
+    .sort(byWeekdays);
 };
 
 // eslint-disable-next-line import/prefer-default-export
@@ -137,9 +138,7 @@ export const openingHoursToPreviewRows = (
     // Group consecutive days
     .map((previewRow) => ({
       ...previewRow,
-      openingHours: groupByConsecutiveDays(previewRow.openingHours).sort(
-        byWeekdays
-      ),
+      openingHours: groupByConsecutiveDays(previewRow.openingHours),
     }))
     // If user has selected some other rule than 'Joka viikko' it will be removed from the list
     .filter((previewRow, idx, arr) => {
