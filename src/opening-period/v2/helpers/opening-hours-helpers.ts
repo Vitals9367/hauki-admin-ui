@@ -1,6 +1,7 @@
 import {
   DatePeriod,
   GroupRule,
+  LanguageStrings,
   TimeSpan,
   TimeSpanGroup,
   Weekdays,
@@ -88,14 +89,11 @@ const toTimeSpanGroups = (openingHours: OpeningHours[]): TimeSpanGroup[] =>
 // eslint-disable-next-line import/prefer-default-export
 export const openingHoursToApiDatePeriod = (
   resource: number,
+  description: LanguageStrings,
   openingHours: OpeningHours[],
   id?: number
 ): DatePeriod => ({
-  description: {
-    en: '',
-    fi: '',
-    sv: '',
-  },
+  description,
   end_date: null,
   id,
   name: {

@@ -5,7 +5,7 @@ $final-action-row-height: $spacing-layout-xl;
 .opening-period-form {
   margin-top: $spacing-layout-s;
 
-  input[type="text"] {
+  input[type='text'] {
     display: block;
   }
 }
@@ -83,7 +83,7 @@ $final-action-row-height: $spacing-layout-xl;
 }
 
 .opening-period-start-date-picker {
-  [role="dialog"] {
+  [role='dialog'] {
     right: auto;
   }
 }

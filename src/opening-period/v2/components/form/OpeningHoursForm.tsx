@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/ban-ts-ignore */
-import { Accordion, IconSort } from 'hds-react';
+import { Accordion, IconSort, TextInput } from 'hds-react';
 import React, { useRef, useState } from 'react';
 import { FormProvider, useFieldArray, useForm } from 'react-hook-form';
 import { useHistory } from 'react-router-dom';
@@ -42,6 +42,11 @@ const OpeningHoursForm = ({
   resource: Resource;
 }): JSX.Element => {
   const defaultValues: OpeningHoursFormState = {
+    description: datePeriod?.description || {
+      fi: null,
+      sv: null,
+      en: null,
+    },
     openingHours: datePeriod
       ? apiDatePeriodToOpeningHours(datePeriod)
       : [
@@ -81,7 +86,7 @@ const OpeningHoursForm = ({
     shouldUnregister: false,
   });
 
-  const { control, getValues, reset, setValue, watch } = form;
+  const { control, getValues, register, reset, setValue, watch } = form;
   const { insert, fields, remove } = useFieldArray<TOpeningHours>({
     control,
     name: 'openingHours',
@@ -98,6 +103,7 @@ const OpeningHoursForm = ({
     submitFn(
       openingHoursToApiDatePeriod(
         resource?.id,
+        values.description,
         values.openingHours,
         datePeriod?.id
       )
@@ -213,6 +219,26 @@ const OpeningHoursForm = ({
                   Peruuta ja palaa
                 </SecondaryButton>
               </div>
+            </div>
+            <div className="titles-container">
+              <TextInput
+                ref={register()}
+                id="title-fi"
+                name="description.fi"
+                label="Aukioloajan otsikko suomeksi"
+              />
+              <TextInput
+                ref={register()}
+                id="title-sv"
+                name="description.sv"
+                label="Aukioloajan otsikko ruotsiksi"
+              />
+              <TextInput
+                ref={register()}
+                id="title-en"
+                name="description.en"
+                label="Aukioloajan otsikko englanniksi"
+              />
             </div>
             <Accordion card heading="Ohjeet">
               WIP

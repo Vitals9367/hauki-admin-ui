@@ -220,3 +220,14 @@ label.day-label {
     font-size: $fontsize-heading-xxs;
   }
 }
+
+.titles-container {
+  background: #fff;
+  display: flex;
+  gap: 10px;
+  padding: 2rem;
+
+  & > * {
+    flex: 1;
+  }
+}

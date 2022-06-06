@@ -172,9 +172,13 @@ const datePeriod = {
 describe('form-helpers', () => {
   describe('openingHoursToApiDatePeriod', () => {
     it('should map to correct data', () => {
-      expect(openingHoursToApiDatePeriod(8414, openingHours)).toEqual(
-        datePeriod
-      );
+      expect(
+        openingHoursToApiDatePeriod(
+          8414,
+          { fi: 'Otsikko', sv: null, en: null },
+          openingHours
+        )
+      ).toEqual(datePeriod);
     });
   });
 
