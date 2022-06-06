@@ -231,3 +231,15 @@ label.day-label {
     flex: 1;
   }
 }
+
+.opening-hours-validity-container {
+  background: #fff;
+  display: flex;
+  flex-direction: column;
+  padding: 2rem;
+}
+
+.opening-hours-validity-scheduled-container {
+  display: flex;
+  gap: 60px;
+}

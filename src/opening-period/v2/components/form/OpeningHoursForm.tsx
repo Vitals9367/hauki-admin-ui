@@ -1,5 +1,11 @@
 /* eslint-disable @typescript-eslint/ban-ts-ignore */
-import { Accordion, IconSort, TextInput } from 'hds-react';
+import {
+  Accordion,
+  DateInput,
+  IconSort,
+  RadioButton,
+  TextInput,
+} from 'hds-react';
 import React, { useRef, useState } from 'react';
 import { FormProvider, useFieldArray, useForm } from 'react-hook-form';
 import { useHistory } from 'react-router-dom';
@@ -29,6 +35,7 @@ import {
 import toast from '../../../../components/notification/Toast';
 import OpeningHours from '../opening-hours/OpeningHours';
 import { defaultTimeSpan } from '../../constants';
+import { formatDate } from '../../../../common/utils/date-time/format';
 
 const OpeningHoursForm = ({
   datePeriod,
@@ -42,6 +49,7 @@ const OpeningHoursForm = ({
   resource: Resource;
 }): JSX.Element => {
   const defaultValues: OpeningHoursFormState = {
+    startDate: datePeriod?.start_date ?? null,
     description: datePeriod?.description || {
       fi: null,
       sv: null,
@@ -91,6 +99,12 @@ const OpeningHoursForm = ({
     control,
     name: 'openingHours',
   });
+  const [selectedItem, setSelectedItem] = useState(
+    datePeriod?.start_date ? 1 : 0
+  );
+  const onChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
+    setSelectedItem(+event.target.value);
+  };
 
   const returnToResourcePage = (): void =>
     history.push(`/resource/${resource.id}`);
@@ -104,6 +118,7 @@ const OpeningHoursForm = ({
       openingHoursToApiDatePeriod(
         resource?.id,
         values.description,
+        selectedItem === 1 ? values.startDate : null,
         values.openingHours,
         datePeriod?.id
       )
@@ -239,6 +254,43 @@ const OpeningHoursForm = ({
                 name="description.en"
                 label="Aukioloajan otsikko englanniksi"
               />
+            </div>
+            <div className="opening-hours-validity-container">
+              <h2>Aukiolon voimassaoloaika</h2>
+              <div className="opening-hours-validity-scheduled-container">
+                <div>
+                  <RadioButton
+                    id="opening-hours-validity-recurring"
+                    checked={selectedItem === 0}
+                    name="example"
+                    label="Toistaiseksi voimassa"
+                    value="0"
+                    onChange={onChange}
+                  />
+                  <RadioButton
+                    id="opening-hours-validity-scheduled"
+                    checked={selectedItem === 1}
+                    name="example"
+                    label="Voimassa tietyn ajan"
+                    value="1"
+                    onChange={onChange}
+                  />
+                </div>
+                <DateInput
+                  ref={register()}
+                  id="opening-hours-start-time"
+                  initialMonth={new Date()}
+                  label="Astuu voimaan"
+                  language="fi"
+                  name="startDate"
+                  disabled={selectedItem === 0}
+                  value={
+                    datePeriod?.start_date
+                      ? formatDate(datePeriod?.start_date)
+                      : ''
+                  }
+                />
+              </div>
             </div>
             <Accordion card heading="Ohjeet">
               WIP

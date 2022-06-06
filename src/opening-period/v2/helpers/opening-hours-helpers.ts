@@ -6,6 +6,7 @@ import {
   TimeSpanGroup,
   Weekdays,
 } from '../../../common/lib/types';
+import { transformDateToApiFormat } from '../../../common/utils/date-time/format';
 import { updateByWithDefault } from '../../../common/utils/fp/list';
 import {
   OpeningHours,
@@ -90,6 +91,7 @@ const toTimeSpanGroups = (openingHours: OpeningHours[]): TimeSpanGroup[] =>
 export const openingHoursToApiDatePeriod = (
   resource: number,
   description: LanguageStrings,
+  startDate: string | null,
   openingHours: OpeningHours[],
   id?: number
 ): DatePeriod => ({
@@ -103,7 +105,7 @@ export const openingHoursToApiDatePeriod = (
   },
   override: false,
   resource,
-  start_date: null,
+  start_date: startDate ? transformDateToApiFormat(startDate) : null,
   time_span_groups: toTimeSpanGroups(openingHours),
 });
 

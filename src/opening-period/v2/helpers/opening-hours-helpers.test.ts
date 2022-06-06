@@ -88,12 +88,12 @@ const openingHours = [
 
 const datePeriod = {
   id: undefined,
-  description: { en: '', fi: '', sv: '' },
+  description: { en: null, fi: 'Otsikko', sv: null },
   end_date: null,
   name: { en: '', fi: 'Normaali aukiolo', sv: '' },
   override: false,
   resource: 8414,
-  start_date: null,
+  start_date: '2022-06-06',
   time_span_groups: [
     {
       rules: [],
@@ -176,6 +176,7 @@ describe('form-helpers', () => {
         openingHoursToApiDatePeriod(
           8414,
           { fi: 'Otsikko', sv: null, en: null },
+          '6.6.2022',
           openingHours
         )
       ).toEqual(datePeriod);

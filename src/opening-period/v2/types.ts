@@ -23,6 +23,7 @@ export type OpeningHours = {
 export type OpeningHoursFormState = {
   description: LanguageStrings;
   openingHours: OpeningHours[];
+  startDate: string | null;
 };
 
 export type PreviewOpeningHours = {
