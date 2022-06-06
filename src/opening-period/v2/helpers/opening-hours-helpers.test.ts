@@ -104,6 +104,7 @@ const datePeriod = {
           resource_state: ResourceState.OPEN,
           start_time: '08:00',
           weekdays: [1, 2, 3, 4, 5],
+          end_time_on_next_day: false,
         },
         {
           end_time: '17:00',
@@ -111,6 +112,7 @@ const datePeriod = {
           resource_state: ResourceState.SELF_SERVICE,
           start_time: '16:00',
           weekdays: [1, 2, 3, 4, 5],
+          end_time_on_next_day: false,
         },
         {
           end_time: null,
@@ -118,6 +120,7 @@ const datePeriod = {
           resource_state: ResourceState.OPEN,
           start_time: null,
           weekdays: [7],
+          end_time_on_next_day: false,
         },
       ],
     },
@@ -137,6 +140,7 @@ const datePeriod = {
           resource_state: ResourceState.OPEN,
           start_time: '10:00',
           weekdays: [6],
+          end_time_on_next_day: false,
         },
         {
           end_time: '16:00',
@@ -144,6 +148,7 @@ const datePeriod = {
           resource_state: ResourceState.CLOSED,
           start_time: '17:00',
           weekdays: [6],
+          end_time_on_next_day: true,
         },
       ],
     },
@@ -163,6 +168,7 @@ const datePeriod = {
           resource_state: ResourceState.OPEN,
           start_time: '10:00',
           weekdays: [6],
+          end_time_on_next_day: false,
         },
       ],
     },

@@ -36,6 +36,11 @@ const toTimeSpan = (days: number[]) => (
   resource_state: timeSpan.resource_state,
   start_time: timeSpan.start_time || null,
   weekdays: days,
+  end_time_on_next_day:
+    (timeSpan.start_time &&
+      timeSpan.end_time &&
+      timeSpan.start_time > timeSpan.end_time) ||
+    false,
 });
 
 const frequencyModifierMap: { [key in Rule]: string } = {

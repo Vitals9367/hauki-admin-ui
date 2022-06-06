@@ -46,6 +46,7 @@ export type TimeSpan = {
   full_day?: boolean;
   resource_state?: ResourceState;
   group?: number;
+  end_time_on_next_day?: boolean;
 };
 
 export type FormWeekdays = [
