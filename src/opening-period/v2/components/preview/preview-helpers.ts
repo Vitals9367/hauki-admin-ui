@@ -1,5 +1,5 @@
 import { isEqual } from 'lodash';
-import { updateByOr } from '../../../../common/utils/fp/list';
+import { updateByWithDefault } from '../../../../common/utils/fp/list';
 import { byWeekdays } from '../../helpers/opening-hours-helpers';
 import {
   OpeningHours,
@@ -92,12 +92,11 @@ export const openingHoursToPreviewRows = (
   openingHours: OpeningHours[]
 ): PreviewRow[] =>
   openingHours
-    // Group preview rows by rule
     .reduce(
-      (result: PreviewRow[], openingHour) =>
+      (allPreviewRows: PreviewRow[], openingHour) =>
         openingHour.timeSpanGroups.reduce(
-          (previewRows: PreviewRow[], timeSpanGroup) =>
-            updateByOr(
+          (timeSpanGroupPreviewRows: PreviewRow[], timeSpanGroup) =>
+            updateByWithDefault(
               (previewRow) => previewRow.rule === timeSpanGroup.rule,
               (previewRow) => ({
                 ...previewRow,
@@ -118,25 +117,25 @@ export const openingHoursToPreviewRows = (
                   },
                 ],
               },
-              previewRows
+              timeSpanGroupPreviewRows
             ),
-          result
+          allPreviewRows
         ),
       []
     )
     // Merge rows with 'Joka viikko' days
     .map((previewRow, idx, arr) => {
-      if (previewRow.rule !== 'week_every') {
-        return {
-          ...previewRow,
-          openingHours: [
-            ...previewRow.openingHours,
-            ...(arr.find((elem) => elem.rule === 'week_every')?.openingHours ??
-              []),
-          ],
-        };
+      if (previewRow.rule === 'week_every') {
+        return previewRow;
       }
-      return previewRow;
+      return {
+        ...previewRow,
+        openingHours: [
+          ...previewRow.openingHours,
+          ...(arr.find((elem) => elem.rule === 'week_every')?.openingHours ??
+            []),
+        ],
+      };
     })
     // Group consecutive days
     .map((previewRow) => ({

@@ -3,37 +3,28 @@ export function updateBy<T>(
   fn: (data: T) => T,
   arr: T[]
 ): T[] {
-  let found = false;
-  const result = arr.map((elem) => {
+  return arr.map((elem) => {
     if (predicate(elem)) {
-      found = true;
       return {
         ...elem,
         ...fn(elem),
       };
     }
-
     return elem;
   });
-
-  if (!found) {
-    return arr;
-  }
-
-  return result;
 }
 
-export function updateByOr<T>(
+export function updateByWithDefault<T>(
   predicate: (data: T) => boolean,
   fn: (data: T) => T,
-  defaultValues: T,
+  defaultValue: T,
   arr: T[]
 ): T[] {
-  const result = updateBy(predicate, fn, arr);
+  const hasMatch: boolean = arr.some(predicate);
 
-  if (result === arr) {
-    return [...arr, defaultValues];
+  if (hasMatch) {
+    return updateBy<T>(predicate, fn, arr);
   }
 
-  return result;
+  return [...arr, defaultValue];
 }

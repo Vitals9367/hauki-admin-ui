@@ -11,6 +11,7 @@ const openingHours = [
     weekdays: [1, 2, 3, 4, 5],
     timeSpanGroups: [
       {
+        rule: 'week_every' as const,
         timeSpans: [
           {
             description: undefined,
@@ -34,6 +35,7 @@ const openingHours = [
     weekdays: [6],
     timeSpanGroups: [
       {
+        rule: 'week_even' as const,
         timeSpans: [
           {
             description: undefined,
@@ -51,12 +53,25 @@ const openingHours = [
           },
         ],
       },
+      {
+        rule: 'week_odd' as const,
+        timeSpans: [
+          {
+            description: undefined,
+            end_time: '16:00',
+            full_day: false,
+            resource_state: ResourceState.OPEN,
+            start_time: '10:00',
+          },
+        ],
+      },
     ],
   },
   {
     weekdays: [7],
     timeSpanGroups: [
       {
+        rule: 'week_every' as const,
         timeSpans: [
           {
             description: undefined,
@@ -98,6 +113,25 @@ const datePeriod = {
           weekdays: [1, 2, 3, 4, 5],
         },
         {
+          end_time: null,
+          full_day: false,
+          resource_state: ResourceState.OPEN,
+          start_time: null,
+          weekdays: [7],
+        },
+      ],
+    },
+    {
+      rules: [
+        {
+          context: 'year',
+          subject: 'week',
+          frequency_modifier: 'even',
+          frequency_ordinal: null,
+        },
+      ],
+      time_spans: [
+        {
           end_time: '16:00',
           full_day: false,
           resource_state: ResourceState.OPEN,
@@ -111,12 +145,24 @@ const datePeriod = {
           start_time: '17:00',
           weekdays: [6],
         },
+      ],
+    },
+    {
+      rules: [
         {
-          end_time: null,
+          context: 'year',
+          subject: 'week',
+          frequency_modifier: 'odd',
+          frequency_ordinal: null,
+        },
+      ],
+      time_spans: [
+        {
+          end_time: '16:00',
           full_day: false,
           resource_state: ResourceState.OPEN,
-          start_time: null,
-          weekdays: [7],
+          start_time: '10:00',
+          weekdays: [6],
         },
       ],
     },

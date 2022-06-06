@@ -7,6 +7,7 @@ describe('preview-helpers', () => {
       weekdays: [1, 2, 3, 4, 5],
       timeSpanGroups: [
         {
+          rule: 'week_every' as const,
           timeSpans: [
             {
               description: undefined,
@@ -30,6 +31,7 @@ describe('preview-helpers', () => {
       weekdays: [6],
       timeSpanGroups: [
         {
+          rule: 'week_every' as const,
           timeSpans: [
             {
               description: undefined,
@@ -53,6 +55,7 @@ describe('preview-helpers', () => {
       weekdays: [7],
       timeSpanGroups: [
         {
+          rule: 'week_every' as const,
           timeSpans: [
             {
               description: undefined,
@@ -133,7 +136,7 @@ describe('preview-helpers', () => {
               ],
             },
           ],
-          "rule": undefined,
+          "rule": "week_every",
         },
       ]
     `);

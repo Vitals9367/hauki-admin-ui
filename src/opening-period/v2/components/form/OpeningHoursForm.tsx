@@ -42,7 +42,7 @@ const OpeningHoursForm = ({
   resource: Resource;
 }): JSX.Element => {
   const defaultValues: OpeningHoursFormState = {
-    openingHours: (datePeriod
+    openingHours: datePeriod
       ? apiDatePeriodToOpeningHours(datePeriod)
       : [
           {
@@ -68,8 +68,7 @@ const OpeningHoursForm = ({
               },
             ],
           },
-        ]
-    ).sort(byWeekdays),
+        ],
   };
 
   const history = useHistory();

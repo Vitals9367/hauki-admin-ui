@@ -1,14 +1,16 @@
 import {
   DatePeriod,
+  GroupRule,
   TimeSpan,
   TimeSpanGroup,
   Weekdays,
 } from '../../../common/lib/types';
-import { updateBy, updateByOr } from '../../../common/utils/fp/list';
+import { updateByWithDefault } from '../../../common/utils/fp/list';
 import {
   OpeningHours,
   OpeningHoursTimeSpan,
   OpeningHoursTimeSpanGroup,
+  Rule,
 } from '../types';
 
 export const byWeekdays = (
@@ -31,29 +33,48 @@ const toTimeSpan = (days: number[]) => (
   weekdays: days,
 });
 
+const frequencyModifierMap: { [key in Rule]: string } = {
+  week_every: 'every',
+  week_even: 'even',
+  week_odd: 'odd',
+};
+
+const ruleToApiRule = (rule: Rule): GroupRule => ({
+  context: 'year',
+  subject: 'week',
+  frequency_ordinal: null,
+  frequency_modifier: frequencyModifierMap[rule],
+});
+
 const toTimeSpanGroups = (openingHours: OpeningHours[]): TimeSpanGroup[] =>
   openingHours.reduce(
     (result: TimeSpanGroup[], openingHour: OpeningHours) =>
       openingHour.timeSpanGroups.reduce(
         (
           apiTimeSpanGroups: TimeSpanGroup[],
-          uitTimeSpanGroup: OpeningHoursTimeSpanGroup
+          uiTimeSpanGroup: OpeningHoursTimeSpanGroup
         ) =>
-          updateByOr(
-            // TODO: Add proper predicate when the rules are mapped correctly
-            () => true,
+          updateByWithDefault(
+            (apiTimeSpanGroup) =>
+              (apiTimeSpanGroup.rules.length === 0 &&
+                uiTimeSpanGroup.rule === 'week_every') ||
+              apiTimeSpanGroup.rules[0]?.frequency_modifier ===
+                ruleToApiRule(uiTimeSpanGroup.rule).frequency_modifier,
             (apiTimeSpanGroup) => ({
               ...apiTimeSpanGroup,
               time_spans: [
                 ...apiTimeSpanGroup.time_spans,
-                ...uitTimeSpanGroup.timeSpans.map(
+                ...uiTimeSpanGroup.timeSpans.map(
                   toTimeSpan(openingHour.weekdays)
                 ),
               ],
             }),
             {
-              rules: [], // TODO: Map rules
-              time_spans: uitTimeSpanGroup.timeSpans.map(
+              rules:
+                uiTimeSpanGroup.rule === 'week_every'
+                  ? []
+                  : [ruleToApiRule(uiTimeSpanGroup.rule)],
+              time_spans: uiTimeSpanGroup.timeSpans.map(
                 toTimeSpan(openingHour.weekdays)
               ),
             },
@@ -99,45 +120,75 @@ const apiTimeSpanToTimeSpan = (timeSpan: TimeSpan): OpeningHoursTimeSpan => ({
   start_time: timeSpan.start_time ? timeSpan.start_time.substring(0, 5) : null,
 });
 
+const apiRulesToRule = (apiRules: GroupRule[]): Rule => {
+  const apiRule = apiRules[0];
+  if (apiRule && apiRule.context === 'year' && apiRule.subject === 'week') {
+    switch (apiRule.frequency_modifier) {
+      case 'even':
+        return 'week_even';
+      case 'odd':
+        return 'week_odd';
+      default:
+        console.error(
+          `Invalid frequency modifier ${apiRule.frequency_modifier}. Defaulting to every week`
+        );
+        return 'week_every';
+    }
+  }
+
+  if (apiRule) {
+    console.error(
+      `Invalid api rule ${JSON.stringify(apiRule)}. Defaulting to every week`
+    );
+  }
+  return 'week_every';
+};
+
 export const apiDatePeriodToOpeningHours = (
   datePeriod: DatePeriod
 ): OpeningHours[] =>
-  datePeriod.time_span_groups.reduce(
-    // eslint-disable-next-line @typescript-eslint/naming-convention
-    (result: OpeningHours[], { time_spans }: TimeSpanGroup) =>
-      time_spans.reduce(
-        (openingHours, timeSpan) =>
-          updateByOr(
-            (openingHour) =>
-              weekDaysMatch(openingHour.weekdays, timeSpan.weekdays ?? []),
-            (openingHour) => ({
-              ...openingHour,
-              timeSpanGroups: updateBy(
-                // TODO: Add proper predicate when the rules are mapped correctly
-                () => true,
-                (timeSpanGroup) => ({
-                  ...timeSpanGroup,
-                  timeSpans: [
-                    ...timeSpanGroup.timeSpans,
-                    apiTimeSpanToTimeSpan(timeSpan),
-                  ],
-                }),
-                openingHour.timeSpanGroups
-              ),
-            }),
-            {
-              weekdays: timeSpan.weekdays ?? [],
-
-              timeSpanGroups: [
-                {
-                  rule: 'week_every',
-                  timeSpans: [apiTimeSpanToTimeSpan(timeSpan)],
-                },
-              ],
-            },
-            openingHours
-          ),
-        result
-      ),
-    []
-  );
+  datePeriod.time_span_groups
+    .reduce(
+      // eslint-disable-next-line @typescript-eslint/naming-convention
+      (allOpeningHours: OpeningHours[], { rules, time_spans }: TimeSpanGroup) =>
+        time_spans.reduce(
+          (timeSpanOpeningHours, timeSpan) =>
+            updateByWithDefault(
+              (openingHour) =>
+                weekDaysMatch(openingHour.weekdays, timeSpan.weekdays ?? []),
+              (openingHour) => ({
+                ...openingHour,
+                timeSpanGroups: updateByWithDefault(
+                  (timeSpanGroup) => {
+                    return apiRulesToRule(rules) === timeSpanGroup.rule;
+                  },
+                  (timeSpanGroup) => ({
+                    ...timeSpanGroup,
+                    timeSpans: [
+                      ...timeSpanGroup.timeSpans,
+                      apiTimeSpanToTimeSpan(timeSpan),
+                    ],
+                  }),
+                  {
+                    rule: apiRulesToRule(rules),
+                    timeSpans: [apiTimeSpanToTimeSpan(timeSpan)],
+                  },
+                  openingHour.timeSpanGroups
+                ),
+              }),
+              {
+                weekdays: timeSpan.weekdays ?? [],
+                timeSpanGroups: [
+                  {
+                    rule: apiRulesToRule(rules),
+                    timeSpans: [apiTimeSpanToTimeSpan(timeSpan)],
+                  },
+                ],
+              },
+              timeSpanOpeningHours
+            ),
+          allOpeningHours
+        ),
+      []
+    )
+    .sort(byWeekdays);
