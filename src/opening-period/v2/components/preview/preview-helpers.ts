@@ -1,7 +1,21 @@
 import { isEqual } from 'lodash';
 import { updateByOr } from '../../../../common/utils/fp/list';
 import { byWeekdays } from '../../helpers/opening-hours-helpers';
-import { OpeningHours, PreviewOpeningHours, PreviewRow } from '../../types';
+import {
+  OpeningHours,
+  OpeningHoursTimeSpan,
+  PreviewOpeningHours,
+  PreviewRow,
+} from '../../types';
+
+const byRule = (a: PreviewRow, b: PreviewRow): number =>
+  a.rule?.value.localeCompare(b.rule?.value ?? '') ?? 0;
+
+const byStartTime = (
+  a: OpeningHoursTimeSpan,
+  b: OpeningHoursTimeSpan
+): number =>
+  a.start_time ? a.start_time.localeCompare(b.start_time ?? '') : 1;
 
 const openingHoursRangeEqual = (
   o1: PreviewOpeningHours,
@@ -27,6 +41,7 @@ const groupByConsecutiveDays = (
       individualDays.push({ ...openingHour, weekdays: [day] });
     });
   });
+
   const groups: PreviewOpeningHours[][] = [[]];
   let i = 0;
   individualDays
@@ -49,21 +64,29 @@ const groupByConsecutiveDays = (
       groups[i] = [];
     });
 
-  return groups.reduce(
-    (result, group) => [
-      ...result,
-      group.reduce((newOpeningHour: PreviewOpeningHours, openingHour) => {
-        return {
-          ...openingHour,
-          weekdays: [...newOpeningHour.weekdays, ...openingHour.weekdays],
-        };
-      }),
-    ],
-    []
-  );
+  return groups
+    .reduce(
+      (result, group) => [
+        ...result,
+        group.reduce((newOpeningHour: PreviewOpeningHours, openingHour) => {
+          return {
+            ...openingHour,
+            weekdays: [...newOpeningHour.weekdays, ...openingHour.weekdays],
+          };
+        }),
+      ],
+      []
+    )
+    .map((openingHour: PreviewOpeningHours) => ({
+      ...openingHour,
+      timeSpans: openingHour.timeSpans.sort(byStartTime),
+    }));
 };
 
-const groupByRule = (openingHours: OpeningHours[]): PreviewRow[] =>
+// eslint-disable-next-line import/prefer-default-export
+export const openingHoursToPreviewRows = (
+  openingHours: OpeningHours[]
+): PreviewRow[] =>
   openingHours
     // Group preview rows by rule
     .reduce(
@@ -114,7 +137,9 @@ const groupByRule = (openingHours: OpeningHours[]): PreviewRow[] =>
     // Group consecutive days
     .map((previewRow) => ({
       ...previewRow,
-      openingHours: groupByConsecutiveDays(previewRow.openingHours),
+      openingHours: groupByConsecutiveDays(previewRow.openingHours).sort(
+        byWeekdays
+      ),
     }))
     // If user has selected some other rule than 'Joka viikko' it will be removed from the list
     .filter((previewRow, idx, arr) => {
@@ -122,9 +147,5 @@ const groupByRule = (openingHours: OpeningHours[]): PreviewRow[] =>
         return false;
       }
       return true;
-    });
-
-// eslint-disable-next-line import/prefer-default-export
-export const groupOpeningHoursForPreview = (
-  openingHours: OpeningHours[]
-): PreviewRow[] => groupByRule(openingHours);
+    })
+    .sort(byRule);
