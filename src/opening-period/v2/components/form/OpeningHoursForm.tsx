@@ -212,7 +212,7 @@ const OpeningHoursForm = ({
       <FormProvider {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)}>
           <div className="opening-hours-page">
-            <div className="opening-hours-page__title">
+            <div className="card opening-hours-page__title">
               <div>
                 <h1 data-test="resource-info" className="resource-info-title">
                   {resource?.name?.fi}
@@ -235,7 +235,7 @@ const OpeningHoursForm = ({
                 </SecondaryButton>
               </div>
             </div>
-            <div className="titles-container">
+            <div className="card titles-container">
               <TextInput
                 ref={register()}
                 id="title-fi"
@@ -255,7 +255,7 @@ const OpeningHoursForm = ({
                 label="Aukioloajan otsikko englanniksi"
               />
             </div>
-            <div className="opening-hours-validity-container">
+            <div className="card opening-hours-validity-container">
               <h3>Aukiolon voimassaoloaika</h3>
               <div className="opening-hours-validity-scheduled-container">
                 <div>
@@ -296,7 +296,7 @@ const OpeningHoursForm = ({
               WIP
             </Accordion>
             <div className="opening-hours-page__content">
-              <section className="opening-hours-section">
+              <section className="card opening-hours-section">
                 {fields.map((field, i) => (
                   <OpeningHours
                     key={field.id}

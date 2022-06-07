@@ -11,11 +11,9 @@
 
 .opening-hours-container {
   align-items: flex-start;
-  background: #fff;
   display: flex;
   flex-direction: column;
   gap: 1rem 2rem;
-  padding: 2rem;
 }
 
 .fullday-checkbox-container {
@@ -30,11 +28,9 @@
 
 .opening-hours-page__title {
   justify-content: space-between;
-  background: #fff;
   display: flex;
   gap: 0.75rem;
   left: 0;
-  padding: 1rem 2rem;
   position: sticky;
   right: 0;
   top: 0;
@@ -42,7 +38,6 @@
 }
 
 .opening-hours-page__actions {
-  background: #fff;
   display: flex;
   gap: 1rem;
 }
@@ -222,10 +217,8 @@ label.day-label {
 }
 
 .titles-container {
-  background: #fff;
   display: flex;
   gap: 10px;
-  padding: 2rem;
 
   & > * {
     flex: 1;
@@ -233,13 +226,16 @@ label.day-label {
 }
 
 .opening-hours-validity-container {
-  background: #fff;
   display: flex;
   flex-direction: column;
-  padding: 2rem;
 }
 
 .opening-hours-validity-scheduled-container {
   display: flex;
   gap: 60px;
+}
+
+.card {
+  background: #fff;
+  padding: 1.5rem;
 }
