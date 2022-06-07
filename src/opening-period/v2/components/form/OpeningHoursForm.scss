@@ -105,12 +105,13 @@
 .opening-hours-and-details-container {
   align-items: flex-end;
   display: grid;
-  gap: 1.5rem;
-  grid-template-columns: 1fr;
+  gap: 1.5rem 0;
+  grid-template-columns: 1fr 1fr;
 }
 
 @media screen and (min-width: $breakpoint-s) {
   .opening-hours-and-details-container {
+    gap: 1.5rem;
     grid-template-columns: 1fr 70px 1fr 1fr;
   }
 }
