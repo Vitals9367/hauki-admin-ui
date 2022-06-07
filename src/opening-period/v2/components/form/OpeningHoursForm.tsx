@@ -278,7 +278,8 @@ const OpeningHoursForm = ({
                 </div>
                 <DateInput
                   ref={register()}
-                  id="opening-hours-start-time"
+                  id="opening-hours-start-date"
+                  className="opening-hours-start-date"
                   initialMonth={new Date()}
                   label="Astuu voimaan"
                   language="fi"

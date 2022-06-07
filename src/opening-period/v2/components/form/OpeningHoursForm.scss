@@ -10,6 +10,7 @@
 }
 
 .opening-hours-container {
+  background: #fff;
   align-items: flex-start;
   display: flex;
   flex-direction: column;
@@ -217,12 +218,9 @@ label.day-label {
 }
 
 .titles-container {
-  display: flex;
+  display: grid;
   gap: 10px;
-
-  & > * {
-    flex: 1;
-  }
+  grid-template-columns: 1fr 1fr 1fr;
 }
 
 .opening-hours-validity-container {
@@ -231,11 +229,16 @@ label.day-label {
 }
 
 .opening-hours-validity-scheduled-container {
-  display: flex;
-  gap: 60px;
+  display: grid;
+  gap: 10px;
+  grid-template-columns: 1fr 1fr 1fr;
 }
 
 .card {
   background: #fff;
   padding: 1.5rem;
+}
+
+.opening-hours-start-date {
+  max-width: 180px;
 }
