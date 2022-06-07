@@ -21,7 +21,7 @@ export type OpeningHours = {
 };
 
 export type OpeningHoursFormValues = {
-  description: LanguageStrings;
+  name: LanguageStrings;
   openingHours: OpeningHours[];
   startDate: string | null;
   scheduled: boolean;

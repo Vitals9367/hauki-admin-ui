@@ -58,7 +58,7 @@ const OpeningHoursForm = ({
     : {
         scheduled: false,
         startDate: null,
-        description: {
+        name: {
           fi: null,
           sv: null,
           en: null,
@@ -231,19 +231,19 @@ const OpeningHoursForm = ({
               <TextInput
                 ref={register()}
                 id="title-fi"
-                name="description.fi"
+                name="name.fi"
                 label="Aukioloajan otsikko suomeksi"
               />
               <TextInput
                 ref={register()}
                 id="title-sv"
-                name="description.sv"
+                name="name.sv"
                 label="Aukioloajan otsikko ruotsiksi"
               />
               <TextInput
                 ref={register()}
                 id="title-en"
-                name="description.en"
+                name="name.en"
                 label="Aukioloajan otsikko englanniksi"
               />
             </div>

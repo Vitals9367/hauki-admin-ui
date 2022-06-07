@@ -88,9 +88,9 @@ const openingHours = [
 
 const datePeriod = {
   id: undefined,
-  description: { en: null, fi: 'Otsikko', sv: null },
   end_date: null,
-  name: { en: '', fi: 'Normaali aukiolo', sv: '' },
+  name: { en: null, fi: 'Normaali aukiolo', sv: null },
+  description: { en: null, fi: null, sv: null },
   override: false,
   resource: 8414,
   start_date: '2022-06-06',
@@ -174,7 +174,7 @@ describe('form-helpers', () => {
     it('should map to correct data', () => {
       expect(
         formValuesToApiDatePeriod(8414, {
-          description: { fi: 'Otsikko', sv: null, en: null },
+          name: { fi: 'Normaali aukiolo', sv: null, en: null },
           openingHours,
           scheduled: true,
           startDate: '06.06.2022',
@@ -186,7 +186,7 @@ describe('form-helpers', () => {
   describe('apiDatePeriodToOpeningHours', () => {
     it('should map to correct data', () => {
       expect(apiDatePeriodToOpeningHours(datePeriod)).toEqual({
-        description: { fi: 'Otsikko', sv: null, en: null },
+        name: { fi: 'Normaali aukiolo', sv: null, en: null },
         openingHours,
         scheduled: true,
         startDate: '06.06.2022',

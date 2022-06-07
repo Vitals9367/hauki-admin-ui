@@ -96,13 +96,13 @@ export const formValuesToApiDatePeriod = (
   formValues: OpeningHoursFormValues,
   id?: number
 ): DatePeriod => ({
-  description: formValues.description,
+  name: formValues.name,
   end_date: null,
   id,
-  name: {
-    en: '',
-    fi: 'Normaali aukiolo',
-    sv: '',
+  description: {
+    en: null,
+    fi: null,
+    sv: null,
   },
   override: false,
   resource,
@@ -151,7 +151,7 @@ const apiRulesToRule = (apiRules: GroupRule[]): Rule => {
 export const apiDatePeriodToOpeningHours = (
   datePeriod: DatePeriod
 ): OpeningHoursFormValues => ({
-  description: datePeriod.description,
+  name: datePeriod.name,
   scheduled: !!datePeriod.start_date,
   startDate: datePeriod.start_date ? formatDate(datePeriod.start_date) : null,
   openingHours: datePeriod.time_span_groups
