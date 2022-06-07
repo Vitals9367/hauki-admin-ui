@@ -7,7 +7,7 @@ import { getWeekdayLongNameByIndexAndLang } from '../../../../common/utils/date-
 import TimeSpans from '../time-span/TimeSpans';
 import {
   OpeningHours as TOpeningHours,
-  OpeningHoursFormState,
+  OpeningHoursFormValues,
   OpeningHoursTimeSpanGroup,
   OptionType,
   Rule,
@@ -53,7 +53,7 @@ const OpeningHours = ({
   onDayChange: (day: number, checked: boolean, offsetTop: number) => void;
   onRemove: () => void;
 }): JSX.Element => {
-  const { control, setValue, watch } = useFormContext<OpeningHoursFormState>();
+  const { control, setValue, watch } = useFormContext<OpeningHoursFormValues>();
   const { append, fields, remove } = useFieldArray<OpeningHoursTimeSpanGroup>({
     control,
     name: `${namePrefix}.timeSpanGroups`,

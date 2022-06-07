@@ -20,10 +20,11 @@ export type OpeningHours = {
   timeSpanGroups: OpeningHoursTimeSpanGroup[];
 };
 
-export type OpeningHoursFormState = {
+export type OpeningHoursFormValues = {
   description: LanguageStrings;
   openingHours: OpeningHours[];
   startDate: string | null;
+  scheduled: boolean;
 };
 
 export type PreviewOpeningHours = {

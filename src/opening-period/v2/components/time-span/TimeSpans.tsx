@@ -3,7 +3,7 @@ import React, { useRef } from 'react';
 import { useFieldArray, useFormContext } from 'react-hook-form';
 import { SupplementaryButton } from '../../../../components/button/Button';
 import {
-  OpeningHoursFormState,
+  OpeningHoursFormValues,
   OpeningHoursTimeSpan,
   OptionType,
 } from '../../types';
@@ -16,7 +16,7 @@ const TimeSpans = ({
   resourceStates: OptionType[];
   namePrefix: string;
 }): JSX.Element => {
-  const { control } = useFormContext<OpeningHoursFormState>();
+  const { control } = useFormContext<OpeningHoursFormValues>();
   const { fields, append, remove } = useFieldArray({
     control,
     name: `${namePrefix}`,

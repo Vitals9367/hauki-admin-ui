@@ -3,7 +3,7 @@
 import { ResourceState } from '../../../common/lib/types';
 import {
   apiDatePeriodToOpeningHours,
-  openingHoursToApiDatePeriod,
+  formValuesToApiDatePeriod,
 } from './opening-hours-helpers';
 
 const openingHours = [
@@ -173,19 +173,24 @@ describe('form-helpers', () => {
   describe('openingHoursToApiDatePeriod', () => {
     it('should map to correct data', () => {
       expect(
-        openingHoursToApiDatePeriod(
-          8414,
-          { fi: 'Otsikko', sv: null, en: null },
-          '6.6.2022',
-          openingHours
-        )
+        formValuesToApiDatePeriod(8414, {
+          description: { fi: 'Otsikko', sv: null, en: null },
+          openingHours,
+          scheduled: true,
+          startDate: '06.06.2022',
+        })
       ).toEqual(datePeriod);
     });
   });
 
   describe('apiDatePeriodToOpeningHours', () => {
     it('should map to correct data', () => {
-      expect(apiDatePeriodToOpeningHours(datePeriod)).toEqual(openingHours);
+      expect(apiDatePeriodToOpeningHours(datePeriod)).toEqual({
+        description: { fi: 'Otsikko', sv: null, en: null },
+        openingHours,
+        scheduled: true,
+        startDate: '06.06.2022',
+      });
     });
   });
 });

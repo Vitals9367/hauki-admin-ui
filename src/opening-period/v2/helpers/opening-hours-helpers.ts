@@ -1,15 +1,18 @@
 import {
   DatePeriod,
   GroupRule,
-  LanguageStrings,
   TimeSpan,
   TimeSpanGroup,
   Weekdays,
 } from '../../../common/lib/types';
-import { transformDateToApiFormat } from '../../../common/utils/date-time/format';
+import {
+  formatDate,
+  transformDateToApiFormat,
+} from '../../../common/utils/date-time/format';
 import { updateByWithDefault } from '../../../common/utils/fp/list';
 import {
   OpeningHours,
+  OpeningHoursFormValues,
   OpeningHoursTimeSpan,
   OpeningHoursTimeSpanGroup,
   Rule,
@@ -88,14 +91,12 @@ const toTimeSpanGroups = (openingHours: OpeningHours[]): TimeSpanGroup[] =>
   );
 
 // eslint-disable-next-line import/prefer-default-export
-export const openingHoursToApiDatePeriod = (
+export const formValuesToApiDatePeriod = (
   resource: number,
-  description: LanguageStrings,
-  startDate: string | null,
-  openingHours: OpeningHours[],
+  formValues: OpeningHoursFormValues,
   id?: number
 ): DatePeriod => ({
-  description,
+  description: formValues.description,
   end_date: null,
   id,
   name: {
@@ -105,8 +106,11 @@ export const openingHoursToApiDatePeriod = (
   },
   override: false,
   resource,
-  start_date: startDate ? transformDateToApiFormat(startDate) : null,
-  time_span_groups: toTimeSpanGroups(openingHours),
+  start_date:
+    formValues.scheduled && formValues.startDate
+      ? transformDateToApiFormat(formValues.startDate)
+      : null,
+  time_span_groups: toTimeSpanGroups(formValues.openingHours),
 });
 
 const weekDaysMatch = (weekdays1: Weekdays, weekdays2: Weekdays): boolean =>
@@ -146,8 +150,11 @@ const apiRulesToRule = (apiRules: GroupRule[]): Rule => {
 
 export const apiDatePeriodToOpeningHours = (
   datePeriod: DatePeriod
-): OpeningHours[] =>
-  datePeriod.time_span_groups
+): OpeningHoursFormValues => ({
+  description: datePeriod.description,
+  scheduled: !!datePeriod.start_date,
+  startDate: datePeriod.start_date ? formatDate(datePeriod.start_date) : null,
+  openingHours: datePeriod.time_span_groups
     .reduce(
       // eslint-disable-next-line @typescript-eslint/naming-convention
       (allOpeningHours: OpeningHours[], { rules, time_spans }: TimeSpanGroup) =>
@@ -191,4 +198,5 @@ export const apiDatePeriodToOpeningHours = (
         ),
       []
     )
-    .sort(byWeekdays);
+    .sort(byWeekdays),
+});

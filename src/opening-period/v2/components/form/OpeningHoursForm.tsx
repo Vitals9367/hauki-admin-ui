@@ -7,7 +7,12 @@ import {
   TextInput,
 } from 'hds-react';
 import React, { useRef, useState } from 'react';
-import { FormProvider, useFieldArray, useForm } from 'react-hook-form';
+import {
+  Controller,
+  FormProvider,
+  useFieldArray,
+  useForm,
+} from 'react-hook-form';
 import { useHistory } from 'react-router-dom';
 import {
   DatePeriod,
@@ -24,13 +29,13 @@ import Preview from '../preview/OpeningHoursPreview';
 import './OpeningHoursForm.scss';
 import {
   OpeningHours as TOpeningHours,
-  OpeningHoursFormState,
+  OpeningHoursFormValues,
   Rule,
 } from '../../types';
 import {
-  apiDatePeriodToOpeningHours,
+  apiDatePeriodToOpeningHours as apiDatePeriodToFormValues,
   byWeekdays,
-  openingHoursToApiDatePeriod,
+  formValuesToApiDatePeriod,
 } from '../../helpers/opening-hours-helpers';
 import toast from '../../../../components/notification/Toast';
 import OpeningHours from '../opening-hours/OpeningHours';
@@ -48,16 +53,17 @@ const OpeningHoursForm = ({
   submitFn: (values: DatePeriod) => Promise<DatePeriod>;
   resource: Resource;
 }): JSX.Element => {
-  const defaultValues: OpeningHoursFormState = {
-    startDate: datePeriod?.start_date ?? null,
-    description: datePeriod?.description || {
-      fi: null,
-      sv: null,
-      en: null,
-    },
-    openingHours: datePeriod
-      ? apiDatePeriodToOpeningHours(datePeriod)
-      : [
+  const defaultValues: OpeningHoursFormValues = datePeriod
+    ? apiDatePeriodToFormValues(datePeriod)
+    : {
+        scheduled: false,
+        startDate: null,
+        description: {
+          fi: null,
+          sv: null,
+          en: null,
+        },
+        openingHours: [
           {
             weekdays: [1, 2, 3, 4, 5],
             timeSpanGroups: [
@@ -82,14 +88,14 @@ const OpeningHoursForm = ({
             ],
           },
         ],
-  };
+      };
 
   const history = useHistory();
   const [isSaving, setSaving] = useState(false);
   const [dropInRow, setDropInRow] = useState<number>();
   const [rowToBeRemoved, setRowToBeRemoved] = useState<string[]>([]);
   const offsetTop = useRef<number>();
-  const form = useForm<OpeningHoursFormState>({
+  const form = useForm<OpeningHoursFormValues>({
     defaultValues,
     shouldUnregister: false,
   });
@@ -99,30 +105,16 @@ const OpeningHoursForm = ({
     control,
     name: 'openingHours',
   });
-  const [selectedItem, setSelectedItem] = useState(
-    datePeriod?.start_date ? 1 : 0
-  );
-  const onChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
-    setSelectedItem(+event.target.value);
-  };
 
   const returnToResourcePage = (): void =>
     history.push(`/resource/${resource.id}`);
 
-  const onSubmit = (values: OpeningHoursFormState): void => {
+  const onSubmit = (values: OpeningHoursFormValues): void => {
     if (!resource) {
       throw new Error('Resource not found');
     }
     setSaving(true);
-    submitFn(
-      openingHoursToApiDatePeriod(
-        resource?.id,
-        values.description,
-        selectedItem === 1 ? values.startDate : null,
-        values.openingHours,
-        datePeriod?.id
-      )
-    )
+    submitFn(formValuesToApiDatePeriod(resource?.id, values, datePeriod?.id))
       .then(() => {
         toast.success({
           dataTestId: 'opening-period-form-success',
@@ -258,38 +250,46 @@ const OpeningHoursForm = ({
             <div className="card opening-hours-validity-container">
               <h3>Aukiolon voimassaoloaika</h3>
               <div className="opening-hours-validity-scheduled-container">
-                <div>
-                  <RadioButton
-                    id="opening-hours-validity-recurring"
-                    checked={selectedItem === 0}
-                    name="example"
-                    label="Toistaiseksi voimassa"
-                    value="0"
-                    onChange={onChange}
-                  />
-                  <RadioButton
-                    id="opening-hours-validity-scheduled"
-                    checked={selectedItem === 1}
-                    name="example"
-                    label="Voimassa tietyn ajan"
-                    value="1"
-                    onChange={onChange}
-                  />
-                </div>
-                <DateInput
-                  ref={register()}
-                  id="opening-hours-start-date"
-                  className="opening-hours-start-date"
-                  initialMonth={new Date()}
-                  label="Astuu voimaan"
-                  language="fi"
-                  name="startDate"
-                  disabled={selectedItem === 0}
-                  value={
-                    datePeriod?.start_date
-                      ? formatDate(datePeriod?.start_date)
-                      : ''
-                  }
+                <Controller
+                  control={control}
+                  name="scheduled"
+                  render={({ onChange, value }): JSX.Element => (
+                    <>
+                      <div>
+                        <RadioButton
+                          id="opening-hours-validity-recurring"
+                          checked={!value}
+                          name="example"
+                          label="Toistaiseksi voimassa"
+                          value={value}
+                          onChange={(): void => onChange(false)}
+                        />
+                        <RadioButton
+                          id="opening-hours-validity-scheduled"
+                          checked={value}
+                          name="example"
+                          label="Voimassa tietyn ajan"
+                          value={value}
+                          onChange={(): void => onChange(true)}
+                        />
+                      </div>
+                      <DateInput
+                        ref={register()}
+                        id="opening-hours-start-date"
+                        className="opening-hours-start-date"
+                        initialMonth={new Date()}
+                        label="Astuu voimaan"
+                        language="fi"
+                        name="startDate"
+                        disabled={!value}
+                        value={
+                          datePeriod?.start_date
+                            ? formatDate(datePeriod?.start_date)
+                            : ''
+                        }
+                      />
+                    </>
+                  )}
                 />
               </div>
             </div>
