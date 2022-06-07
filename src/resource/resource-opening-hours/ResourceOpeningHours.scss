@@ -6,6 +6,7 @@
   color: var(--opening-periods-header-color);
   display: flex;
   flex-direction: row;
+  flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
   margin-top: auto;
@@ -45,8 +46,8 @@
   font-size: $fontsize-heading-m;
   color: inherit;
   margin-right: $spacing-s;
-  margin-top: 0;
-  margin-bottom: 0;
+  margin-top: $spacing-s;
+  margin-bottom: $spacing-s;
 }
 
 .opening-periods-header-info {
