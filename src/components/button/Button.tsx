@@ -82,7 +82,15 @@ export const SupplementaryButton = React.forwardRef<
   ButtonProps
 >(
   (
-    { children, dataTest, onClick, className = '', type = 'button', iconLeft },
+    {
+      children,
+      dataTest,
+      onClick,
+      className = '',
+      type = 'button',
+      iconLeft,
+      iconRight,
+    },
     ref
   ): JSX.Element => {
     return (
@@ -93,7 +101,8 @@ export const SupplementaryButton = React.forwardRef<
         className={`button-common supplementary-button ${className}`}
         variant="supplementary"
         onClick={onClick}
-        iconLeft={iconLeft}>
+        iconLeft={iconLeft}
+        iconRight={iconRight}>
         {children}
       </HDSButton>
     );

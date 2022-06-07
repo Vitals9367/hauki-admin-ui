@@ -2,9 +2,12 @@
 import {
   Accordion,
   DateInput,
+  IconAngleDown,
+  IconAngleUp,
   IconSort,
   RadioButton,
   TextInput,
+  useAccordion,
 } from 'hds-react';
 import React, { useRef, useState } from 'react';
 import {
@@ -99,7 +102,9 @@ const OpeningHoursForm = ({
     defaultValues,
     shouldUnregister: false,
   });
-
+  const { isOpen, buttonProps } = useAccordion({
+    initiallyOpen: false,
+  });
   const { control, getValues, register, reset, setValue, watch } = form;
   const { insert, fields, remove } = useFieldArray<TOpeningHours>({
     control,
@@ -204,16 +209,12 @@ const OpeningHoursForm = ({
       <FormProvider {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)}>
           <div className="opening-hours-page">
+            {/* <div className="card opening-hours-page__title-container"> */}
             <div className="card opening-hours-page__title">
               <div>
                 <h1 data-test="resource-info" className="resource-info-title">
                   {resource?.name?.fi}
                 </h1>
-                {/* <span>Osoite: {resource?.address.fi}</span>
-            <p className="opening-hour-forms-required-help-text">
-              Kaikki kentät jotka ovat merkitty{' '}
-              <span className="asterisk">*</span>:llä ovat pakollisia
-            </p> */}
               </div>
               <div className="opening-hours-page__actions opening-hours-page__actions--title">
                 <PrimaryButton
@@ -225,6 +226,32 @@ const OpeningHoursForm = ({
                 <SecondaryButton onClick={returnToResourcePage}>
                   Peruuta ja palaa
                 </SecondaryButton>
+              </div>
+              <div className="opening-hours-page__preview-toggle">
+                <SupplementaryButton
+                  className="preview-toggle"
+                  iconRight={
+                    isOpen ? (
+                      <IconAngleUp aria-hidden />
+                    ) : (
+                      <IconAngleDown aria-hidden />
+                    )
+                  }
+                  {...buttonProps}>
+                  Esikatselu
+                </SupplementaryButton>
+              </div>
+              <div
+                className={`mobile-preview-container ${
+                  isOpen
+                    ? 'mobile-preview-container--open'
+                    : 'mobile-preview-container--closed'
+                }`}>
+                <Preview
+                  openingHours={openingHours}
+                  resourceStates={resourceStates}
+                  rules={rules}
+                />
               </div>
             </div>
             <div className="card titles-container">

@@ -15,8 +15,20 @@
 }
 
 .resource-info-title {
-  font-size: var(--fontsize-heading-l);
+  font-size: var(--fontsize-heading-s);
   margin: 0;
+}
+
+@media screen and (min-width: $breakpoint-m) {
+  .resource-info-title {
+    font-size: var(--fontsize-heading-m);
+  }
+}
+
+@media screen and (min-width: $breakpoint-m) {
+  .resource-info-title {
+    font-size: var(--fontsize-heading-l);
+  }
 }
 
 .resource-copy-date-periods {

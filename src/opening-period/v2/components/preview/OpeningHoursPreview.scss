@@ -1,23 +1,26 @@
+@import 'node_modules/hds-design-tokens/lib/all.scss';
+
 .opening-hours-preview-container {
   display: flex;
   flex-direction: column;
   justify-self: flex-start;
-  gap: 25px;
-}
-
-.opening-hours-preview-table-container {
-  background: #fff;
-  padding: 1.5rem;
+  max-height: 65vh;
+  overflow: scroll;
 }
 
 .opening-hours-preview-table {
-  table-layout: fixed;
+  margin-bottom: 1.5rem;
   min-width: 100%;
+  table-layout: fixed;
+}
+
+.opening-hours-preview-table:last-child {
+  margin-bottom: 0;
 }
 
 .opening-hours-preview-table__caption {
   font-size: 1.25rem;
-  margin-bottom: 1rem;
+  margin-bottom: 0.5rem;
   text-align: left;
 }
 
@@ -61,6 +64,28 @@ td::first-letter {
 }
 
 .opening-hours-preview-title {
-  margin-bottom: 0;
-  margin-left: 10px;
+  font-size: 1.25rem;
+  margin: 0;
+  margin-bottom: 1rem;
+}
+
+@media screen and (min-width: $breakpoint-l) {
+  .opening-hours-preview-title {
+    font-size: 1.5rem;
+  }
+}
+
+.opening-hours-preview-table td,
+.opening-hours-preview-table th {
+  padding: 5px;
+}
+
+.opening-hours-preview-table td:first-child,
+.opening-hours-preview-table th:first-child {
+  padding-left: 0;
+}
+
+.opening-hours-preview-table td:last-child,
+.opening-hours-preview-table th:last-child {
+  padding-right: 0;
 }
