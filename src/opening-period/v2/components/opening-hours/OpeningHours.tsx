@@ -169,58 +169,57 @@ const OpeningHours = ({
           <div id={`${namePrefix}-weekdays`} className="weekdays-label">
             Päivä tai päiväryhmä
           </div>
-          <div className="weekdays-container">
-            <div
-              className="weekdays"
-              role="group"
-              aria-labelledby={`${namePrefix}-weekdays`}>
-              {removedDay && (
-                <Notification
-                  key={removedDay}
-                  label={`${upperFirst(
-                    removedDayLabel
-                  )}-päivä siirretty omaksi riviksi`}
-                  position="bottom-right"
-                  dismissible
-                  autoClose
-                  displayAutoCloseProgress={false}
-                  closeButtonLabelText="Sulje ilmoitus"
-                  onClose={(): void => setRemovedDay(null)}
-                  style={{ zIndex: 100 }}>
-                  {`Juuri poistettu ${removedDayLabel} siirrettiin omaksi rivikseen.`}
-                </Notification>
+
+          <div
+            className="weekdays"
+            role="group"
+            aria-labelledby={`${namePrefix}-weekdays`}>
+            {removedDay && (
+              <Notification
+                key={removedDay}
+                label={`${upperFirst(
+                  removedDayLabel
+                )}-päivä siirretty omaksi riviksi`}
+                position="bottom-right"
+                dismissible
+                autoClose
+                displayAutoCloseProgress={false}
+                closeButtonLabelText="Sulje ilmoitus"
+                onClose={(): void => setRemovedDay(null)}
+                style={{ zIndex: 100 }}>
+                {`Juuri poistettu ${removedDayLabel} siirrettiin omaksi rivikseen.`}
+              </Notification>
+            )}
+            <Controller
+              control={control}
+              defaultValue={item.weekdays ?? []}
+              name={`${namePrefix}.weekdays`}
+              render={(): JSX.Element => (
+                <>
+                  {[1, 2, 3, 4, 5, 6, 7].map((day) => (
+                    <DayCheckbox
+                      key={`${namePrefix}-${day}`}
+                      checked={weekdays.includes(day)}
+                      currentDay={day}
+                      namePrefix={namePrefix}
+                      onChange={(checked): void => {
+                        onDayChange(
+                          day,
+                          checked,
+                          ref.current?.getBoundingClientRect().top
+                        );
+                        if (
+                          !isOnlySelectedDay(day, item.weekdays) &&
+                          !checked
+                        ) {
+                          setRemovedDay(day);
+                        }
+                      }}
+                    />
+                  ))}
+                </>
               )}
-              <Controller
-                control={control}
-                defaultValue={item.weekdays ?? []}
-                name={`${namePrefix}.weekdays`}
-                render={(): JSX.Element => (
-                  <>
-                    {[1, 2, 3, 4, 5, 6, 7].map((day) => (
-                      <DayCheckbox
-                        key={`${namePrefix}-${day}`}
-                        checked={weekdays.includes(day)}
-                        currentDay={day}
-                        namePrefix={namePrefix}
-                        onChange={(checked): void => {
-                          onDayChange(
-                            day,
-                            checked,
-                            ref.current?.getBoundingClientRect().top
-                          );
-                          if (
-                            !isOnlySelectedDay(day, item.weekdays) &&
-                            !checked
-                          ) {
-                            setRemovedDay(day);
-                          }
-                        }}
-                      />
-                    ))}
-                  </>
-                )}
-              />
-            </div>
+            />
           </div>
         </div>
         <div

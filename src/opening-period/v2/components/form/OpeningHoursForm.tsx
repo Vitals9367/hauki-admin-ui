@@ -215,7 +215,7 @@ const OpeningHoursForm = ({
               <span className="asterisk">*</span>:llä ovat pakollisia
             </p> */}
               </div>
-              <div className="opening-hours-page__actions">
+              <div className="opening-hours-page__actions opening-hours-page__actions--title">
                 <PrimaryButton
                   isLoading={isSaving}
                   loadingText="Tallentaa aukioloaikoja"
@@ -363,6 +363,17 @@ const OpeningHoursForm = ({
                 </div>
               </div>
             </div>
+          </div>
+          <div className="card opening-hours-page__actions opening-hours-page__actions--footer">
+            <PrimaryButton
+              isLoading={isSaving}
+              loadingText="Tallentaa aukioloaikoja"
+              type="submit">
+              Tallenna muutokset
+            </PrimaryButton>
+            <SecondaryButton onClick={returnToResourcePage}>
+              Peruuta ja palaa
+            </SecondaryButton>
           </div>
         </form>
       </FormProvider>

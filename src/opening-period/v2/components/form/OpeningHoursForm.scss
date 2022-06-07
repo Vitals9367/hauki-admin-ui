@@ -1,16 +1,13 @@
 @import 'node_modules/hds-design-tokens/lib/all.scss';
 
-.weekdays-container {
-  align-items: flex-end;
-  display: flex;
-}
-
 .weekdays {
-  display: flex;
+  display: grid;
+  gap: 1.5rem;
+  grid-template-columns: repeat(auto-fit, minmax(2.5rem, 1fr));
 }
 
 .opening-hours-container {
-  align-items: flex-start;
+  align-items: stretch;
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
@@ -24,22 +21,80 @@
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
+  padding-bottom: 110px;
+}
+
+@media screen and (min-width: $breakpoint-l) {
+  .opening-hours-page {
+    padding-bottom: 0;
+  }
 }
 
 .opening-hours-page__title {
-  justify-content: space-between;
+  box-shadow: 0 2px 10px 0 rgba(212, 212, 212, 0.2);
   display: flex;
   gap: 1.5rem;
+  justify-content: space-between;
   left: 0;
+  margin-bottom: 0;
+  margin: -1rem;
   position: sticky;
   right: 0;
   top: 0;
-  z-index: 100;
+  z-index: 8;
+}
+
+@media screen and (min-width: $breakpoint-m) {
+  .opening-hours-page__title {
+    margin: -1.5rem;
+    margin-bottom: 0;
+  }
+}
+
+@media screen and (min-width: $breakpoint-l) {
+  .opening-hours-page__title {
+    box-shadow: none;
+    margin: 0;
+  }
 }
 
 .opening-hours-page__actions {
+  gap: 0.5rem;
+}
+
+@media screen and (min-width: $breakpoint-m) {
+  .opening-hours-page__actions {
+    gap: 1.5rem;
+  }
+}
+
+.opening-hours-page__actions--title {
+  display: none;
+}
+
+@media screen and (min-width: $breakpoint-l) {
+  .opening-hours-page__actions--title {
+    display: flex;
+  }
+}
+
+.opening-hours-page__actions--footer {
+  align-items: center;
+  background-color: #fff;
+  bottom: 0;
+  box-shadow: 0 -2px 10px 0 rgba(212, 212, 212, 0.2);
   display: flex;
-  gap: 1.5rem;
+  justify-content: center;
+  left: 0;
+  padding: 1rem 1.5rem;
+  position: fixed;
+  right: 0;
+}
+
+@media screen and (min-width: $breakpoint-l) {
+  .opening-hours-page__actions--footer {
+    display: none;
+  }
 }
 
 .opening-hours-resource-state-select {
@@ -49,8 +104,14 @@
 .opening-hours-and-details-container {
   align-items: flex-end;
   display: grid;
-  grid-template-columns: 1fr 70px 1fr 1fr;
   gap: 1.5rem;
+  grid-template-columns: 1fr;
+}
+
+@media screen and (min-width: $breakpoint-s) {
+  .opening-hours-and-details-container {
+    grid-template-columns: 1fr 70px 1fr 1fr;
+  }
 }
 
 .opening-hours-and-details-container--with-extra-fields {
@@ -146,19 +207,24 @@
 }
 
 .aside {
-  align-self: flex-start;
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
-  position: sticky;
-  top: 115px;
+  display: none;
+}
+
+@media screen and (min-width: $breakpoint-l) {
+  .aside {
+    align-self: flex-start;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    position: sticky;
+    top: 115px;
+  }
 }
 
 .day-option {
   display: block;
   margin-top: 0;
   border: $spacing-4-xs solid;
-  width: $spacing-layout-l;
   text-align: center;
   padding-top: 5px;
   padding-bottom: 5px;
@@ -170,7 +236,6 @@ label.day-label {
   position: relative;
   display: inline-block;
   cursor: pointer;
-  margin-right: $spacing-s;
   margin-top: 0;
 
   input[type='checkbox'] {
@@ -213,7 +278,19 @@ label.day-label {
 .titles-container {
   display: grid;
   gap: 1.5rem;
-  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-columns: 1fr;
+}
+
+@media screen and (min-width: $breakpoint-m) {
+  .titles-container {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media screen and (min-width: $breakpoint-l) {
+  .titles-container {
+    grid-template-columns: 1fr 1fr 1fr;
+  }
 }
 
 .opening-hours-validity-container {
@@ -224,14 +301,28 @@ label.day-label {
 .opening-hours-validity-scheduled-container {
   display: grid;
   gap: 1.5rem;
-  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-columns: 1fr;
+}
+
+@media screen and (min-width: $breakpoint-m) {
+  .opening-hours-validity-scheduled-container {
+    grid-template-columns: 1fr 1fr 1fr;
+  }
 }
 
 .card {
   background: #fff;
-  padding: 1.5rem;
+  padding: 1rem;
 }
 
-.opening-hours-start-date {
-  max-width: 180px;
+@media screen and (min-width: $breakpoint-m) {
+  .card {
+    padding: 1.5rem;
+  }
+}
+
+@media screen and (min-width: $breakpoint-m) {
+  .opening-hours-start-date {
+    max-width: 180px;
+  }
 }
