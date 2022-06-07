@@ -10,11 +10,10 @@
 }
 
 .opening-hours-container {
-  background: #fff;
   align-items: flex-start;
   display: flex;
   flex-direction: column;
-  gap: 1rem 2rem;
+  gap: 1.5rem;
 }
 
 .fullday-checkbox-container {
@@ -24,13 +23,13 @@
 .opening-hours-page {
   display: flex;
   flex-direction: column;
-  gap: 25px;
+  gap: 1.5rem;
 }
 
 .opening-hours-page__title {
   justify-content: space-between;
   display: flex;
-  gap: 0.75rem;
+  gap: 1.5rem;
   left: 0;
   position: sticky;
   right: 0;
@@ -40,7 +39,7 @@
 
 .opening-hours-page__actions {
   display: flex;
-  gap: 1rem;
+  gap: 1.5rem;
 }
 
 .opening-hours-resource-state-select {
@@ -51,7 +50,7 @@
   align-items: flex-end;
   display: grid;
   grid-template-columns: 1fr 70px 1fr 1fr;
-  gap: 10px;
+  gap: 1.5rem;
 }
 
 .opening-hours-and-details-container--with-extra-fields {
@@ -67,12 +66,6 @@
   & > .remove-time-span {
     order: 1;
   }
-}
-
-.opening-hours-time-span {
-  align-items: flex-end;
-  display: flex;
-  gap: 30px;
 }
 
 .opening-hours-time-span__range {
@@ -120,7 +113,7 @@
 
 .opening-hours-page__content {
   display: flex;
-  gap: 25px;
+  gap: 1.5rem;
 }
 
 .weekdays-label {
@@ -131,13 +124,13 @@
   display: flex;
   flex: 1;
   flex-direction: column;
-  gap: 25px;
+  gap: 1.5rem;
 }
 
 .opening-hours-group {
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 1.5rem;
 }
 
 .rule-select {
@@ -156,7 +149,7 @@
   align-self: flex-start;
   display: flex;
   flex-direction: column;
-  gap: 25px;
+  gap: 1.5rem;
   position: sticky;
   top: 115px;
 }
@@ -219,7 +212,7 @@ label.day-label {
 
 .titles-container {
   display: grid;
-  gap: 10px;
+  gap: 1.5rem;
   grid-template-columns: 1fr 1fr 1fr;
 }
 
@@ -230,7 +223,7 @@ label.day-label {
 
 .opening-hours-validity-scheduled-container {
   display: grid;
-  gap: 10px;
+  gap: 1.5rem;
   grid-template-columns: 1fr 1fr 1fr;
 }
 

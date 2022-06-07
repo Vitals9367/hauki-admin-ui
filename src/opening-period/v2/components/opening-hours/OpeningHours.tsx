@@ -164,7 +164,7 @@ const OpeningHours = ({
 
   return (
     <div ref={containerRef} style={{ zIndex: isMoving ? 1 : undefined }}>
-      <div ref={ref} className="opening-hours-container">
+      <div ref={ref} className="card opening-hours-container">
         <div>
           <div id={`${namePrefix}-weekdays`} className="weekdays-label">
             Päivä tai päiväryhmä

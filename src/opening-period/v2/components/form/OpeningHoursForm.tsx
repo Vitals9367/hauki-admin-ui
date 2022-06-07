@@ -297,7 +297,7 @@ const OpeningHoursForm = ({
               WIP
             </Accordion>
             <div className="opening-hours-page__content">
-              <section className="card opening-hours-section">
+              <section className="opening-hours-section">
                 {fields.map((field, i) => (
                   <OpeningHours
                     key={field.id}
