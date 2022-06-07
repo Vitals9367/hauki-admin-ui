@@ -227,20 +227,18 @@ const OpeningHoursForm = ({
                   Peruuta ja palaa
                 </SecondaryButton>
               </div>
-              <div className="opening-hours-page__preview-toggle">
-                <SupplementaryButton
-                  className="preview-toggle"
-                  iconRight={
-                    isOpen ? (
-                      <IconAngleUp aria-hidden />
-                    ) : (
-                      <IconAngleDown aria-hidden />
-                    )
-                  }
-                  {...buttonProps}>
-                  Esikatselu
-                </SupplementaryButton>
-              </div>
+              <SupplementaryButton
+                className="opening-hours-page__preview-toggle"
+                iconRight={
+                  isOpen ? (
+                    <IconAngleUp aria-hidden />
+                  ) : (
+                    <IconAngleDown aria-hidden />
+                  )
+                }
+                {...buttonProps}>
+                Esikatselu
+              </SupplementaryButton>
               <div
                 className={`mobile-preview-container ${
                   isOpen

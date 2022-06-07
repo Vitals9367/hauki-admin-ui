@@ -348,14 +348,13 @@ label.day-label {
   }
 }
 
+.opening-hours-page__preview-toggle {
+  color: #000;
+  text-decoration: none;
+}
+
 @media screen and (min-width: $breakpoint-l) {
   .opening-hours-page__preview-toggle {
     display: none;
   }
-}
-
-.preview-toggle {
-  color: #000;
-  margin-right: -18px;
-  text-decoration: none;
 }
