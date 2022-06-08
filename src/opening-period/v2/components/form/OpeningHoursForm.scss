@@ -97,19 +97,6 @@
   font-weight: bold;
 }
 
-.opening-hours-preview-table {
-  border-collapse: separate;
-  border-spacing: 0;
-}
-
-.time-span-row--even {
-  background: transparent;
-}
-
-.time-span-row--odd {
-  background: #fafafb;
-}
-
 .opening-hours-page__content {
   display: flex;
   gap: 1.5rem;
@@ -156,35 +143,6 @@
 @media screen and (min-width: $breakpoint-l) {
   .titles-container {
     grid-template-columns: 1fr 1fr 1fr;
-  }
-}
-
-.opening-hours-validity-container {
-  display: flex;
-  flex-direction: column;
-}
-
-.opening-hours-validity-scheduled-container {
-  display: grid;
-  gap: 1.5rem;
-  grid-template-columns: 1fr;
-}
-
-@media screen and (min-width: $breakpoint-m) {
-  .opening-hours-validity-scheduled-container {
-    grid-template-columns: 1fr 1fr 1fr;
-  }
-}
-
-@media screen and (min-width: $breakpoint-m) {
-  .card {
-    padding: 1.5rem;
-  }
-}
-
-@media screen and (min-width: $breakpoint-m) {
-  .opening-hours-start-date {
-    max-width: 180px;
   }
 }
 

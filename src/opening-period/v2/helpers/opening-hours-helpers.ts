@@ -97,7 +97,9 @@ export const formValuesToApiDatePeriod = (
   id?: number
 ): DatePeriod => ({
   name: formValues.name,
-  end_date: null,
+  end_date: formValues.endDate
+    ? transformDateToApiFormat(formValues.endDate)
+    : null,
   id,
   description: {
     en: null,
@@ -106,10 +108,9 @@ export const formValuesToApiDatePeriod = (
   },
   override: false,
   resource,
-  start_date:
-    formValues.scheduled && formValues.startDate
-      ? transformDateToApiFormat(formValues.startDate)
-      : null,
+  start_date: formValues.startDate
+    ? transformDateToApiFormat(formValues.startDate)
+    : null,
   time_span_groups: toTimeSpanGroups(formValues.openingHours),
 });
 
@@ -152,7 +153,8 @@ export const apiDatePeriodToOpeningHours = (
   datePeriod: DatePeriod
 ): OpeningHoursFormValues => ({
   name: datePeriod.name,
-  scheduled: !!datePeriod.start_date,
+  endDate: datePeriod.end_date ? formatDate(datePeriod.end_date) : null,
+  fixed: !!datePeriod.start_date && !!datePeriod.end_date,
   startDate: datePeriod.start_date ? formatDate(datePeriod.start_date) : null,
   openingHours: datePeriod.time_span_groups
     .reduce(

@@ -88,7 +88,7 @@ const openingHours = [
 
 const datePeriod = {
   id: undefined,
-  end_date: null,
+  end_date: '2022-12-31',
   name: { en: null, fi: 'Normaali aukiolo', sv: null },
   description: { en: null, fi: null, sv: null },
   override: false,
@@ -174,9 +174,10 @@ describe('form-helpers', () => {
     it('should map to correct data', () => {
       expect(
         formValuesToApiDatePeriod(8414, {
+          endDate: '31.12.2022',
+          fixed: true,
           name: { fi: 'Normaali aukiolo', sv: null, en: null },
           openingHours,
-          scheduled: true,
           startDate: '06.06.2022',
         })
       ).toEqual(datePeriod);
@@ -186,9 +187,10 @@ describe('form-helpers', () => {
   describe('apiDatePeriodToOpeningHours', () => {
     it('should map to correct data', () => {
       expect(apiDatePeriodToOpeningHours(datePeriod)).toEqual({
+        endDate: '31.12.2022',
+        fixed: true,
         name: { fi: 'Normaali aukiolo', sv: null, en: null },
         openingHours,
-        scheduled: true,
         startDate: '06.06.2022',
       });
     });

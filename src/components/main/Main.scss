@@ -51,3 +51,13 @@
   background: #fff;
   padding: 1rem;
 }
+
+@media screen and (min-width: $breakpoint-m) {
+  .card {
+    padding: 1.5rem;
+  }
+}
+
+.range-divider {
+  margin-top: 1.5rem;
+}

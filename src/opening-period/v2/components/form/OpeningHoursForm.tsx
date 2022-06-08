@@ -1,18 +1,7 @@
 /* eslint-disable @typescript-eslint/ban-ts-ignore */
-import {
-  Accordion,
-  DateInput,
-  IconSort,
-  RadioButton,
-  TextInput,
-} from 'hds-react';
+import { Accordion, IconSort, TextInput } from 'hds-react';
 import React, { useRef, useState } from 'react';
-import {
-  Controller,
-  FormProvider,
-  useFieldArray,
-  useForm,
-} from 'react-hook-form';
+import { FormProvider, useFieldArray, useForm } from 'react-hook-form';
 import { useHistory } from 'react-router-dom';
 import {
   DatePeriod,
@@ -40,8 +29,8 @@ import {
 import toast from '../../../../components/notification/Toast';
 import OpeningHours from '../opening-hours/OpeningHours';
 import { defaultTimeSpan } from '../../constants';
-import { formatDate } from '../../../../common/utils/date-time/format';
 import OpeningHoursPreviewMobile from '../preview/OpeningHoursPreviewMobile';
+import OpeningHoursValidity from './OpeningHoursValidity';
 
 const OpeningHoursForm = ({
   datePeriod,
@@ -57,7 +46,7 @@ const OpeningHoursForm = ({
   const defaultValues: OpeningHoursFormValues = datePeriod
     ? apiDatePeriodToFormValues(datePeriod)
     : {
-        scheduled: false,
+        recurring: false,
         startDate: null,
         name: {
           fi: null,
@@ -229,6 +218,9 @@ const OpeningHoursForm = ({
                 />
               </div>
             </div>
+            <Accordion card heading="Ohjeet">
+              WIP
+            </Accordion>
             <div className="card titles-container">
               <TextInput
                 ref={register()}
@@ -249,55 +241,7 @@ const OpeningHoursForm = ({
                 label="Aukioloajan otsikko englanniksi"
               />
             </div>
-            <div className="card opening-hours-validity-container">
-              <h3>Aukiolon voimassaoloaika</h3>
-              <div className="opening-hours-validity-scheduled-container">
-                <Controller
-                  control={control}
-                  name="scheduled"
-                  render={({ onChange, value }): JSX.Element => (
-                    <>
-                      <div>
-                        <RadioButton
-                          id="opening-hours-validity-recurring"
-                          checked={!value}
-                          name="example"
-                          label="Toistaiseksi voimassa"
-                          value={value}
-                          onChange={(): void => onChange(false)}
-                        />
-                        <RadioButton
-                          id="opening-hours-validity-scheduled"
-                          checked={value}
-                          name="example"
-                          label="Voimassa tietyn ajan"
-                          value={value}
-                          onChange={(): void => onChange(true)}
-                        />
-                      </div>
-                      <DateInput
-                        ref={register()}
-                        id="opening-hours-start-date"
-                        className="opening-hours-start-date"
-                        initialMonth={new Date()}
-                        label="Astuu voimaan"
-                        language="fi"
-                        name="startDate"
-                        disabled={!value}
-                        value={
-                          datePeriod?.start_date
-                            ? formatDate(datePeriod?.start_date)
-                            : ''
-                        }
-                      />
-                    </>
-                  )}
-                />
-              </div>
-            </div>
-            <Accordion card heading="Ohjeet">
-              WIP
-            </Accordion>
+            <OpeningHoursValidity />
             <div className="opening-hours-page__content">
               <section className="opening-hours-section">
                 {fields.map((field, i) => (

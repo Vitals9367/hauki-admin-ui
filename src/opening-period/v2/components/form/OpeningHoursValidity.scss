@@ -1,0 +1,62 @@
+@import 'node_modules/hds-design-tokens/lib/all.scss';
+
+.opening-hours-validity {
+  display: grid;
+  flex-direction: column;
+}
+
+.opening-hours-validity__selections {
+  display: grid;
+  gap: 1.5rem;
+}
+
+@media screen and (min-width: $breakpoint-m) {
+  .opening-hours-validity__selections {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media screen and (min-width: $breakpoint-l) {
+  .opening-hours-validity__selections {
+    grid-template-columns: 1fr 1fr 1fr;
+  }
+}
+
+.opening-hours-validity__dates {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+@media screen and (min-width: $breakpoint-m) {
+  .opening-hours-validity__dates {
+    flex-direction: row;
+    justify-content: space-between;
+    gap: 0.5rem;
+  }
+}
+
+@media screen and (min-width: $breakpoint-l) {
+  .opening-hours-validity__dates {
+    gap: 1rem;
+  }
+}
+
+.opening-hours-validity__range-divider {
+  display: none;
+}
+
+@media screen and (min-width: $breakpoint-m) {
+  .opening-hours-validity__range-divider {
+    display: block;
+    margin-top: 2.6rem;
+  }
+}
+
+.opening-hours-validity__title {
+  margin: 0;
+}
+
+.hidden {
+  opacity: 0;
+}
