@@ -1,0 +1,22 @@
+.opening-hours-preview-mobile {
+  box-shadow: 0 5px 5px 0 rgba(212, 212, 212, 0.2);
+  left: 0;
+  overflow: scroll;
+  position: absolute;
+  right: 0;
+  top: 100%;
+  transition: max-height 300ms;
+}
+
+.opening-hours-preview-mobile--open {
+  max-height: 70vh;
+}
+
+.opening-hours-preview-mobile--closed {
+  max-height: 0;
+}
+
+.opening-hours-preview-mobile__toggle {
+  color: #000;
+  text-decoration: none;
+}

@@ -2,12 +2,9 @@
 import {
   Accordion,
   DateInput,
-  IconAngleDown,
-  IconAngleUp,
   IconSort,
   RadioButton,
   TextInput,
-  useAccordion,
 } from 'hds-react';
 import React, { useRef, useState } from 'react';
 import {
@@ -44,6 +41,7 @@ import toast from '../../../../components/notification/Toast';
 import OpeningHours from '../opening-hours/OpeningHours';
 import { defaultTimeSpan } from '../../constants';
 import { formatDate } from '../../../../common/utils/date-time/format';
+import OpeningHoursPreviewMobile from '../preview/OpeningHoursPreviewMobile';
 
 const OpeningHoursForm = ({
   datePeriod,
@@ -101,9 +99,6 @@ const OpeningHoursForm = ({
   const form = useForm<OpeningHoursFormValues>({
     defaultValues,
     shouldUnregister: false,
-  });
-  const { isOpen, buttonProps } = useAccordion({
-    initiallyOpen: false,
   });
   const { control, getValues, register, reset, setValue, watch } = form;
   const { insert, fields, remove } = useFieldArray<TOpeningHours>({
@@ -227,25 +222,8 @@ const OpeningHoursForm = ({
                   Peruuta ja palaa
                 </SecondaryButton>
               </div>
-              <SupplementaryButton
-                className="opening-hours-page__preview-toggle"
-                iconRight={
-                  isOpen ? (
-                    <IconAngleUp aria-hidden />
-                  ) : (
-                    <IconAngleDown aria-hidden />
-                  )
-                }
-                {...buttonProps}>
-                Esikatselu
-              </SupplementaryButton>
-              <div
-                className={`mobile-preview-container ${
-                  isOpen
-                    ? 'mobile-preview-container--open'
-                    : 'mobile-preview-container--closed'
-                }`}>
-                <Preview
+              <div className="mobile-preview-container">
+                <OpeningHoursPreviewMobile
                   openingHours={openingHours}
                   resourceStates={resourceStates}
                   rules={rules}

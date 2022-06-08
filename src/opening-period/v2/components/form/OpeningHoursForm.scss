@@ -324,37 +324,8 @@ label.day-label {
   }
 }
 
-.mobile-preview-container {
-  box-shadow: 0 5px 5px 0 rgba(212, 212, 212, 0.2);
-  left: 0;
-  overflow: scroll;
-  position: absolute;
-  right: 0;
-  top: 100%;
-  transition: max-height 300ms;
-}
-
-.mobile-preview-container--open {
-  max-height: 70vh;
-}
-
-.mobile-preview-container--closed {
-  max-height: 0;
-}
-
-@media screen and (min-width: $breakpoint-l) {
+@media screen and (min-width: $breakpoint-m) {
   .mobile-preview-container {
-    display: none;
-  }
-}
-
-.opening-hours-page__preview-toggle {
-  color: #000;
-  text-decoration: none;
-}
-
-@media screen and (min-width: $breakpoint-l) {
-  .opening-hours-page__preview-toggle {
     display: none;
   }
 }
