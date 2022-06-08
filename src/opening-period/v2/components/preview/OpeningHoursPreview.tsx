@@ -102,8 +102,8 @@ const OpeningHoursPreview = ({
   resourceStates: OptionType[];
   rules: OptionType[];
 }): JSX.Element => (
-  <div className="card opening-hours-preview-container">
-    <h2 className="opening-hours-preview-title">Esikatselu</h2>
+  <div className="card opening-hours-preview">
+    <h2 className="opening-hours-preview__title">Esikatselu</h2>
     {openingHoursToPreviewRows(openingHours).map(
       (previewRow, previewRowIdx) => (
         <table

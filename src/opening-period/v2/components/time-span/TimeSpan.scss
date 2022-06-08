@@ -1,21 +1,6 @@
 @import 'node_modules/hds-design-tokens/lib/all.scss';
 
-.opening-hours-and-details-container--with-extra-fields {
-  @extend .opening-hours-and-details-container;
-
-  & > .opening-hours-time-span__description-container {
-    display: flex;
-    grid-column: 1/5;
-    justify-content: space-between;
-    order: 2;
-  }
-
-  & > .remove-time-span {
-    order: 1;
-  }
-}
-
-.opening-hours-and-details-container {
+.time-span {
   align-items: flex-end;
   display: grid;
   gap: 1.5rem 0;
@@ -23,22 +8,41 @@
 }
 
 @media screen and (min-width: $breakpoint-s) {
-  .opening-hours-and-details-container {
+  .time-span {
     gap: 1.5rem;
     grid-template-columns: 1fr 70px 1fr 1fr;
   }
 }
 
-.opening-hours-time-span__range {
+.time-span--with-extra-fields {
+  @extend .time-span;
+
+  & > .time-span__descriptions {
+    display: flex;
+    grid-column: 1/5;
+    justify-content: space-between;
+    order: 2;
+  }
+
+  & > .remove-time-span-button {
+    order: 1;
+  }
+}
+
+.time-span__range {
   display: flex;
   align-items: center;
   gap: 5px;
 }
 
-.opening-hours-time-span__range-divider {
+.time-span__range-divider {
   margin-top: 1.5rem;
 }
 
-.opening-hours-resource-state-select {
+.time-span__resource-state-select {
   min-width: 240px;
+}
+
+.time-span__full-day-checkbox {
+  padding-bottom: 1rem;
 }

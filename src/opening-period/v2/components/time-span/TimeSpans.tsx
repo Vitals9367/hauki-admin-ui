@@ -44,7 +44,7 @@ const TimeSpans = ({
           }
         />
       ))}
-      <div className="opening-hours-actions-container">
+      <div>
         <SupplementaryButton
           ref={ref}
           className="add-time-span-button"

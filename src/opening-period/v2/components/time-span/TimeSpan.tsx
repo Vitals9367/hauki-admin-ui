@@ -32,12 +32,12 @@ const TimeSpan = ({
     <div
       className={
         resourceState === ResourceState.OTHER
-          ? 'opening-hours-and-details-container--with-extra-fields'
-          : 'opening-hours-and-details-container'
+          ? 'time-span--with-extra-fields'
+          : 'time-span'
       }
       role="group"
       aria-label={groupLabel}>
-      <div className="opening-hours-time-span__range">
+      <div className="time-span__range">
         <TimeInput
           ref={register()}
           disabled={disabled || fullDay}
@@ -49,7 +49,7 @@ const TimeSpan = ({
           required
           value={item?.start_time || ''}
         />
-        <div className="opening-hours-time-span__range-divider">-</div>
+        <div className="time-span__range-divider">-</div>
         <TimeInput
           ref={register()}
           disabled={disabled || fullDay}
@@ -62,24 +62,23 @@ const TimeSpan = ({
           value={item?.end_time || ''}
         />
       </div>
-      <div className="fullday-checkbox-container">
-        <Controller
-          defaultValue={item?.full_day ?? false}
-          render={(field): JSX.Element => (
-            <Checkbox
-              id={`${namePrefix}-full-day`}
-              name={`${namePrefix}.full_day`}
-              label="24 h"
-              onChange={(e): void => {
-                field.onChange(e.target.checked);
-              }}
-              checked={field.value}
-            />
-          )}
-          control={control}
-          name={`${namePrefix}.full_day`}
-        />
-      </div>
+      <Controller
+        defaultValue={item?.full_day ?? false}
+        render={(field): JSX.Element => (
+          <Checkbox
+            className="time-span__full-day-checkbox"
+            id={`${namePrefix}-full-day`}
+            name={`${namePrefix}.full_day`}
+            label="24 h"
+            onChange={(e): void => {
+              field.onChange(e.target.checked);
+            }}
+            checked={field.value}
+          />
+        )}
+        control={control}
+        name={`${namePrefix}.full_day`}
+      />
       <Controller
         defaultValue={item?.resource_state ?? ResourceState.OPEN}
         name={`${namePrefix}.resource_state`}
@@ -90,7 +89,7 @@ const TimeSpan = ({
             id={`${namePrefix}-resource-state`}
             label="Aukiolon tyyppi"
             options={sanitizedResourceStateOptions}
-            className="opening-hours-resource-state-select"
+            className="time-span__resource-state-select"
             onChange={(option: OptionType): void => onChange(option.value)}
             placeholder="Valitse"
             required
@@ -101,7 +100,7 @@ const TimeSpan = ({
         )}
       />
       {resourceState === ResourceState.OTHER && (
-        <div className="opening-hours-time-span__description-container">
+        <div className="time-span__descriptions">
           <TextInput
             id={`${namePrefix}-description-fi`}
             label="Kuvaus suomeksi"
@@ -122,7 +121,7 @@ const TimeSpan = ({
           />
         </div>
       )}
-      <div className="remove-time-span">
+      <div className="remove-time-span-button">
         {onDelete && (
           <SupplementaryButton iconLeft={<IconTrash />} onClick={onDelete}>
             Poista rivi<span className="sr-only">{groupLabel}</span>

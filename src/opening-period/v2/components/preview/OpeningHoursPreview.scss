@@ -1,6 +1,6 @@
 @import 'node_modules/hds-design-tokens/lib/all.scss';
 
-.opening-hours-preview-container {
+.opening-hours-preview {
   display: flex;
   flex-direction: column;
   justify-self: flex-start;
@@ -63,7 +63,7 @@ td::first-letter {
   font-weight: bold;
 }
 
-.opening-hours-preview-title {
+.opening-hours-preview__title {
   font-size: 1.25rem;
   margin: 0;
   margin-bottom: 1rem;

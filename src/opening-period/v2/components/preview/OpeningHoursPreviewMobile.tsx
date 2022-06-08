@@ -26,7 +26,7 @@ const OpeningHoursPreviewMobile = ({
   return (
     <div ref={mobilePreview}>
       <SupplementaryButton
-        className="opening-hours-preview-mobile__toggle"
+        className="opening-hours-preview-mobile-toggle"
         iconRight={
           isOpen ? <IconAngleUp aria-hidden /> : <IconAngleDown aria-hidden />
         }
