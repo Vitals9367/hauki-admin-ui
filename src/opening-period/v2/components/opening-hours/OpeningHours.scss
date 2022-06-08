@@ -1,0 +1,29 @@
+@import 'node_modules/hds-design-tokens/lib/all.scss';
+
+.opening-hours-container {
+  align-items: stretch;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.opening-hours-group {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.rule-select {
+  width: 200px;
+}
+
+.weekdays-label {
+  padding: 5px 0;
+}
+
+.weekdays {
+  legend {
+    font-family: HelsinkiGrotesk-Medium, Arial, sans-serif;
+    font-size: $fontsize-heading-xxs;
+  }
+}

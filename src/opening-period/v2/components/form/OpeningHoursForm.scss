@@ -6,17 +6,6 @@
   grid-template-columns: repeat(auto-fit, minmax(2.5rem, 1fr));
 }
 
-.opening-hours-container {
-  align-items: stretch;
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
-}
-
-.fullday-checkbox-container {
-  padding-bottom: 1rem;
-}
-
 .opening-hours-page {
   display: flex;
   flex-direction: column;
@@ -98,54 +87,6 @@
   }
 }
 
-.opening-hours-resource-state-select {
-  min-width: 240px;
-}
-
-.opening-hours-and-details-container {
-  align-items: flex-end;
-  display: grid;
-  gap: 1.5rem 0;
-  grid-template-columns: 1fr 1fr;
-}
-
-@media screen and (min-width: $breakpoint-s) {
-  .opening-hours-and-details-container {
-    gap: 1.5rem;
-    grid-template-columns: 1fr 70px 1fr 1fr;
-  }
-}
-
-.opening-hours-and-details-container--with-extra-fields {
-  @extend .opening-hours-and-details-container;
-
-  & > .opening-hours-time-span__description-container {
-    display: flex;
-    grid-column: 1/5;
-    justify-content: space-between;
-    order: 2;
-  }
-
-  & > .remove-time-span {
-    order: 1;
-  }
-}
-
-.opening-hours-time-span__range {
-  display: flex;
-  align-items: center;
-  gap: 5px;
-}
-
-.opening-hours-time-span__range-divider {
-  margin-top: 1.5rem;
-}
-
-.opening-hours-actions-container {
-  align-items: center;
-  display: flex;
-}
-
 .opening-hour-forms-required-help-text {
   font-size: 1rem;
   margin: 0;
@@ -174,29 +115,11 @@
   gap: 1.5rem;
 }
 
-.weekdays-label {
-  padding: 5px 0;
-}
-
 .opening-hours-section {
   display: flex;
   flex: 1;
   flex-direction: column;
   gap: 1.5rem;
-}
-
-.opening-hours-group {
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
-}
-
-.rule-select {
-  width: 200px;
-}
-
-.add-time-span-button {
-  margin-left: -25px;
 }
 
 .sort-weekdays-container {
@@ -215,60 +138,6 @@
     gap: 1.5rem;
     position: sticky;
     top: 115px;
-  }
-}
-
-.day-option {
-  display: block;
-  margin-top: 0;
-  border: $spacing-4-xs solid;
-  text-align: center;
-  padding-top: 5px;
-  padding-bottom: 5px;
-  color: var(--color-coat-of-arms);
-  border-color: var(--color-coat-of-arms);
-}
-
-label.day-label {
-  position: relative;
-  display: inline-block;
-  cursor: pointer;
-  margin-top: 0;
-
-  input[type='checkbox'] {
-    position: absolute;
-    opacity: 0;
-    width: 1em;
-    height: 1em;
-    z-index: 10000;
-  }
-
-  & input[type='checkbox']:checked ~ .day-option {
-    background-color: var(--color-coat-of-arms);
-    color: white;
-    transition-property: background-color, border-color, color;
-    transition-duration: 85ms;
-    transition-timing-function: ease-out;
-  }
-
-  & input[type='checkbox']:checked ~ .day-option:hover {
-    background-color: var(--color-coat-of-arms-dark);
-    border-color: var(--color-coat-of-arms-dark);
-  }
-
-  & input[type='checkbox']:focus ~ .day-option {
-    outline: blue solid 2px;
-  }
-
-  &::first-letter {
-    text-transform: uppercase;
-  }
-}
-
-.weekdays {
-  legend {
-    font-family: HelsinkiGrotesk-Medium, Arial, sans-serif;
-    font-size: $fontsize-heading-xxs;
   }
 }
 
@@ -305,11 +174,6 @@ label.day-label {
   .opening-hours-validity-scheduled-container {
     grid-template-columns: 1fr 1fr 1fr;
   }
-}
-
-.card {
-  background: #fff;
-  padding: 1rem;
 }
 
 @media screen and (min-width: $breakpoint-m) {

@@ -14,6 +14,7 @@ import {
 } from '../../types';
 import DayCheckbox from './DayCheckbox';
 import { defaultTimeSpan } from '../../constants';
+import './OpeningHours.scss';
 
 type InflectLabels = {
   [language in Language]: {
@@ -169,7 +170,6 @@ const OpeningHours = ({
           <div id={`${namePrefix}-weekdays`} className="weekdays-label">
             Päivä tai päiväryhmä
           </div>
-
           <div
             className="weekdays"
             role="group"

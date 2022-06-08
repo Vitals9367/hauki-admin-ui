@@ -8,6 +8,7 @@ import {
   OptionType,
 } from '../../types';
 import TimeSpan from './TimeSpan';
+import './TimeSpans.scss';
 
 const TimeSpans = ({
   resourceStates,
@@ -47,12 +48,10 @@ const TimeSpans = ({
         <SupplementaryButton
           ref={ref}
           className="add-time-span-button"
-          iconLeft={<IconPlusCircle className="add-time-span-button__icon" />}
+          iconLeft={<IconPlusCircle />}
           onClick={(): void => append({})}
           type="button">
-          <span className="add-time-span-button__text">
-            Lisää aukiolomääritys
-          </span>
+          <span>Lisää aukiolomääritys</span>
         </SupplementaryButton>
       </div>
     </>

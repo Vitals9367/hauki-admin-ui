@@ -204,7 +204,6 @@ const OpeningHoursForm = ({
       <FormProvider {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)}>
           <div className="opening-hours-page">
-            {/* <div className="card opening-hours-page__title-container"> */}
             <div className="card opening-hours-page__title">
               <div>
                 <h1 data-test="resource-info" className="resource-info-title">

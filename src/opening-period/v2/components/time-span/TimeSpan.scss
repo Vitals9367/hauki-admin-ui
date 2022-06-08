@@ -1,0 +1,44 @@
+@import 'node_modules/hds-design-tokens/lib/all.scss';
+
+.opening-hours-and-details-container--with-extra-fields {
+  @extend .opening-hours-and-details-container;
+
+  & > .opening-hours-time-span__description-container {
+    display: flex;
+    grid-column: 1/5;
+    justify-content: space-between;
+    order: 2;
+  }
+
+  & > .remove-time-span {
+    order: 1;
+  }
+}
+
+.opening-hours-and-details-container {
+  align-items: flex-end;
+  display: grid;
+  gap: 1.5rem 0;
+  grid-template-columns: 1fr 1fr;
+}
+
+@media screen and (min-width: $breakpoint-s) {
+  .opening-hours-and-details-container {
+    gap: 1.5rem;
+    grid-template-columns: 1fr 70px 1fr 1fr;
+  }
+}
+
+.opening-hours-time-span__range {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.opening-hours-time-span__range-divider {
+  margin-top: 1.5rem;
+}
+
+.opening-hours-resource-state-select {
+  min-width: 240px;
+}

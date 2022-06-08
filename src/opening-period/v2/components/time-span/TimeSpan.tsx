@@ -4,6 +4,7 @@ import React from 'react';
 import { ResourceState } from '../../../../common/lib/types';
 import { SupplementaryButton } from '../../../../components/button/Button';
 import { OpeningHoursTimeSpan, OptionType } from '../../types';
+import './TimeSpan.scss';
 
 const TimeSpan = ({
   disabled = false,
@@ -123,10 +124,7 @@ const TimeSpan = ({
       )}
       <div className="remove-time-span">
         {onDelete && (
-          <SupplementaryButton
-            className="remove-time-span-button"
-            iconLeft={<IconTrash />}
-            onClick={onDelete}>
+          <SupplementaryButton iconLeft={<IconTrash />} onClick={onDelete}>
             Poista rivi<span className="sr-only">{groupLabel}</span>
           </SupplementaryButton>
         )}
