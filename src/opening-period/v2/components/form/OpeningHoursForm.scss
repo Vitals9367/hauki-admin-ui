@@ -3,7 +3,7 @@
 .weekdays {
   display: grid;
   gap: 1.5rem;
-  grid-template-columns: repeat(auto-fit, minmax(2.5rem, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(44px, 1fr));
 }
 
 .opening-hours-page {
@@ -11,26 +11,30 @@
   flex-direction: column;
   gap: 1.5rem;
   padding-bottom: 110px;
+  margin-left: -$spacing-s;
+  margin-right: -$spacing-s;
 }
 
-@media screen and (min-width: $breakpoint-l) {
+@media screen and (min-width: $breakpoint-m) {
   .opening-hours-page {
-    padding-bottom: 0;
+    margin-left: 0;
+    margin-right: 0;
   }
 }
 
 .opening-hours-page__title {
   align-items: center;
+  border-bottom: 1px solid var(--hauki-content-border-color);
   box-shadow: 0 2px 10px 0 rgba(212, 212, 212, 0.2);
   display: flex;
   gap: 1.5rem;
   justify-content: space-between;
   left: 0;
-  margin-bottom: 0;
-  margin: -1rem;
+  margin-top: -1rem;
   position: sticky;
   right: 0;
   top: 0;
+  transition: padding 300ms;
   z-index: 8;
 }
 
@@ -38,6 +42,11 @@
   .opening-hours-page__title {
     margin: -1.5rem;
     margin-bottom: 0;
+  }
+
+  .opening-hours-page__title--on-top {
+    padding-bottom: 0.5rem;
+    padding-top: 0.5rem;
   }
 }
 
@@ -48,8 +57,24 @@
   }
 }
 
+.opening-hours-page__actions-container {
+  background: #fff;
+  bottom: 0;
+  box-shadow: 0 -2px 10px 0 rgba(212, 212, 212, 0.2);
+  border-top: 1px solid var(--hauki-content-border-color);
+  left: 0;
+  position: fixed;
+  right: 0;
+}
+
 .opening-hours-page__actions {
-  gap: 0.5rem;
+  align-items: center;
+  box-sizing: border-box;
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  margin: 0 auto;
+  max-width: $container-width-xl;
 }
 
 @media screen and (min-width: $breakpoint-m) {
@@ -58,32 +83,9 @@
   }
 }
 
-.opening-hours-page__actions--title {
-  display: none;
-}
-
 @media screen and (min-width: $breakpoint-l) {
-  .opening-hours-page__actions--title {
-    display: flex;
-  }
-}
-
-.opening-hours-page__actions--footer {
-  align-items: center;
-  background-color: #fff;
-  bottom: 0;
-  box-shadow: 0 -2px 10px 0 rgba(212, 212, 212, 0.2);
-  display: flex;
-  justify-content: center;
-  left: 0;
-  padding: 1rem 1.5rem;
-  position: fixed;
-  right: 0;
-}
-
-@media screen and (min-width: $breakpoint-l) {
-  .opening-hours-page__actions--footer {
-    display: none;
+  .opening-hours-page__actions {
+    justify-content: left;
   }
 }
 

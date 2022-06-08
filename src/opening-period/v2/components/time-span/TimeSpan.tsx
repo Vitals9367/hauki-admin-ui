@@ -65,16 +65,18 @@ const TimeSpan = ({
       <Controller
         defaultValue={item?.full_day ?? false}
         render={(field): JSX.Element => (
-          <Checkbox
-            className="time-span__full-day-checkbox"
-            id={`${namePrefix}-full-day`}
-            name={`${namePrefix}.full_day`}
-            label="24 h"
-            onChange={(e): void => {
-              field.onChange(e.target.checked);
-            }}
-            checked={field.value}
-          />
+          <div className="time-span__full-day-checkbox-container">
+            <Checkbox
+              className="time-span__full-day-checkbox"
+              id={`${namePrefix}-full-day`}
+              name={`${namePrefix}.full_day`}
+              label="24 h"
+              onChange={(e): void => {
+                field.onChange(e.target.checked);
+              }}
+              checked={field.value}
+            />
+          </div>
         )}
         control={control}
         name={`${namePrefix}.full_day`}

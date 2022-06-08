@@ -40,9 +40,25 @@
 }
 
 .time-span__resource-state-select {
-  min-width: 240px;
+  max-width: 240px;
+}
+
+.time-span__full-day-checkbox-container {
+  display: flex;
+  justify-content: center;
 }
 
 .time-span__full-day-checkbox {
   padding-bottom: 1rem;
+}
+
+.remove-time-span-button {
+  grid-column: 1;
+  margin-left: -25px;
+}
+
+@media screen and (min-width: $breakpoint-m) {
+  .remove-time-span-button {
+    grid-column: auto;
+  }
 }

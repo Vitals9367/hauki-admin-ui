@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/ban-ts-ignore */
 import { Accordion, IconSort, TextInput } from 'hds-react';
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { FormProvider, useFieldArray, useForm } from 'react-hook-form';
 import { useHistory } from 'react-router-dom';
 import {
@@ -95,6 +95,24 @@ const OpeningHoursForm = ({
     control,
     name: 'openingHours',
   });
+
+  const [titleIsOnTop, setTitleIsOnTop] = useState(false);
+  const title = useRef<HTMLHeadingElement>(null);
+
+  useEffect(() => {
+    const onScroll = (): void => {
+      if (title.current?.getBoundingClientRect().top === 0) {
+        setTitleIsOnTop(true);
+      }
+      // TODO: Figure out some nicer way for this
+      if (titleIsOnTop && window.scrollY < 40) {
+        setTitleIsOnTop(false);
+      }
+    };
+
+    window.addEventListener('scroll', onScroll);
+    return (): void => window.removeEventListener('scroll', onScroll);
+  }, [title, titleIsOnTop]);
 
   const returnToResourcePage = (): void =>
     history.push(`/resource/${resource.id}`);
@@ -194,22 +212,19 @@ const OpeningHoursForm = ({
       <FormProvider {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)}>
           <div className="opening-hours-page">
-            <div className="card opening-hours-page__title">
+            <div
+              ref={title}
+              className={`card opening-hours-page__title ${
+                titleIsOnTop ? 'opening-hours-page__title--on-top' : ''
+              }`}>
               <div>
-                <h1 data-test="resource-info" className="resource-info-title">
+                <h1
+                  data-test="resource-info"
+                  className={`resource-info-title ${
+                    titleIsOnTop ? 'resource-info-title--on-top' : ''
+                  }`}>
                   {resource?.name?.fi}
                 </h1>
-              </div>
-              <div className="opening-hours-page__actions opening-hours-page__actions--title">
-                <PrimaryButton
-                  isLoading={isSaving}
-                  loadingText="Tallentaa aukioloaikoja"
-                  type="submit">
-                  Tallenna muutokset
-                </PrimaryButton>
-                <SecondaryButton onClick={returnToResourcePage}>
-                  Peruuta ja palaa
-                </SecondaryButton>
               </div>
               <div className="mobile-preview-container">
                 <OpeningHoursPreviewMobile
@@ -311,16 +326,18 @@ const OpeningHoursForm = ({
               </div>
             </div>
           </div>
-          <div className="card opening-hours-page__actions opening-hours-page__actions--footer">
-            <PrimaryButton
-              isLoading={isSaving}
-              loadingText="Tallentaa aukioloaikoja"
-              type="submit">
-              Tallenna muutokset
-            </PrimaryButton>
-            <SecondaryButton onClick={returnToResourcePage}>
-              Peruuta ja palaa
-            </SecondaryButton>
+          <div className="opening-hours-page__actions-container">
+            <div className="card opening-hours-page__actions">
+              <PrimaryButton
+                isLoading={isSaving}
+                loadingText="Tallentaa aukioloaikoja"
+                type="submit">
+                Tallenna
+              </PrimaryButton>
+              <SecondaryButton onClick={returnToResourcePage}>
+                Peruuta
+              </SecondaryButton>
+            </div>
           </div>
         </form>
       </FormProvider>

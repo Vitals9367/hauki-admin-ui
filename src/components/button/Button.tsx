@@ -1,4 +1,8 @@
-import { Button as HDSButton, ButtonSize as HDSButtonSize } from 'hds-react';
+import {
+  Button as HDSButton,
+  ButtonSize,
+  ButtonSize as HDSButtonSize,
+} from 'hds-react';
 import React, { ReactNode } from 'react';
 import './Button.scss';
 
@@ -17,6 +21,7 @@ interface ButtonProps {
   disabled?: boolean;
   isLoading?: boolean;
   loadingText?: string;
+  size?: ButtonSize;
 }
 
 export function SecondaryButton({
@@ -58,6 +63,7 @@ export function PrimaryButton({
   disabled,
   isLoading,
   loadingText,
+  size,
 }: ButtonProps): JSX.Element {
   return (
     <HDSButton
@@ -71,7 +77,8 @@ export function PrimaryButton({
       iconLeft={iconLeft}
       disabled={disabled}
       isLoading={isLoading}
-      loadingText={loadingText}>
+      loadingText={loadingText}
+      size={size}>
       {children}
     </HDSButton>
   );

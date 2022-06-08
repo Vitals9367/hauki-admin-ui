@@ -17,17 +17,16 @@
 .resource-info-title {
   font-size: var(--fontsize-heading-s);
   margin: 0;
-}
-
-@media screen and (min-width: $breakpoint-m) {
-  .resource-info-title {
-    font-size: var(--fontsize-heading-m);
-  }
+  transition: font-size 300ms;
 }
 
 @media screen and (min-width: $breakpoint-m) {
   .resource-info-title {
     font-size: var(--fontsize-heading-l);
+  }
+
+  .resource-info-title--on-top {
+    font-size: var(--fontsize-heading-s);
   }
 }
 

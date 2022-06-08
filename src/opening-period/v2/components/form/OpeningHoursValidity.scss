@@ -58,5 +58,11 @@
 }
 
 .hidden {
-  opacity: 0;
+  display: none;
+}
+
+@media screen and (min-width: $breakpoint-m) {
+  .hidden {
+    opacity: 0;
+  }
 }
