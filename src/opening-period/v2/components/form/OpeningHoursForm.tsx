@@ -46,7 +46,8 @@ const OpeningHoursForm = ({
   const defaultValues: OpeningHoursFormValues = datePeriod
     ? apiDatePeriodToFormValues(datePeriod)
     : {
-        recurring: false,
+        fixed: false,
+        endDate: null,
         startDate: null,
         name: {
           fi: null,
