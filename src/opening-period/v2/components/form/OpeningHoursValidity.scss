@@ -63,6 +63,7 @@
 
 @media screen and (min-width: $breakpoint-m) {
   .hidden {
+    display: block;
     opacity: 0;
   }
 }
