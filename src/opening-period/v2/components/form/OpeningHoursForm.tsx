@@ -33,6 +33,7 @@ import OpeningHoursValidity from './OpeningHoursValidity';
 import ResourceTitle from './ResourceTitle';
 import useMobile from '../../../../hooks/useMobile';
 import OpeningHoursTitles from './OpeningHoursTitles';
+import { formatDate } from '../../../../common/utils/date-time/format';
 
 const getDefaultsValues = (
   datePeriod: DatePeriod | undefined
@@ -42,7 +43,7 @@ const getDefaultsValues = (
     : {
         fixed: false,
         endDate: null,
-        startDate: null,
+        startDate: formatDate(new Date().toISOString()),
         name: {
           fi: null,
           sv: null,
