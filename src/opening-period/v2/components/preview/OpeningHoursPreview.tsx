@@ -119,16 +119,18 @@ const OpeningHoursPreview = ({
           <thead className="opening-hours-preview-table__header">
             <tr>
               <th
-                className="opening-hours-preview-table__day-column"
+                className="opening-hours-preview-table__day-column sr-only"
                 scope="col">
                 Päivä
               </th>
               <th
-                className="opening-hours-preview-table__time-span-column"
+                className="opening-hours-preview-table__time-span-column sr-only"
                 scope="col">
                 Kellonaika
               </th>
-              <th scope="col">Aukiolon tyyppi</th>
+              <th className="sr-only" scope="col">
+                Aukiolon tyyppi
+              </th>
             </tr>
           </thead>
           <tbody>
