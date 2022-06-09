@@ -32,18 +32,10 @@ import { defaultTimeSpan } from '../../constants';
 import OpeningHoursValidity from './OpeningHoursValidity';
 import ResourceTitle from './ResourceTitle';
 
-const OpeningHoursForm = ({
-  datePeriod,
-  datePeriodConfig,
-  submitFn,
-  resource,
-}: {
-  datePeriod?: DatePeriod;
-  datePeriodConfig: UiDatePeriodConfig;
-  submitFn: (values: DatePeriod) => Promise<DatePeriod>;
-  resource: Resource;
-}): JSX.Element => {
-  const defaultValues: OpeningHoursFormValues = datePeriod
+const getDefaultsValues = (
+  datePeriod: DatePeriod | undefined
+): OpeningHoursFormValues =>
+  datePeriod
     ? apiDatePeriodToFormValues(datePeriod)
     : {
         fixed: false,
@@ -81,6 +73,18 @@ const OpeningHoursForm = ({
         ],
       };
 
+const OpeningHoursForm = ({
+  datePeriod,
+  datePeriodConfig,
+  submitFn,
+  resource,
+}: {
+  datePeriod?: DatePeriod;
+  datePeriodConfig: UiDatePeriodConfig;
+  submitFn: (values: DatePeriod) => Promise<DatePeriod>;
+  resource: Resource;
+}): JSX.Element => {
+  const defaultValues: OpeningHoursFormValues = getDefaultsValues(datePeriod);
   const history = useHistory();
   const [isSaving, setSaving] = useState(false);
   const [dropInRow, setDropInRow] = useState<number>();
