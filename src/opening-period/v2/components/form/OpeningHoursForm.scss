@@ -96,21 +96,3 @@
     top: 70px;
   }
 }
-
-.titles-container {
-  display: grid;
-  gap: 1.5rem;
-  grid-template-columns: 1fr;
-}
-
-@media screen and (min-width: $breakpoint-m) {
-  .titles-container {
-    grid-template-columns: 1fr 1fr;
-  }
-}
-
-@media screen and (min-width: $breakpoint-l) {
-  .titles-container {
-    grid-template-columns: 1fr 1fr 1fr;
-  }
-}

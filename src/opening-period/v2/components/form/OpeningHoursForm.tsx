@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/ban-ts-ignore */
-import { Accordion, IconSort, TextInput } from 'hds-react';
+import { Accordion, IconSort } from 'hds-react';
 import React, { useRef, useState } from 'react';
 import { FormProvider, useFieldArray, useForm } from 'react-hook-form';
 import { useHistory } from 'react-router-dom';
@@ -32,6 +32,7 @@ import { defaultTimeSpan } from '../../constants';
 import OpeningHoursValidity from './OpeningHoursValidity';
 import ResourceTitle from './ResourceTitle';
 import useMobile from '../../../../hooks/useMobile';
+import OpeningHoursTitles from './OpeningHoursTitles';
 
 const getDefaultsValues = (
   datePeriod: DatePeriod | undefined
@@ -95,7 +96,7 @@ const OpeningHoursForm = ({
     defaultValues,
     shouldUnregister: false,
   });
-  const { control, getValues, register, reset, setValue, watch } = form;
+  const { control, getValues, reset, setValue, watch } = form;
   const { insert, fields, remove } = useFieldArray<TOpeningHours>({
     control,
     name: 'openingHours',
@@ -209,26 +210,7 @@ const OpeningHoursForm = ({
             <Accordion card heading="Ohjeet">
               WIP
             </Accordion>
-            <div className="card titles-container">
-              <TextInput
-                ref={register()}
-                id="title-fi"
-                name="name.fi"
-                label="Aukioloajan otsikko suomeksi"
-              />
-              <TextInput
-                ref={register()}
-                id="title-sv"
-                name="name.sv"
-                label="Aukioloajan otsikko ruotsiksi"
-              />
-              <TextInput
-                ref={register()}
-                id="title-en"
-                name="name.en"
-                label="Aukioloajan otsikko englanniksi"
-              />
-            </div>
+            <OpeningHoursTitles />
             <OpeningHoursValidity />
             <div className="opening-hours-page__content">
               <section className="opening-hours-section">
