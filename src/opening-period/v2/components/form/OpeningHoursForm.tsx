@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/ban-ts-ignore */
 import { Accordion, IconSort, TextInput } from 'hds-react';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { FormProvider, useFieldArray, useForm } from 'react-hook-form';
 import { useHistory } from 'react-router-dom';
 import {
@@ -29,8 +29,8 @@ import {
 import toast from '../../../../components/notification/Toast';
 import OpeningHours from '../opening-hours/OpeningHours';
 import { defaultTimeSpan } from '../../constants';
-import OpeningHoursPreviewMobile from '../preview/OpeningHoursPreviewMobile';
 import OpeningHoursValidity from './OpeningHoursValidity';
+import ResourceTitle from './ResourceTitle';
 
 const OpeningHoursForm = ({
   datePeriod,
@@ -95,24 +95,6 @@ const OpeningHoursForm = ({
     control,
     name: 'openingHours',
   });
-
-  const [titleIsOnTop, setTitleIsOnTop] = useState(false);
-  const title = useRef<HTMLHeadingElement>(null);
-
-  useEffect(() => {
-    const onScroll = (): void => {
-      if (title.current?.getBoundingClientRect().top === 0) {
-        setTitleIsOnTop(true);
-      }
-      // TODO: Figure out some nicer way for this
-      if (titleIsOnTop && window.scrollY < 40) {
-        setTitleIsOnTop(false);
-      }
-    };
-
-    window.addEventListener('scroll', onScroll);
-    return (): void => window.removeEventListener('scroll', onScroll);
-  }, [title, titleIsOnTop]);
 
   const returnToResourcePage = (): void =>
     history.push(`/resource/${resource.id}`);
@@ -212,28 +194,12 @@ const OpeningHoursForm = ({
       <FormProvider {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)}>
           <div className="opening-hours-page">
-            <div
-              ref={title}
-              className={`card opening-hours-page__title ${
-                titleIsOnTop ? 'opening-hours-page__title--on-top' : ''
-              }`}>
-              <div>
-                <h1
-                  data-test="resource-info"
-                  className={`resource-info-title ${
-                    titleIsOnTop ? 'resource-info-title--on-top' : ''
-                  }`}>
-                  {resource?.name?.fi}
-                </h1>
-              </div>
-              <div className="mobile-preview-container">
-                <OpeningHoursPreviewMobile
-                  openingHours={openingHours}
-                  resourceStates={resourceStates}
-                  rules={rules}
-                />
-              </div>
-            </div>
+            <ResourceTitle
+              openingHours={openingHours}
+              resource={resource}
+              resourceStates={resourceStates}
+              rules={rules}
+            />
             <Accordion card heading="Ohjeet">
               WIP
             </Accordion>
