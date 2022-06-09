@@ -43,6 +43,7 @@ const OpeningHoursPreviewMobile = ({
           openingHours={openingHours}
           resourceStates={resourceStates}
           rules={rules}
+          className="opening-hours-preview-mobile-preview"
         />
       </div>
     </div>

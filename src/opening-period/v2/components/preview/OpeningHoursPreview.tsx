@@ -97,12 +97,14 @@ const OpeningHoursPreview = ({
   openingHours,
   resourceStates,
   rules,
+  className,
 }: {
   openingHours: OpeningHours[];
   resourceStates: OptionType[];
   rules: OptionType[];
+  className?: string;
 }): JSX.Element => (
-  <div className="card opening-hours-preview">
+  <div className={`card opening-hours-preview ${className || ''}`}>
     <h2 className="opening-hours-preview__title">Esikatselu</h2>
     {openingHoursToPreviewRows(openingHours).map(
       (previewRow, previewRowIdx) => (
