@@ -31,6 +31,7 @@ import OpeningHours from '../opening-hours/OpeningHours';
 import { defaultTimeSpan } from '../../constants';
 import OpeningHoursValidity from './OpeningHoursValidity';
 import ResourceTitle from './ResourceTitle';
+import useMobile from '../../../../hooks/useMobile';
 
 const getDefaultsValues = (
   datePeriod: DatePeriod | undefined
@@ -99,6 +100,7 @@ const OpeningHoursForm = ({
     control,
     name: 'openingHours',
   });
+  const isMobile = useMobile();
 
   const returnToResourcePage = (): void =>
     history.push(`/resource/${resource.id}`);
@@ -301,10 +303,13 @@ const OpeningHoursForm = ({
               <PrimaryButton
                 isLoading={isSaving}
                 loadingText="Tallentaa aukioloaikoja"
-                type="submit">
+                type="submit"
+                size={isMobile ? 'small' : 'default'}>
                 Tallenna
               </PrimaryButton>
-              <SecondaryButton onClick={returnToResourcePage}>
+              <SecondaryButton
+                onClick={returnToResourcePage}
+                size={isMobile ? 'small' : 'default'}>
                 Peruuta
               </SecondaryButton>
             </div>
