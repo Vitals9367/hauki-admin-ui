@@ -62,3 +62,15 @@
     grid-column: auto;
   }
 }
+
+.time-span__full-day-checkbox-container--hidden,
+.time-span__range--hidden {
+  display: none;
+}
+
+@media screen and (min-width: $breakpoint-l) {
+  .time-span__full-day-checkbox-container--hidden,
+  .time-span__range--hidden {
+    opacity: 0;
+  }
+}

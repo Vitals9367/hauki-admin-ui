@@ -62,11 +62,13 @@ const TimeSpan = ({
         render={(field): JSX.Element => (
           <div
             className={`time-span__full-day-checkbox-container ${
-              resourceState === ResourceState.CLOSED ? 'opacity-0' : ''
+              resourceState === ResourceState.CLOSED
+                ? 'time-span__full-day-checkbox-container--hidden'
+                : ''
             }`}>
             <Checkbox
               className="time-span__full-day-checkbox"
-              disabled={disabled || resourceState === ResourceState.CLOSED}
+              disabled={disabled}
               id={`${namePrefix}-full-day`}
               name={`${namePrefix}.full_day`}
               label="24 h"
@@ -81,14 +83,14 @@ const TimeSpan = ({
         name={`${namePrefix}.full_day`}
       />
       <div
-        className={`${
-          resourceState === ResourceState.CLOSED ? 'opacity-0' : ''
-        } time-span__range`}>
+        className={`time-span__range ${
+          resourceState === ResourceState.CLOSED
+            ? 'time-span__range--hidden'
+            : ''
+        }`}>
         <TimeInput
           ref={register()}
-          disabled={
-            disabled || fullDay || resourceState === ResourceState.CLOSED
-          }
+          disabled={disabled || fullDay}
           id={`${namePrefix}-start-time`}
           hoursLabel="tunnit"
           minutesLabel="minuutit"
@@ -100,9 +102,7 @@ const TimeSpan = ({
         <div className="time-span__range-divider">-</div>
         <TimeInput
           ref={register()}
-          disabled={
-            disabled || fullDay || resourceState === ResourceState.CLOSED
-          }
+          disabled={disabled || fullDay}
           id={`${namePrefix}-end-time`}
           hoursLabel="tunnit"
           minutesLabel="minuutit"
