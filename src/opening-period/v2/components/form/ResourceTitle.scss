@@ -35,6 +35,16 @@
   }
 }
 
+.mobile-preview-container {
+  margin-right: -15px;
+}
+
+@media screen and (min-width: $breakpoint-m) {
+  .mobile-preview-container {
+    margin-right: 0;
+  }
+}
+
 @media screen and (min-width: $breakpoint-l) {
   .mobile-preview-container {
     display: none;
