@@ -34,7 +34,6 @@
 
 .opening-hours-preview-table__time-span-column {
   padding: 0 10px;
-  width: 140px;
 }
 
 td {
@@ -101,4 +100,10 @@ td::first-letter {
 .opening-hours-preview-table {
   border-collapse: separate;
   border-spacing: 0;
+}
+
+.opening-hours-preview-table__opening-hours {
+  display: grid;
+  grid-template-columns: 120px 1fr;
+  gap: 5px;
 }

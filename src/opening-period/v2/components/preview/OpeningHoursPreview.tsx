@@ -5,6 +5,8 @@ import { OpeningHoursTimeSpan, OpeningHours, OptionType } from '../../types';
 import { openingHoursToPreviewRows } from './preview-helpers';
 import './OpeningHoursPreview.scss';
 
+const emptyHours = '-- : --';
+
 const TimeSpan = ({
   start,
   end,
@@ -14,11 +16,11 @@ const TimeSpan = ({
 }): JSX.Element => (
   <>
     <span className="opening-hours-preview-time-span__time">
-      {start || '-- : --'}
+      {start || emptyHours}
     </span>
     <span>-</span>
-    <span className="opening-hours-preview-time-span__time opening-hours-preview-time-span__time--end">
-      {end || '-- : --'}
+    <span className="opening-hours-preview-time-span__time">
+      {end || emptyHours}
     </span>
   </>
 );
@@ -27,37 +29,12 @@ const renderStartAndEndTimes = (
   timeSpan?: OpeningHoursTimeSpan
 ): JSX.Element => (
   <span className="opening-hours-preview-time-span">
-    {timeSpan?.resource_state !== ResourceState.CLOSED && timeSpan?.full_day ? (
+    {timeSpan?.full_day ? (
       '24h'
     ) : (
       <TimeSpan start={timeSpan?.start_time} end={timeSpan?.end_time} />
     )}
   </span>
-);
-
-const PreviewRow = ({
-  className,
-  timeClassname,
-  label,
-  time,
-  description,
-}: {
-  className: string;
-  timeClassname?: string;
-  label?: string;
-  time?: JSX.Element | string | null | undefined;
-  description?: string;
-}): JSX.Element => (
-  <tr className={className}>
-    <td className="opening-hours-preview-table__day-column">{label}</td>
-    <td
-      className={`opening-hours-preview-table__time-span-column ${
-        timeClassname ?? ''
-      }`}>
-      {time}
-    </td>
-    <td>{description}</td>
-  </tr>
 );
 
 const resolveDescription = (
@@ -66,6 +43,10 @@ const resolveDescription = (
 ): string => {
   if (!timeSpan) {
     return 'Tuntematon';
+  }
+
+  if (timeSpan.resource_state === ResourceState.OPEN) {
+    return '';
   }
 
   return timeSpan.resource_state === ResourceState.OTHER
@@ -85,12 +66,23 @@ const TimeSpanRow = ({
   resourceStates: OptionType[];
   timeSpan?: OpeningHoursTimeSpan;
 }): JSX.Element => (
-  <PreviewRow
-    className={className}
-    description={resolveDescription(resourceStates, timeSpan)}
-    label={label}
-    time={renderStartAndEndTimes(timeSpan)}
-  />
+  <tr className={className}>
+    <td className="opening-hours-preview-table__day-column">{label}</td>
+    <td
+      className={`opening-hours-preview-table__time-span-column ${
+        className ?? ''
+      }`}>
+      <span className="opening-hours-preview-table__opening-hours">
+        {timeSpan?.resource_state === ResourceState.CLOSED &&
+        !timeSpan.start_time &&
+        !timeSpan.end_time &&
+        !timeSpan.full_day
+          ? ''
+          : renderStartAndEndTimes(timeSpan)}
+        <span>{resolveDescription(resourceStates, timeSpan)}</span>
+      </span>
+    </td>
+  </tr>
 );
 
 const OpeningHoursPreview = ({
@@ -126,10 +118,7 @@ const OpeningHoursPreview = ({
               <th
                 className="opening-hours-preview-table__time-span-column sr-only"
                 scope="col">
-                Kellonaika
-              </th>
-              <th className="sr-only" scope="col">
-                Aukiolon tyyppi
+                Aukioloaika
               </th>
             </tr>
           </thead>
