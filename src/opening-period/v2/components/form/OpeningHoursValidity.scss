@@ -57,12 +57,20 @@
   margin: 0;
 }
 
-.hidden {
+.opening-hours-validity__content {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.opening-hours-validity__range-divider--hidden,
+.opening-hours-validity__date--hidden {
   display: none;
 }
 
 @media screen and (min-width: $breakpoint-m) {
-  .hidden {
+  .opening-hours-validity__range-divider--hidden,
+  .opening-hours-validity__date--hidden {
     display: block;
     opacity: 0;
   }

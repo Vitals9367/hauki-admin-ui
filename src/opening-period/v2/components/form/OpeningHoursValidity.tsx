@@ -52,7 +52,7 @@ const OpeningHoursValidity = (): JSX.Element => {
                 />
                 <span
                   className={`opening-hours-validity__range-divider ${
-                    fixed ? '' : 'hidden'
+                    fixed ? '' : 'opening-hours-validity__range-divider--hidden'
                   }`}>
                   -
                 </span>
@@ -60,7 +60,7 @@ const OpeningHoursValidity = (): JSX.Element => {
                   ref={register()}
                   id="opening-hours-end-date"
                   className={`opening-hours-validity__date ${
-                    fixed ? '' : 'hidden'
+                    fixed ? '' : 'opening-hours-validity__date--hidden'
                   }`}
                   initialMonth={new Date()}
                   label="Päättyy"

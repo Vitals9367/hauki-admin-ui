@@ -37,50 +37,6 @@ const TimeSpan = ({
       }
       role="group"
       aria-label={groupLabel}>
-      <div className="time-span__range">
-        <TimeInput
-          ref={register()}
-          disabled={disabled || fullDay}
-          id={`${namePrefix}-start-time`}
-          hoursLabel="tunnit"
-          minutesLabel="minuutit"
-          label="Alkaen"
-          name={`${namePrefix}.start_time`}
-          required
-          value={item?.start_time || ''}
-        />
-        <div className="time-span__range-divider">-</div>
-        <TimeInput
-          ref={register()}
-          disabled={disabled || fullDay}
-          id={`${namePrefix}-end-time`}
-          hoursLabel="tunnit"
-          minutesLabel="minuutit"
-          label="Päättyen"
-          name={`${namePrefix}.end_time`}
-          required
-          value={item?.end_time || ''}
-        />
-      </div>
-      <Controller
-        defaultValue={item?.full_day ?? false}
-        render={(field): JSX.Element => (
-          <div className="time-span__full-day-checkbox-container">
-            <Checkbox
-              className="time-span__full-day-checkbox"
-              id={`${namePrefix}-full-day`}
-              name={`${namePrefix}.full_day`}
-              label="24 h"
-              onChange={(e): void => {
-                field.onChange(e.target.checked);
-              }}
-              checked={field.value}
-            />
-          </div>
-        )}
-        control={control}
-        name={`${namePrefix}.full_day`}
-      />
       <Controller
         defaultValue={item?.resource_state ?? ResourceState.OPEN}
         name={`${namePrefix}.resource_state`}
@@ -101,6 +57,61 @@ const TimeSpan = ({
           />
         )}
       />
+      <Controller
+        defaultValue={item?.full_day ?? false}
+        render={(field): JSX.Element => (
+          <div
+            className={`time-span__full-day-checkbox-container ${
+              resourceState === ResourceState.CLOSED ? 'opacity-0' : ''
+            }`}>
+            <Checkbox
+              className="time-span__full-day-checkbox"
+              disabled={disabled || resourceState === ResourceState.CLOSED}
+              id={`${namePrefix}-full-day`}
+              name={`${namePrefix}.full_day`}
+              label="24 h"
+              onChange={(e): void => {
+                field.onChange(e.target.checked);
+              }}
+              checked={field.value}
+            />
+          </div>
+        )}
+        control={control}
+        name={`${namePrefix}.full_day`}
+      />
+      <div
+        className={`${
+          resourceState === ResourceState.CLOSED ? 'opacity-0' : ''
+        } time-span__range`}>
+        <TimeInput
+          ref={register()}
+          disabled={
+            disabled || fullDay || resourceState === ResourceState.CLOSED
+          }
+          id={`${namePrefix}-start-time`}
+          hoursLabel="tunnit"
+          minutesLabel="minuutit"
+          label="Alkaen"
+          name={`${namePrefix}.start_time`}
+          required
+          value={item?.start_time || ''}
+        />
+        <div className="time-span__range-divider">-</div>
+        <TimeInput
+          ref={register()}
+          disabled={
+            disabled || fullDay || resourceState === ResourceState.CLOSED
+          }
+          id={`${namePrefix}-end-time`}
+          hoursLabel="tunnit"
+          minutesLabel="minuutit"
+          label="Päättyen"
+          name={`${namePrefix}.end_time`}
+          required
+          value={item?.end_time || ''}
+        />
+      </div>
       {resourceState === ResourceState.OTHER && (
         <div className="time-span__descriptions">
           <TextInput

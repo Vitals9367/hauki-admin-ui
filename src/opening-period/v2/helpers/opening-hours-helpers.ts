@@ -1,6 +1,7 @@
 import {
   DatePeriod,
   GroupRule,
+  ResourceState,
   TimeSpan,
   TimeSpanGroup,
   Weekdays,
@@ -31,10 +32,17 @@ export const byWeekdays = (
 const toTimeSpan = (days: number[]) => (
   timeSpan: OpeningHoursTimeSpan
 ): TimeSpan => ({
-  end_time: timeSpan.end_time || null,
-  full_day: timeSpan.full_day,
+  end_time:
+    (timeSpan.resource_state !== ResourceState.CLOSED &&
+      timeSpan.start_time &&
+      timeSpan.end_time) ||
+    null,
+  full_day:
+    timeSpan.resource_state === ResourceState.CLOSED ? true : timeSpan.full_day,
   resource_state: timeSpan.resource_state,
-  start_time: timeSpan.start_time || null,
+  start_time:
+    (timeSpan.resource_state !== ResourceState.CLOSED && timeSpan.start_time) ||
+    null,
   weekdays: days,
   end_time_on_next_day:
     (timeSpan.start_time &&

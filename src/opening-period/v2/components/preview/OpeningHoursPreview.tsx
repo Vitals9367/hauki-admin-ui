@@ -73,10 +73,7 @@ const TimeSpanRow = ({
         className ?? ''
       }`}>
       <span className="opening-hours-preview-table__opening-hours">
-        {timeSpan?.resource_state === ResourceState.CLOSED &&
-        !timeSpan.start_time &&
-        !timeSpan.end_time &&
-        !timeSpan.full_day
+        {timeSpan?.resource_state === ResourceState.CLOSED
           ? ''
           : renderStartAndEndTimes(timeSpan)}
         <span>{resolveDescription(resourceStates, timeSpan)}</span>
