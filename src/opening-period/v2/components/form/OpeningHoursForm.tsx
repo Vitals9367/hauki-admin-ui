@@ -33,6 +33,7 @@ import OpeningHoursValidity from './OpeningHoursValidity';
 import ResourceTitle from './ResourceTitle';
 import useMobile from '../../../../hooks/useMobile';
 import { formatDate } from '../../../../common/utils/date-time/format';
+import OpeningHoursTitles from './OpeningHoursTitles';
 
 const getDefaultsValues = (
   datePeriod: DatePeriod | undefined
@@ -209,6 +210,7 @@ const OpeningHoursForm = ({
             <Accordion card heading="Ohjeet">
               WIP
             </Accordion>
+            <OpeningHoursTitles />
             <OpeningHoursValidity />
             <div className="opening-hours-page__content">
               <section className="opening-hours-section">
@@ -250,7 +252,7 @@ const OpeningHoursForm = ({
                   />
                 ))}
               </section>
-              <div className="aside">
+              <aside className="aside">
                 <Preview
                   openingHours={openingHours}
                   resourceStates={resourceStates}
@@ -266,7 +268,7 @@ const OpeningHoursForm = ({
                     Järjestä päiväryhmät viikonpäivien mukaan
                   </SupplementaryButton>
                 </div>
-              </div>
+              </aside>
             </div>
           </div>
           <div className="opening-hours-page__actions-container">
