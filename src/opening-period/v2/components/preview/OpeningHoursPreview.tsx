@@ -93,8 +93,14 @@ const OpeningHoursPreview = ({
   rules: OptionType[];
   className?: string;
 }): JSX.Element => (
-  <div className={`card opening-hours-preview ${className || ''}`}>
-    <h2 className="opening-hours-preview__title">Esikatselu</h2>
+  <div
+    aria-labelledby="opening-hours-preview"
+    className={`card opening-hours-preview ${className || ''}`}
+    // eslint-disable-next-line jsx-a11y/no-noninteractive-tabindex
+    tabIndex={0}>
+    <h2 id="opening-hours-preview" className="opening-hours-preview__title">
+      Esikatselu
+    </h2>
     {openingHoursToPreviewRows(openingHours).map(
       (previewRow, previewRowIdx) => (
         <table
