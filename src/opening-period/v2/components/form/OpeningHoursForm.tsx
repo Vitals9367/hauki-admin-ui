@@ -32,7 +32,6 @@ import { defaultTimeSpan } from '../../constants';
 import OpeningHoursValidity from './OpeningHoursValidity';
 import ResourceTitle from './ResourceTitle';
 import useMobile from '../../../../hooks/useMobile';
-import OpeningHoursTitles from './OpeningHoursTitles';
 import { formatDate } from '../../../../common/utils/date-time/format';
 
 const getDefaultsValues = (
@@ -91,7 +90,6 @@ const OpeningHoursForm = ({
   const history = useHistory();
   const [isSaving, setSaving] = useState(false);
   const [dropInRow, setDropInRow] = useState<number>();
-  const [rowToBeRemoved, setRowToBeRemoved] = useState<string[]>([]);
   const offsetTop = useRef<number>();
   const form = useForm<OpeningHoursFormValues>({
     defaultValues,
@@ -211,7 +209,6 @@ const OpeningHoursForm = ({
             <Accordion card heading="Ohjeet">
               WIP
             </Accordion>
-            <OpeningHoursTitles />
             <OpeningHoursValidity />
             <div className="opening-hours-page__content">
               <section className="opening-hours-section">
@@ -219,7 +216,6 @@ const OpeningHoursForm = ({
                   <OpeningHours
                     key={field.id}
                     dropIn={dropInRow === i}
-                    remove={rowToBeRemoved.includes(field.id!)}
                     offsetTop={offsetTop.current}
                     item={field as TOpeningHours}
                     resourceStates={resourceStates}
@@ -238,10 +234,7 @@ const OpeningHoursForm = ({
                         if (prevId >= 0) {
                           setDay(prevId, day, false);
                           if (allDayAreUncheckedForRow(prevId)) {
-                            setRowToBeRemoved((state) => [
-                              ...state,
-                              fields[prevId].id!,
-                            ]);
+                            remove(prevId);
                           }
                         }
                       } else {
@@ -253,11 +246,6 @@ const OpeningHoursForm = ({
                           addNewRow(i, day);
                         }
                       }
-                    }}
-                    onRemove={(): void => {
-                      remove(
-                        fields.findIndex((f) => rowToBeRemoved.includes(f.id!))
-                      );
                     }}
                   />
                 ))}

@@ -35,24 +35,20 @@ const isOnlySelectedDay = (day: number, weekdays: number[]): boolean =>
 
 const OpeningHours = ({
   dropIn,
-  remove: fadeOut,
   item,
   offsetTop = 0,
   resourceStates,
   namePrefix,
   onDayChange,
-  onRemove,
   rules,
 }: {
   dropIn: boolean;
-  remove: boolean;
   item: TOpeningHours;
   namePrefix: string;
   offsetTop?: number;
   resourceStates: OptionType[];
   rules: OptionType<Rule>[];
   onDayChange: (day: number, checked: boolean, offsetTop: number) => void;
-  onRemove: () => void;
 }): JSX.Element => {
   const { control, setValue, watch } = useFormContext<OpeningHoursFormValues>();
   const { append, fields, remove } = useFieldArray<OpeningHoursTimeSpanGroup>({
@@ -84,35 +80,6 @@ const OpeningHours = ({
         .addEventListener('finish', () => setIsMoving(false));
     }
   }, [dropIn, offsetTop, ref, setIsMoving]);
-
-  useEffect(() => {
-    if (fadeOut) {
-      if (containerRef.current) {
-        const currentOffsetHeightPixels = `${containerRef.current?.offsetHeight}px`;
-        containerRef.current.style.height = currentOffsetHeightPixels;
-        setIsMoving(true);
-        containerRef.current
-          .animate(
-            [
-              { height: currentOffsetHeightPixels },
-              {
-                height: 0,
-                opacity: 0,
-              },
-            ],
-            {
-              duration: 350,
-              iterations: 1,
-              fill: 'forwards',
-            }
-          )
-          .addEventListener('finish', () => {
-            setIsMoving(false);
-            onRemove();
-          });
-      }
-    }
-  }, [offsetTop, fadeOut, onRemove, setIsMoving]);
 
   const weekdays = watch(`${namePrefix}.weekdays`, []) as number[];
   const removedDayLabel = removedDay
