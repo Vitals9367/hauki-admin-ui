@@ -1,18 +1,16 @@
 @import 'node_modules/hds-design-tokens/lib/all.scss';
 
 .opening-periods-header {
+  align-items: center;
   background-color: var(--opening-periods-header-background-color);
   color: var(--opening-periods-header-color);
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
+  gap: $spacing-m;
   justify-content: space-between;
   margin-top: auto;
-  padding-left: $spacing-m;
-  padding-right: $spacing-m;
-  align-items: center;
-  gap: $spacing-m;
-  padding: $spacing-s;
+  padding: $spacing-s $spacing-m;
 }
 
 .opening-period-header-button {
