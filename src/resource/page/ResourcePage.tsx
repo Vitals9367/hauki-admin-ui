@@ -1,14 +1,13 @@
 import React, { ReactNode, useEffect, useState } from 'react';
-import { Notification } from 'hds-react';
+import { Accordion, Notification } from 'hds-react';
+import { useAppContext } from '../../App-context';
 import api from '../../common/utils/api/api';
 import { Language, Resource } from '../../common/lib/types';
 import { isUnitResource } from '../../common/utils/resource/helper';
 import storage from '../../common/utils/storage/storage';
 import Collapse from '../../components/collapse/Collapse';
-import LanguageSelect, {
-  displayLangVersionNotFound,
-} from '../../components/language-select/LanguageSelect';
-import { ExternalLink, Link } from '../../components/link/Link';
+import { displayLangVersionNotFound } from '../../components/language-select/LanguageSelect';
+import { Link } from '../../components/link/Link';
 import ResourceOpeningHours from '../resource-opening-hours/ResourceOpeningHours';
 import ResourcePeriodsCopyFieldset, {
   TargetResourcesProps,
@@ -20,11 +19,9 @@ const resourceTitleId = 'resource-title';
 export const ResourceTitle = ({
   resource,
   language = Language.FI,
-  children,
 }: {
   resource?: Resource;
   language?: Language;
-  children: ReactNode;
 }): JSX.Element => {
   const name =
     resource?.name[language] ||
@@ -43,32 +40,7 @@ export const ResourceTitle = ({
         className="resource-info-title">
         {name}
       </h1>
-      <div className="resource-info-title-add-on">{children}</div>
     </div>
-  );
-};
-
-export const ResourceAddress = ({
-  resource,
-  language = Language.FI,
-}: {
-  resource?: Resource;
-  language?: Language;
-}): JSX.Element => {
-  const address =
-    resource?.address[language] ||
-    displayLangVersionNotFound({
-      language,
-      label: `${
-        resource && isUnitResource(resource) ? 'toimipisteen' : 'alakohteen'
-      } osoite`,
-    });
-
-  return (
-    <>
-      <span>Osoite: </span>
-      <address className="resource-info-address">{address}</address>
-    </>
   );
 };
 
@@ -79,12 +51,6 @@ export const ResourceInfo = ({
 }): JSX.Element => (
   <section aria-labelledby={resourceTitleId}>{children}</section>
 );
-
-export const ResourceInfoSubTitle = ({
-  text,
-}: {
-  text: string;
-}): JSX.Element => <h2 className="resource-info-subtitle">{text}</h2>;
 
 const ResourceSection = ({
   id,
@@ -114,35 +80,6 @@ const ResourceDetailsSection = ({
   </ResourceSection>
 );
 
-const ResourceSourceLink = ({
-  id,
-  resource,
-}: {
-  id: string;
-  resource?: Resource;
-}): JSX.Element | null => {
-  const adminLink = resource?.extra_data?.admin_url;
-
-  if (!adminLink) {
-    return null;
-  }
-
-  return (
-    <ResourceSection id={id}>
-      <p>
-        Toimipisteeseen liittyvät tiedot kieliversioineen ovat lähtöisin
-        Toimipisterekisteristä. Tietojen muuttaminen on mahdollista
-        Toimipisterekisterissä.
-        <br />
-        <ExternalLink
-          href={adminLink}
-          text="Tarkastele toimipisteen tietoja Toimipisterekisterissä"
-        />
-      </p>
-    </ResourceSection>
-  );
-};
-
 export default function ResourcePage({
   id,
   targetResourcesString,
@@ -150,12 +87,13 @@ export default function ResourcePage({
   id: string;
   targetResourcesString?: string;
 }): JSX.Element {
+  const { language: contextLanguage } = useAppContext();
+  const language = contextLanguage || Language.FI;
   const [resource, setResource] = useState<Resource | undefined>(undefined);
   const [childResources, setChildResources] = useState<Resource[]>([]);
   const [parentResources, setParentResources] = useState<Resource[]>([]);
   const [error, setError] = useState<Error | undefined>(undefined);
   const [isLoading, setLoading] = useState<boolean>(true);
-  const [language, setLanguage] = useState<Language>(Language.FI);
   const [targetResourceData, setTargetResourceData] = useState<
     TargetResourcesProps | undefined
   >(undefined);
@@ -251,30 +189,14 @@ export default function ResourcePage({
             }
           />
         )}
-        <ResourceTitle resource={resource} language={language}>
-          <LanguageSelect
-            id="resource-info-language-select"
-            label="Toimipisteen tietojen kielivalinta"
-            className="resource-info-language-selector"
-            selectedLanguage={language}
-            onSelect={setLanguage}
-            formatter={(selectedLanguage: Language): string =>
-              `Esityskieli: ${selectedLanguage.toUpperCase()}`
-            }
-            theme="dark"
-          />
-        </ResourceTitle>
-        <ResourceAddress resource={resource} language={language} />
+        <ResourceTitle resource={resource} language={language} />
+        {childResources.length ? (
+          <p>
+            Tällä toimipisteellä on {childResources.length} alakohdetta. Niiden
+            aukioloajat löytyvät alempana tällä sivulla.
+          </p>
+        ) : null}
       </ResourceInfo>
-      <ResourceDetailsSection id="resource-description" title="Perustiedot">
-        <p className="resource-description-text">
-          {resource?.description[language] ||
-            displayLangVersionNotFound({
-              language,
-              label: 'toimipisteen kuvaus',
-            })}
-        </p>
-      </ResourceDetailsSection>
       {!hasTargetResources && parentResources?.length > 0 && (
         <ResourceDetailsSection
           id="parent-resource-description"
@@ -310,30 +232,31 @@ export default function ResourcePage({
           ))}
         </ResourceDetailsSection>
       )}
+      <ResourceSection id="resource-opening-hours">
+        {resource && (
+          <ResourceOpeningHours language={language} resource={resource} />
+        )}
+      </ResourceSection>
       {!hasTargetResources && childResources?.length > 0 && (
-        <ResourceDetailsSection
-          id="child-resource-description"
-          title="Alakohteet">
+        <>
+          <h2 className="child-resources-title">Toimipisteen alakohteet</h2>
           <p
             data-test="child-resource-description"
             className="resource-description-text">
-            Tässä toimipisteessä on alakohteita. Alakohteet voivat olla
-            esimerkiksi toimipisteen eri tiloja. Voit muokata alakohteiden muita
-            tietoja tilapaikkarekisterissä.
+            Täällä voit määritellä toimipisteen alakohteiden aukioloaikoja.
+            Alakohteet voivat olla esimerkiksi toimipisteen eri tiloja. Voit
+            muokata alakohteiden muita tietoja tilapaikkarekisterissä.
           </p>
           {childResources?.map((childResource, index) => (
-            <div className="related-resource-list-item" key={index}>
-              <Link
-                dataTest={`child-resource-name-${index}`}
-                href={`/resource/${childResource.id}`}
-                text={
-                  childResource?.name[language] ||
-                  displayLangVersionNotFound({
-                    language,
-                    label: 'alakohteen nimi',
-                  })
-                }
-              />
+            <Accordion
+              key={index}
+              heading={
+                childResource?.name[language] ||
+                displayLangVersionNotFound({
+                  language,
+                  label: 'alakohteen nimi',
+                })
+              }>
               <p
                 data-test={`child-resource-description-${index}`}
                 className="resource-description-text related-resource-description-text">
@@ -343,16 +266,10 @@ export default function ResourcePage({
                     label: 'alakohteen kuvaus',
                   })}
               </p>
-            </div>
+            </Accordion>
           ))}
-        </ResourceDetailsSection>
+        </>
       )}
-      {!hasTargetResources && (
-        <ResourceSourceLink id="resource-source-link" resource={resource} />
-      )}
-      <ResourceSection id="resource-opening-hours">
-        {resource && <ResourceOpeningHours resource={resource} />}
-      </ResourceSection>
     </>
   );
 }

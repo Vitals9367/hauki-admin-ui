@@ -192,13 +192,6 @@ describe(`<ResourcePage />`, () => {
       expect(await screen.getByRole('heading', { level: 1 })).toHaveTextContent(
         testResource.name.fi
       );
-      expect(
-        await screen.findByText(testResource.address.fi)
-      ).toBeInTheDocument();
-
-      expect(
-        await screen.findByText(testResource.description.fi)
-      ).toBeInTheDocument();
     });
   });
 
@@ -213,7 +206,7 @@ describe(`<ResourcePage />`, () => {
     });
 
     await act(async () => {
-      expect(screen.getByText('Alakohteet')).toBeInTheDocument();
+      expect(screen.getByText('Toimipisteen alakohteet')).toBeInTheDocument();
 
       expect(
         await container.querySelector(
@@ -226,10 +219,6 @@ describe(`<ResourcePage />`, () => {
           'p[data-test="child-resource-description-0"]'
         )
       ).toHaveTextContent(testChildResource.description.fi);
-
-      expect(
-        await container.querySelector('a[data-test="child-resource-name-0"]')
-      ).toHaveTextContent(testChildResource.name.fi);
     });
   });
 
@@ -253,35 +242,8 @@ describe(`<ResourcePage />`, () => {
       ).toBeInTheDocument();
 
       expect(
-        await container.querySelector(
-          'p[data-test="parent-resource-description-0"]'
-        )
-      ).toHaveTextContent(testParentResource.description.fi);
-
-      expect(
         await container.querySelector('a[data-test="parent-resource-name-0"]')
       ).toHaveTextContent(testParentResource.name.fi);
-    });
-  });
-
-  it('should show resource source link', async () => {
-    let container: Element;
-    await act(async () => {
-      container = render(
-        <Router>
-          <ResourcePage id="tprek:8100" />
-        </Router>
-      ).container;
-    });
-
-    const linkSelector = `a[href="${testResource.extra_data.admin_url}"]`;
-
-    await act(async () => {
-      expect(await container.querySelector(linkSelector)).toBeInTheDocument();
-      expect(await container.querySelector(linkSelector)).toHaveAttribute(
-        'rel',
-        'noopener noreferrer'
-      );
     });
   });
 
@@ -319,13 +281,6 @@ describe(`<ResourcePage />`, () => {
       expect(await screen.getByRole('heading', { level: 1 })).toHaveTextContent(
         testResource.name.fi
       );
-      expect(
-        await screen.findByText(testResource.address.fi)
-      ).toBeInTheDocument();
-
-      expect(
-        await screen.findByText(testResource.description.fi)
-      ).toBeInTheDocument();
     });
   });
 });

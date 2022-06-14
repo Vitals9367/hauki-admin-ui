@@ -6,11 +6,13 @@ interface Props {
   children: React.ReactNode;
 }
 
-export default function NavigationAndFooterWrapper(props: Props): JSX.Element {
+export default function NavigationAndFooterWrapper({
+  children,
+}: Props): JSX.Element {
   return (
     <>
       <HaukiNavigation />
-      {props.children}
+      {children}
       <HaukiFooter />
     </>
   );

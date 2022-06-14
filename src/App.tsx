@@ -24,6 +24,7 @@ import PrivateResourceRoute from './resource/PrivateResourceRoute';
 import ResourcePage from './resource/page/ResourcePage';
 import CreateNewOpeningPeriodPage from './opening-period/v2/pages/CreateNewOpeningPeriodPage';
 import EditOpeningPeriodPage from './opening-period/v2/pages/EditOpeningPeriodPage';
+import { Language } from './common/lib/types';
 
 type OptionalAuthTokens = AuthTokens | undefined;
 
@@ -67,9 +68,12 @@ export default function App(): JSX.Element {
     removeTokens();
   };
 
+  const [language, setLanguage] = useState(Language.FI);
+
   return (
     <div className="App">
-      <AppContext.Provider value={{ hasOpenerWindow, closeAppWindow }}>
+      <AppContext.Provider
+        value={{ hasOpenerWindow, closeAppWindow, language, setLanguage }}>
         <AuthContext.Provider value={{ authTokens, clearAuth }}>
           <Router>
             <Switch>

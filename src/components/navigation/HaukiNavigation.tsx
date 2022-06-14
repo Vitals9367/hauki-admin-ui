@@ -7,9 +7,15 @@ import { AuthContextProps, TokenKeys, useAuth } from '../../auth/auth-context';
 import './HaukiNavigation.scss';
 import { SecondaryButton } from '../button/Button';
 import toast from '../notification/Toast';
+import LanguageSelect from '../language-select/LanguageSelect';
 
 export default function HaukiNavigation(): JSX.Element {
-  const { hasOpenerWindow, closeAppWindow } = useAppContext();
+  const {
+    hasOpenerWindow,
+    closeAppWindow,
+    language,
+    setLanguage,
+  } = useAppContext();
   const authProps: Partial<AuthContextProps> = useAuth();
   const { authTokens, clearAuth } = authProps;
   const history = useHistory();
@@ -34,7 +40,7 @@ export default function HaukiNavigation(): JSX.Element {
       }
     } catch (e) {
       // eslint-disable-next-line no-console
-      console.error('Sign out failed:', e.message);
+      console.error('Sign out failed:', (e as Error).message);
       showSignOutErrorNotification(
         `Uloskirjautuminen epäonnistui. Yritä myöhemmin uudestaan. Virhe: ${e}`
       );
@@ -74,6 +80,14 @@ export default function HaukiNavigation(): JSX.Element {
               </span>
             </div>
           </Navigation.Item>
+          {language && setLanguage && (
+            <LanguageSelect
+              id="language-select"
+              label="Sivun kielivalinta"
+              selectedLanguage={language}
+              onSelect={setLanguage}
+            />
+          )}
           <SecondaryButton
             dataTest="close-app-button"
             className="navigation-button"

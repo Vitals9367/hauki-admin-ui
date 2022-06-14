@@ -2,7 +2,6 @@
 
 .resource-details-section {
   border-bottom: 1px solid var(--hauki-content-border-color);
-  padding: var(--spacing-layout-2-xs) 0;
 }
 
 .resource-info-title-wrapper {
@@ -60,4 +59,9 @@
 
 .related-resource-list-item {
   margin-top: $spacing-m;
+}
+
+.child-resources-title {
+  color: var(--color-coat-of-arms);
+  margin: $spacing-l 0 $spacing-s;
 }
