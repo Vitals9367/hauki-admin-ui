@@ -33,7 +33,9 @@ const areConsecutiveDays = (
   openingHour1: PreviewOpeningHours,
   openingHour2: PreviewOpeningHours
 ): boolean =>
-  openingHour2.weekdays.sort()[0] - openingHour1.weekdays.sort()[0] === 1;
+  openingHour2.weekdays.sort((a, b) => a - b)[0] -
+    openingHour1.weekdays.sort((a, b) => a - b)[0] ===
+  1;
 
 const groupByConsecutiveDays = (
   openingHours: PreviewOpeningHours[]

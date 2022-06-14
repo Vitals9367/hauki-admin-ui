@@ -90,16 +90,18 @@ const OpeningHours = ({
     : '';
 
   const groupWeekdays = (weekdaysToIterate: number[]): number[][] =>
-    weekdaysToIterate.sort().reduce((acc: number[][], day): number[][] => {
-      const lastSet = acc.length > 0 ? acc[acc.length - 1] : [];
-      if (lastSet.length === 0) {
-        return [[day]];
-      }
-      if (lastSet && lastSet[lastSet.length - 1] + 1 === day) {
-        return [...acc.slice(0, acc.length - 1), [...lastSet, day]];
-      }
-      return [...acc, [day]];
-    }, []);
+    weekdaysToIterate
+      .sort((a, b) => a - b)
+      .reduce((acc: number[][], day): number[][] => {
+        const lastSet = acc.length > 0 ? acc[acc.length - 1] : [];
+        if (lastSet.length === 0) {
+          return [[day]];
+        }
+        if (lastSet && lastSet[lastSet.length - 1] + 1 === day) {
+          return [...acc.slice(0, acc.length - 1), [...lastSet, day]];
+        }
+        return [...acc, [day]];
+      }, []);
 
   const resolveDayTranslation = (day: number, useGenitive: boolean): string => {
     const language = Language.FI;

@@ -20,11 +20,11 @@ import {
 } from '../types';
 
 export const byWeekdays = (
-  a: { weekdays: number[] },
-  b: { weekdays: number[] }
+  openingHours1: { weekdays: number[] },
+  openingHours2: { weekdays: number[] }
 ): number => {
-  const day1 = a.weekdays.sort()[0];
-  const day2 = b.weekdays.sort()[0];
+  const day1 = openingHours1.weekdays.sort((a, b) => a - b)[0];
+  const day2 = openingHours2.weekdays.sort((a, b) => a - b)[0];
 
   return day1 - day2;
 };
