@@ -5,9 +5,7 @@ import { Language, Resource } from '../../common/lib/types';
 import { isUnitResource } from '../../common/utils/resource/helper';
 import storage from '../../common/utils/storage/storage';
 import Collapse from '../../components/collapse/Collapse';
-import LanguageSelect, {
-  displayLangVersionNotFound,
-} from '../../components/language-select/LanguageSelect';
+import { displayLangVersionNotFound } from '../../components/language-select/LanguageSelect';
 import { Link } from '../../components/link/Link';
 import ResourceOpeningHours from '../resource-opening-hours/ResourceOpeningHours';
 import ResourcePeriodsCopyFieldset, {
@@ -20,11 +18,9 @@ const resourceTitleId = 'resource-title';
 export const ResourceTitle = ({
   resource,
   language = Language.FI,
-  children,
 }: {
   resource?: Resource;
   language?: Language;
-  children: ReactNode;
 }): JSX.Element => {
   const name =
     resource?.name[language] ||
@@ -43,7 +39,6 @@ export const ResourceTitle = ({
         className="resource-info-title">
         {name}
       </h1>
-      <div className="resource-info-title-add-on">{children}</div>
     </div>
   );
 };
@@ -87,16 +82,17 @@ const ResourceDetailsSection = ({
 export default function ResourcePage({
   id,
   targetResourcesString,
+  language,
 }: {
   id: string;
   targetResourcesString?: string;
+  language: Language;
 }): JSX.Element {
   const [resource, setResource] = useState<Resource | undefined>(undefined);
   const [childResources, setChildResources] = useState<Resource[]>([]);
   const [parentResources, setParentResources] = useState<Resource[]>([]);
   const [error, setError] = useState<Error | undefined>(undefined);
   const [isLoading, setLoading] = useState<boolean>(true);
-  const [language, setLanguage] = useState<Language>(Language.FI);
   const [targetResourceData, setTargetResourceData] = useState<
     TargetResourcesProps | undefined
   >(undefined);
@@ -192,19 +188,7 @@ export default function ResourcePage({
             }
           />
         )}
-        <ResourceTitle resource={resource} language={language}>
-          <LanguageSelect
-            id="resource-info-language-select"
-            label="Toimipisteen tietojen kielivalinta"
-            className="resource-info-language-selector"
-            selectedLanguage={language}
-            onSelect={setLanguage}
-            formatter={(selectedLanguage: Language): string =>
-              `Esityskieli: ${selectedLanguage.toUpperCase()}`
-            }
-            theme="dark"
-          />
-        </ResourceTitle>
+        <ResourceTitle resource={resource} language={language} />
         {childResources.length && (
           <p>
             Tällä toimipisteellä on {childResources.length} alakohdetta. Niiden
@@ -248,7 +232,9 @@ export default function ResourcePage({
         </ResourceDetailsSection>
       )}
       <ResourceSection id="resource-opening-hours">
-        {resource && <ResourceOpeningHours resource={resource} />}
+        {resource && (
+          <ResourceOpeningHours language={language} resource={resource} />
+        )}
       </ResourceSection>
       {!hasTargetResources && childResources?.length > 0 && (
         <>

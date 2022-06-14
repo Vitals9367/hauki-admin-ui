@@ -7,6 +7,7 @@ import api from '../../common/utils/api/api';
 import { AppContext } from '../../App-context';
 import { AuthContext } from '../../auth/auth-context';
 import HaukiNavigation from './HaukiNavigation';
+import { Language } from '../../common/lib/types';
 
 describe('<HaukiNavigation>', () => {
   afterEach(() => {
@@ -31,7 +32,10 @@ describe('<HaukiNavigation>', () => {
         <AppContext.Provider value={{ hasOpenerWindow: true, closeAppWindow }}>
           <AuthContext.Provider
             value={{ authTokens: { name: 'tester' }, clearAuth: jest.fn() }}>
-            <HaukiNavigation />
+            <HaukiNavigation
+              language={Language.FI}
+              onLanguageChanged={jest.fn()}
+            />
           </AuthContext.Provider>
         </AppContext.Provider>
       </Router>

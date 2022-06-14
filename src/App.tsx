@@ -24,6 +24,7 @@ import PrivateResourceRoute from './resource/PrivateResourceRoute';
 import ResourcePage from './resource/page/ResourcePage';
 import CreateNewOpeningPeriodPage from './opening-period/v2/pages/CreateNewOpeningPeriodPage';
 import EditOpeningPeriodPage from './opening-period/v2/pages/EditOpeningPeriodPage';
+import { Language } from './common/lib/types';
 
 type OptionalAuthTokens = AuthTokens | undefined;
 
@@ -67,6 +68,8 @@ export default function App(): JSX.Element {
     removeTokens();
   };
 
+  const [language, setLanguage] = useState(Language.FI);
+
   return (
     <div className="App">
       <AppContext.Provider value={{ hasOpenerWindow, closeAppWindow }}>
@@ -74,14 +77,18 @@ export default function App(): JSX.Element {
           <Router>
             <Switch>
               <Route exact path="/">
-                <NavigationAndFooterWrapper>
+                <NavigationAndFooterWrapper
+                  language={language}
+                  onLanguageChanged={setLanguage}>
                   <Main id="main">
                     <h1>Etusivu</h1>
                   </Main>
                 </NavigationAndFooterWrapper>
               </Route>
               <Route exact path="/not_found">
-                <NavigationAndFooterWrapper>
+                <NavigationAndFooterWrapper
+                  language={language}
+                  onLanguageChanged={setLanguage}>
                   <Main id="main">
                     <h1>Kohdetta ei löydy</h1>
                     <p>
@@ -93,14 +100,18 @@ export default function App(): JSX.Element {
                 </NavigationAndFooterWrapper>
               </Route>
               <Route exact path="/unauthorized">
-                <NavigationAndFooterWrapper>
+                <NavigationAndFooterWrapper
+                  language={language}
+                  onLanguageChanged={setLanguage}>
                   <Main id="main">
                     <h1>Puutteelliset tunnukset</h1>
                   </Main>
                 </NavigationAndFooterWrapper>
               </Route>
               <Route exact path="/unauthenticated">
-                <NavigationAndFooterWrapper>
+                <NavigationAndFooterWrapper
+                  language={language}
+                  onLanguageChanged={setLanguage}>
                   <Main id="main">
                     <h1>Puuttuvat tunnukset</h1>
                   </Main>
@@ -113,10 +124,13 @@ export default function App(): JSX.Element {
                 render={({
                   match,
                 }: RouteComponentProps<{ id: string }>): ReactElement => (
-                  <NavigationAndFooterWrapper>
+                  <NavigationAndFooterWrapper
+                    language={language}
+                    onLanguageChanged={setLanguage}>
                     <Main id="main">
                       <ResourcePage
                         id={match.params.id}
+                        language={language}
                         targetResourcesString={targetResourcesStr}
                       />
                     </Main>
@@ -133,7 +147,10 @@ export default function App(): JSX.Element {
                   id: string;
                 }>): ReactElement => (
                   <>
-                    <HaukiNavigation />
+                    <HaukiNavigation
+                      language={language}
+                      onLanguageChanged={setLanguage}
+                    />
                     <Main id="main">
                       <CreateNewOpeningPeriodPage
                         resourceId={match.params.id}
@@ -152,7 +169,10 @@ export default function App(): JSX.Element {
                   id: string;
                 }>): ReactElement => (
                   <>
-                    <HaukiNavigation />
+                    <HaukiNavigation
+                      language={language}
+                      onLanguageChanged={setLanguage}
+                    />
                     <Main id="main">
                       <CreateNewOpeningPeriodPage
                         resourceId={match.params.id}
@@ -171,7 +191,10 @@ export default function App(): JSX.Element {
                   datePeriodId: string;
                 }>): ReactElement => (
                   <>
-                    <HaukiNavigation />
+                    <HaukiNavigation
+                      language={language}
+                      onLanguageChanged={setLanguage}
+                    />
                     <Main id="main">
                       <EditOpeningPeriodPage
                         resourceId={match.params.id}

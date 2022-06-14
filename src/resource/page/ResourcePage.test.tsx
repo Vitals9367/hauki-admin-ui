@@ -5,6 +5,7 @@ import { BrowserRouter as Router } from 'react-router-dom';
 import { datePeriodOptions } from '../../../test/fixtures/api-options';
 import {
   DatePeriod,
+  Language,
   Resource,
   ResourceState,
   ResourceType,
@@ -200,7 +201,7 @@ describe(`<ResourcePage />`, () => {
     await act(async () => {
       container = render(
         <Router>
-          <ResourcePage id="tprek:8100" />
+          <ResourcePage id="tprek:8100" language={Language.FI} />
         </Router>
       ).container;
     });
@@ -227,7 +228,7 @@ describe(`<ResourcePage />`, () => {
     await act(async () => {
       container = render(
         <Router>
-          <ResourcePage id="tprek:8100" />
+          <ResourcePage id="tprek:8100" language={Language.FI} />
         </Router>
       ).container;
     });

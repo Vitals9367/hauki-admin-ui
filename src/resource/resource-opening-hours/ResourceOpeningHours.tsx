@@ -9,7 +9,6 @@ import {
 } from '../../common/lib/types';
 import api from '../../common/utils/api/api';
 import { SecondaryButton } from '../../components/button/Button';
-import LanguageSelect from '../../components/language-select/LanguageSelect';
 import OpeningPeriod from './opening-period/OpeningPeriod';
 import './ResourceOpeningHours.scss';
 
@@ -29,6 +28,7 @@ const OpeningPeriodsList = ({
   theme,
   notFoundLabel,
   deletePeriod,
+  language,
 }: {
   id: string;
   exception: boolean;
@@ -40,6 +40,7 @@ const OpeningPeriodsList = ({
   theme: PeriodsListTheme;
   notFoundLabel: string;
   deletePeriod: (id: number) => Promise<void>;
+  language: Language;
 }): JSX.Element => {
   const openingPeriodsHeaderClassName =
     theme === PeriodsListTheme.LIGHT
@@ -47,7 +48,6 @@ const OpeningPeriodsList = ({
       : 'opening-periods-header';
 
   const history = useHistory();
-  const [language, setLanguage] = useState(Language.FI);
 
   return (
     <section className="opening-periods-section">
@@ -57,12 +57,6 @@ const OpeningPeriodsList = ({
         </div>
         <div className="opening-periods-header-container opening-periods-header-actions">
           <p className="period-count">{datePeriods.length} aukioloaikaa</p>
-          <LanguageSelect
-            id={`${id}-language-select`}
-            label={`${title}-listan kielivalinta`}
-            selectedLanguage={language}
-            onSelect={setLanguage}
-          />
           <SecondaryButton
             dataTest={addNewOpeningPeriodButtonDataTest}
             size="small"
@@ -120,8 +114,10 @@ const partitionByOverride = (datePeriods: DatePeriod[]): DatePeriod[][] =>
   );
 
 export default function ResourceOpeningHours({
+  language,
   resource,
 }: {
+  language: Language;
   resource: Resource;
 }): JSX.Element | null {
   const resourceId = resource.id;
@@ -181,6 +177,7 @@ export default function ResourceOpeningHours({
       theme={PeriodsListTheme.DEFAULT}
       notFoundLabel="Ei aukiolojaksoja."
       deletePeriod={deletePeriod}
+      language={language}
     />
   );
 }
