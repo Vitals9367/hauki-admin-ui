@@ -1,5 +1,5 @@
 import React, { ReactNode, useEffect, useState } from 'react';
-import { Notification } from 'hds-react';
+import { Accordion, Notification } from 'hds-react';
 import api from '../../common/utils/api/api';
 import { Language, Resource } from '../../common/lib/types';
 import { isUnitResource } from '../../common/utils/resource/helper';
@@ -251,29 +251,25 @@ export default function ResourcePage({
         {resource && <ResourceOpeningHours resource={resource} />}
       </ResourceSection>
       {!hasTargetResources && childResources?.length > 0 && (
-        <ResourceDetailsSection
-          id="child-resource-description"
-          title="Alakohteet">
+        <>
+          <h2 className="child-resources-title">Toimipisteen alakohteet</h2>
           <p
             data-test="child-resource-description"
             className="resource-description-text">
-            Tässä toimipisteessä on alakohteita. Alakohteet voivat olla
-            esimerkiksi toimipisteen eri tiloja. Voit muokata alakohteiden muita
-            tietoja tilapaikkarekisterissä.
+            Täällä voit määritellä toimipisteen alakohteiden aukioloaikoja.
+            Alakohteet voivat olla esimerkiksi toimipisteen eri tiloja. Voit
+            muokata alakohteiden muita tietoja tilapaikkarekisterissä.
           </p>
           {childResources?.map((childResource, index) => (
-            <div className="related-resource-list-item" key={index}>
-              <Link
-                dataTest={`child-resource-name-${index}`}
-                href={`/resource/${childResource.id}`}
-                text={
-                  childResource?.name[language] ||
-                  displayLangVersionNotFound({
-                    language,
-                    label: 'alakohteen nimi',
-                  })
-                }
-              />
+            <Accordion
+              key={index}
+              heading={
+                childResource?.name[language] ||
+                displayLangVersionNotFound({
+                  language,
+                  label: 'alakohteen nimi',
+                })
+              }>
               <p
                 data-test={`child-resource-description-${index}`}
                 className="resource-description-text related-resource-description-text">
@@ -283,9 +279,9 @@ export default function ResourcePage({
                     label: 'alakohteen kuvaus',
                   })}
               </p>
-            </div>
+            </Accordion>
           ))}
-        </ResourceDetailsSection>
+        </>
       )}
     </>
   );

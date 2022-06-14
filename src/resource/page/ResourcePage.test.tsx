@@ -219,10 +219,6 @@ describe(`<ResourcePage />`, () => {
           'p[data-test="child-resource-description-0"]'
         )
       ).toHaveTextContent(testChildResource.description.fi);
-
-      expect(
-        await container.querySelector('a[data-test="child-resource-name-0"]')
-      ).toHaveTextContent(testChildResource.name.fi);
     });
   });
 
