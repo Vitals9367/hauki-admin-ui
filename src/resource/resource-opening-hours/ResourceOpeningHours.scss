@@ -32,14 +32,10 @@
   .opening-period-header-button {
     font-family: HelsinkiGrotesk-Medium, Arial, sans-serif;
     color: var(--opening-periods-header-light-button-color);
-    border-color: var(
-      --opening-periods-header-light-button-border-color
-    ) !important;
+    border-color: var(--opening-periods-header-light-button-border-color) !important;
 
     &:hover {
-      background-color: var(
-        --opening-periods-header-light-button-hover-background-color
-      ) !important;
+      background-color: var(--opening-periods-header-light-button-hover-background-color) !important;
       color: var(--opening-periods-header-light-button-hover-color) !important;
     }
 

@@ -5,7 +5,6 @@ import { BrowserRouter as Router } from 'react-router-dom';
 import { datePeriodOptions } from '../../../test/fixtures/api-options';
 import {
   DatePeriod,
-  Language,
   Resource,
   ResourceState,
   ResourceType,
@@ -143,7 +142,7 @@ describe(`<ResourcePage />`, () => {
 
     render(
       <Router>
-        <ResourcePage id="tprek:8100" language={Language.FI} />
+        <ResourcePage id="tprek:8100" />
       </Router>
     );
 
@@ -164,7 +163,7 @@ describe(`<ResourcePage />`, () => {
     await act(async () => {
       render(
         <Router>
-          <ResourcePage id="tprek:8100" language={Language.FI} />
+          <ResourcePage id="tprek:8100" />
         </Router>
       );
     });
@@ -184,7 +183,7 @@ describe(`<ResourcePage />`, () => {
     await act(async () => {
       render(
         <Router>
-          <ResourcePage id="tprek:8100" language={Language.FI} />
+          <ResourcePage id="tprek:8100" />
         </Router>
       );
     });
@@ -201,7 +200,7 @@ describe(`<ResourcePage />`, () => {
     await act(async () => {
       container = render(
         <Router>
-          <ResourcePage id="tprek:8100" language={Language.FI} />
+          <ResourcePage id="tprek:8100" />
         </Router>
       ).container;
     });
@@ -228,7 +227,7 @@ describe(`<ResourcePage />`, () => {
     await act(async () => {
       container = render(
         <Router>
-          <ResourcePage id="tprek:8100" language={Language.FI} />
+          <ResourcePage id="tprek:8100" />
         </Router>
       ).container;
     });
@@ -253,7 +252,7 @@ describe(`<ResourcePage />`, () => {
     await act(async () => {
       container = render(
         <Router>
-          <ResourcePage id="tprek:8100" language={Language.FI} />
+          <ResourcePage id="tprek:8100" />
         </Router>
       ).container;
     });
@@ -269,7 +268,7 @@ describe(`<ResourcePage />`, () => {
     await act(async () => {
       render(
         <Router>
-          <ResourcePage id="tprek:8100" language={Language.FI} />
+          <ResourcePage id="tprek:8100" />
         </Router>
       );
     });
