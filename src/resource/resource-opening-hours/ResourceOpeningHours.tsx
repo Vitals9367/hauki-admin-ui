@@ -52,26 +52,22 @@ const OpeningPeriodsList = ({
   return (
     <section className="opening-periods-section">
       <header className={openingPeriodsHeaderClassName}>
-        <div className="opening-periods-header-container">
-          <h3 className="opening-periods-header-title">{title}</h3>
-        </div>
-        <div className="opening-periods-header-container opening-periods-header-actions">
-          <p className="period-count">{datePeriods.length} aukioloaikaa</p>
-          <SecondaryButton
-            dataTest={addNewOpeningPeriodButtonDataTest}
-            size="small"
-            className="opening-period-header-button"
-            light
-            onClick={(): void => {
-              if (exception) {
-                history.push(`/resource/${resourceId}/period/new-exception`);
-              } else {
-                history.push(`/resource/${resourceId}/period/new`);
-              }
-            }}>
-            Lisää aukioloaika +
-          </SecondaryButton>
-        </div>
+        <h3 className="opening-periods-header-title">{title}</h3>
+        <p className="period-count">{datePeriods.length} aukioloaikaa</p>
+        <SecondaryButton
+          dataTest={addNewOpeningPeriodButtonDataTest}
+          size="small"
+          className="opening-period-header-button"
+          light
+          onClick={(): void => {
+            if (exception) {
+              history.push(`/resource/${resourceId}/period/new-exception`);
+            } else {
+              history.push(`/resource/${resourceId}/period/new`);
+            }
+          }}>
+          Lisää aukioloaika +
+        </SecondaryButton>
       </header>
       {datePeriodConfig && (
         <ul className="opening-periods-list" data-test={id}>
