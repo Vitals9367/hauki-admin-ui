@@ -22,13 +22,13 @@ steps:
     yarn install
   displayName: 'Yarn install'
 
-# - script: |
-#     yarn lint
-#   displayName: 'Yarn lint'
+- script: |
+    yarn lint
+  displayName: 'Yarn lint'
 
-# - script: |
-#     CI=true yarn test
-#   displayName: 'Yarn run tests'
+- script: |
+    CI=true yarn test
+  displayName: 'Yarn run tests'
 
 # - script: |
 #    CI=true yarn test-cypress-with-new-test-api
