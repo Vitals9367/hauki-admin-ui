@@ -56,12 +56,6 @@ export const ResourceInfo = ({
   <section aria-labelledby={resourceTitleId}>{children}</section>
 );
 
-export const ResourceInfoSubTitle = ({
-  text,
-}: {
-  text: string;
-}): JSX.Element => <h2 className="resource-info-subtitle">{text}</h2>;
-
 const ResourceSection = ({
   id,
   children,
