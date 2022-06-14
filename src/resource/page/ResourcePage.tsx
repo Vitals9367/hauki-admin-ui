@@ -189,12 +189,12 @@ export default function ResourcePage({
           />
         )}
         <ResourceTitle resource={resource} language={language} />
-        {childResources.length && (
+        {childResources.length ? (
           <p>
             Tällä toimipisteellä on {childResources.length} alakohdetta. Niiden
             aukioloajat löytyvät alempana tällä sivulla.
           </p>
-        )}
+        ) : null}
       </ResourceInfo>
       {!hasTargetResources && parentResources?.length > 0 && (
         <ResourceDetailsSection
