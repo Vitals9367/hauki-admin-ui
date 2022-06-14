@@ -164,7 +164,7 @@ describe(`<ResourcePage />`, () => {
     await act(async () => {
       render(
         <Router>
-          <ResourcePage id="tprek:8100" />
+          <ResourcePage id="tprek:8100" language={Language.FI} />
         </Router>
       );
     });
@@ -184,7 +184,7 @@ describe(`<ResourcePage />`, () => {
     await act(async () => {
       render(
         <Router>
-          <ResourcePage id="tprek:8100" />
+          <ResourcePage id="tprek:8100" language={Language.FI} />
         </Router>
       );
     });
@@ -253,7 +253,7 @@ describe(`<ResourcePage />`, () => {
     await act(async () => {
       container = render(
         <Router>
-          <ResourcePage id="tprek:8100" />
+          <ResourcePage id="tprek:8100" language={Language.FI} />
         </Router>
       ).container;
     });
@@ -269,7 +269,7 @@ describe(`<ResourcePage />`, () => {
     await act(async () => {
       render(
         <Router>
-          <ResourcePage id="tprek:8100" />
+          <ResourcePage id="tprek:8100" language={Language.FI} />
         </Router>
       );
     });
