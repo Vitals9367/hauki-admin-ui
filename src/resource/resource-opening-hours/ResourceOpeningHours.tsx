@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { IconInfoCircle, Notification } from 'hds-react';
+import { Notification } from 'hds-react';
 import { useHistory } from 'react-router-dom';
 import {
   DatePeriod,
@@ -54,14 +54,9 @@ const OpeningPeriodsList = ({
       <header className={openingPeriodsHeaderClassName}>
         <div className="opening-periods-header-container">
           <h3 className="opening-periods-header-title">{title}</h3>
-          <IconInfoCircle
-            aria-hidden
-            aria-label="Lisätietoja aukiolojaksoista nappi"
-            className="opening-periods-header-info"
-          />
         </div>
         <div className="opening-periods-header-container opening-periods-header-actions">
-          <p className="period-count">{datePeriods.length} jaksoa</p>
+          <p className="period-count">{datePeriods.length} aukioloaikaa</p>
           <LanguageSelect
             id={`${id}-language-select`}
             label={`${title}-listan kielivalinta`}
@@ -80,7 +75,7 @@ const OpeningPeriodsList = ({
                 history.push(`/resource/${resourceId}/period/new`);
               }
             }}>
-            Lisää uusi +
+            Lisää aukioloaika +
           </SecondaryButton>
         </div>
       </header>
@@ -180,7 +175,7 @@ export default function ResourceOpeningHours({
       exception={false}
       addNewOpeningPeriodButtonDataTest="add-new-opening-period-button"
       resourceId={resourceId}
-      title="Aukiolojaksot"
+      title="Aukioloajat"
       datePeriods={defaultPeriods}
       datePeriodConfig={datePeriodConfig}
       theme={PeriodsListTheme.DEFAULT}

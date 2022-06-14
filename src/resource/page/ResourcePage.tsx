@@ -8,7 +8,7 @@ import Collapse from '../../components/collapse/Collapse';
 import LanguageSelect, {
   displayLangVersionNotFound,
 } from '../../components/language-select/LanguageSelect';
-import { ExternalLink, Link } from '../../components/link/Link';
+import { Link } from '../../components/link/Link';
 import ResourceOpeningHours from '../resource-opening-hours/ResourceOpeningHours';
 import ResourcePeriodsCopyFieldset, {
   TargetResourcesProps,
