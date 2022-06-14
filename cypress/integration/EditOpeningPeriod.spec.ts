@@ -2,7 +2,7 @@
 /// <reference path="../index.d.ts" />
 import { ResourceState } from '../../src/common/lib/types';
 
-describe('User edits an opening period', () => {
+describe.skip('User edits an opening period', () => {
   let dataPeriodId: string | undefined;
   const resourceId = Cypress.env('resourceId');
   const datePeriodTitlePrefix = 'e2e-test Muokkaamisen testijakson otsikko';

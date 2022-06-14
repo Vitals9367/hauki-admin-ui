@@ -9,7 +9,7 @@ describe('User adds a new opening period', () => {
     cy.visitResourcePageAsAuthenticatedUser(Cypress.env('resourceId'));
   });
 
-  it('User successfully adds a new opening period', () => {
+  it.skip('User successfully adds a new opening period', () => {
     // Begin from resource page
     cy.get('[data-test=resource-opening-periods-list] ', {
       timeout: 10000,
@@ -80,7 +80,7 @@ describe('User adds a new opening period', () => {
     }).should('be.visible');
   });
 
-  it('User successfully adds a new opening period which is open through the period', () => {
+  it.skip('User successfully adds a new opening period which is open through the period', () => {
     // Begin from resource page
     cy.get('[data-test=resource-opening-periods-list] ', {
       timeout: 10000,

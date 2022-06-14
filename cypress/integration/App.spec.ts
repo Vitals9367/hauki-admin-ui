@@ -11,7 +11,7 @@ describe('Open aukiolot app', () => {
     cy.contains('Aukiolot');
   });
 
-  it('Has no detectable a11y violations on resource page load', () => {
+  it.skip('Has no detectable a11y violations on resource page load', () => {
     cy.injectAxe();
     cy.get('[data-test=resource-info]', { timeout: 5000 }).should('be.visible');
 
@@ -27,7 +27,7 @@ describe('Open aukiolot app', () => {
     );
   });
 
-  it('Has no detectable a11y violations on add new opening period page', () => {
+  it.skip('Has no detectable a11y violations on add new opening period page', () => {
     cy.injectAxe();
     cy.get('[data-test=resource-info]', { timeout: 5000 }).should('be.visible');
 
