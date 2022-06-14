@@ -9,6 +9,8 @@
 }
 
 .opening-hours-preview-table {
+  border-collapse: separate;
+  border-spacing: 0;
   margin-bottom: 1.5rem;
   min-width: 100%;
   table-layout: fixed;
@@ -95,11 +97,6 @@ td::first-letter {
 
 .time-span-row--odd {
   background: #fafafb;
-}
-
-.opening-hours-preview-table {
-  border-collapse: separate;
-  border-spacing: 0;
 }
 
 .opening-hours-preview-table__opening-hours {

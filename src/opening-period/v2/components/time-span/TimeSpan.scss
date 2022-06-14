@@ -14,6 +14,11 @@
   }
 }
 
+.remove-time-span-button {
+  grid-column: 1;
+  margin-left: -25px;
+}
+
 .time-span--with-extra-fields {
   @extend .time-span;
 
@@ -50,11 +55,6 @@
 
 .time-span__full-day-checkbox {
   padding-bottom: 1rem;
-}
-
-.remove-time-span-button {
-  grid-column: 1;
-  margin-left: -25px;
 }
 
 @media screen and (min-width: $breakpoint-m) {

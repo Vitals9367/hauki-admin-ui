@@ -37,13 +37,13 @@ label.day-label {
     transition-timing-function: ease-out;
   }
 
+  & input[type='checkbox']:focus ~ .day-option {
+    outline: blue solid 2px;
+  }
+
   & input[type='checkbox']:checked ~ .day-option:hover {
     background-color: var(--color-coat-of-arms-dark);
     border-color: var(--color-coat-of-arms-dark);
-  }
-
-  & input[type='checkbox']:focus ~ .day-option {
-    outline: blue solid 2px;
   }
 
   &::first-letter {
