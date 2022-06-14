@@ -143,7 +143,7 @@ describe(`<ResourcePage />`, () => {
 
     render(
       <Router>
-        <ResourcePage id="tprek:8100" />
+        <ResourcePage id="tprek:8100" language={Language.FI} />
       </Router>
     );
 
