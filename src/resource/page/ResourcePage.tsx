@@ -114,35 +114,6 @@ const ResourceDetailsSection = ({
   </ResourceSection>
 );
 
-const ResourceSourceLink = ({
-  id,
-  resource,
-}: {
-  id: string;
-  resource?: Resource;
-}): JSX.Element | null => {
-  const adminLink = resource?.extra_data?.admin_url;
-
-  if (!adminLink) {
-    return null;
-  }
-
-  return (
-    <ResourceSection id={id}>
-      <p>
-        Toimipisteeseen liittyvät tiedot kieliversioineen ovat lähtöisin
-        Toimipisterekisteristä. Tietojen muuttaminen on mahdollista
-        Toimipisterekisterissä.
-        <br />
-        <ExternalLink
-          href={adminLink}
-          text="Tarkastele toimipisteen tietoja Toimipisterekisterissä"
-        />
-      </p>
-    </ResourceSection>
-  );
-};
-
 export default function ResourcePage({
   id,
   targetResourcesString,
@@ -266,15 +237,6 @@ export default function ResourcePage({
         </ResourceTitle>
         <ResourceAddress resource={resource} language={language} />
       </ResourceInfo>
-      <ResourceDetailsSection id="resource-description" title="Perustiedot">
-        <p className="resource-description-text">
-          {resource?.description[language] ||
-            displayLangVersionNotFound({
-              language,
-              label: 'toimipisteen kuvaus',
-            })}
-        </p>
-      </ResourceDetailsSection>
       {!hasTargetResources && parentResources?.length > 0 && (
         <ResourceDetailsSection
           id="parent-resource-description"
@@ -346,9 +308,6 @@ export default function ResourcePage({
             </div>
           ))}
         </ResourceDetailsSection>
-      )}
-      {!hasTargetResources && (
-        <ResourceSourceLink id="resource-source-link" resource={resource} />
       )}
       <ResourceSection id="resource-opening-hours">
         {resource && <ResourceOpeningHours resource={resource} />}

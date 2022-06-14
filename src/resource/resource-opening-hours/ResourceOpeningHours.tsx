@@ -7,10 +7,8 @@ import {
   Resource,
   UiDatePeriodConfig,
 } from '../../common/lib/types';
-import { isUnitResource } from '../../common/utils/resource/helper';
 import api from '../../common/utils/api/api';
 import { SecondaryButton } from '../../components/button/Button';
-import Collapse from '../../components/collapse/Collapse';
 import LanguageSelect from '../../components/language-select/LanguageSelect';
 import OpeningPeriod from './opening-period/OpeningPeriod';
 import './ResourceOpeningHours.scss';
@@ -136,9 +134,10 @@ export default function ResourceOpeningHours({
   const [datePeriodConfig, setDatePeriodConfig] = useState<
     UiDatePeriodConfig
   >();
-  const [[defaultPeriods, exceptionPeriods], setDividedDatePeriods] = useState<
-    DatePeriod[][]
-  >([[], []]);
+  const [[defaultPeriods], setDividedDatePeriods] = useState<DatePeriod[][]>([
+    [],
+    [],
+  ]);
   const fetchDatePeriods = async (id: number): Promise<void> => {
     try {
       const [apiDatePeriods, uiDatePeriodOptions] = await Promise.all([
@@ -149,7 +148,7 @@ export default function ResourceOpeningHours({
       setDividedDatePeriods(datePeriodLists);
       setDatePeriodConfig(uiDatePeriodOptions);
     } catch (e) {
-      setError(e);
+      setError(e as Error);
     }
   };
 
@@ -176,45 +175,17 @@ export default function ResourceOpeningHours({
   }
 
   return (
-    <Collapse
-      isOpen
-      collapseContentId={`${resourceId}-opening-hours-section`}
-      title={`${
-        isUnitResource(resource) ? 'Toimipisteen' : 'Alakohteen'
-      } aukiolotiedot`}>
-      <p>
-        {`${
-          isUnitResource(resource) ? 'Toimipisteen' : 'Alakohteen'
-        } aukiolotietoja muokataan jaksokohtaisesti. Aukiolojaksot
-        voivat olla julkaistuja tai julkaisemattomia. Alla voit selata myös
-        tulevia ja menneitä aukiolojaksoja. Näet alla myös eri kieliversiot
-        valitsemalla kielen valikosta. Huomioithan, että palvelu voi itse valita
-        aukiolojaksojen esitystavan, se ei välttämättä ole alla näkyvän
-        kaltainen.`}
-      </p>
-      <OpeningPeriodsList
-        id="resource-opening-periods-list"
-        exception={false}
-        addNewOpeningPeriodButtonDataTest="add-new-opening-period-button"
-        resourceId={resourceId}
-        title="Aukiolojaksot"
-        datePeriods={defaultPeriods}
-        datePeriodConfig={datePeriodConfig}
-        theme={PeriodsListTheme.DEFAULT}
-        notFoundLabel="Ei aukiolojaksoja."
-        deletePeriod={deletePeriod}
-      />
-      <OpeningPeriodsList
-        id="resource-exception-opening-periods-list"
-        exception
-        resourceId={resourceId}
-        title="Poikkeusaukiolojaksot"
-        datePeriods={exceptionPeriods}
-        datePeriodConfig={datePeriodConfig}
-        theme={PeriodsListTheme.LIGHT}
-        notFoundLabel="Ei poikkeusaukiolojaksoja."
-        deletePeriod={deletePeriod}
-      />
-    </Collapse>
+    <OpeningPeriodsList
+      id="resource-opening-periods-list"
+      exception={false}
+      addNewOpeningPeriodButtonDataTest="add-new-opening-period-button"
+      resourceId={resourceId}
+      title="Aukiolojaksot"
+      datePeriods={defaultPeriods}
+      datePeriodConfig={datePeriodConfig}
+      theme={PeriodsListTheme.DEFAULT}
+      notFoundLabel="Ei aukiolojaksoja."
+      deletePeriod={deletePeriod}
+    />
   );
 }
