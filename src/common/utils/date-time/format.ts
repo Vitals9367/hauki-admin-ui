@@ -43,37 +43,37 @@ export const dropMilliseconds = (time: string): string => time.slice(0, -3);
 
 type WeekdayIndexToShortNameMappings = {
   [language in Language]: {
-    [weekdayType in WeekdayTypes]: string;
+    [weekdayType in WeekdayTypes]: [string, string];
   };
 };
 
 const weekdays: WeekdayIndexToShortNameMappings = {
   fi: {
-    1: 'ma',
-    2: 'ti',
-    3: 'ke',
-    4: 'to',
-    5: 'pe',
-    6: 'la',
-    7: 'su',
+    1: ['Ma', 'Maanantai'],
+    2: ['Ti', 'Tiistai'],
+    3: ['Ke', 'Keskiviikko'],
+    4: ['To', 'Torstai'],
+    5: ['Pe', 'Perjantai'],
+    6: ['La', 'Lauantai'],
+    7: ['Su', 'Sunnutai'],
   },
   sv: {
-    1: 'Mån',
-    2: 'Tis',
-    3: 'Ons',
-    4: 'Tors',
-    5: 'Fre',
-    6: 'Lör',
-    7: 'Sön',
+    1: ['Mån', 'Måndag'],
+    2: ['Tis', 'Tisdag'],
+    3: ['Ons', 'Onsdag'],
+    4: ['Tors', 'Torsdag'],
+    5: ['Fre', 'Fredag'],
+    6: ['Lör', 'Lördag'],
+    7: ['Sön', 'Söndag'],
   },
   en: {
-    1: 'Mon.',
-    2: 'Tue.',
-    3: 'Wed.',
-    4: 'Thu.',
-    5: 'Fri.',
-    6: 'Sat.',
-    7: 'Sun.',
+    1: ['Mon.', 'Monday'],
+    2: ['Tue.', 'Tuesday'],
+    3: ['Wed.', 'Wednesday'],
+    4: ['Thu.', 'Thursday'],
+    5: ['Fri.', 'Friday'],
+    6: ['Sat.', 'Saturday'],
+    7: ['Sun.', 'Sunday'],
   },
 };
 
@@ -84,44 +84,8 @@ export function getWeekdayShortNameByIndexAndLang({
   weekdayIndex: WeekdayTypes;
   language: Language;
 }): string {
-  return weekdays[language][weekdayIndex];
+  return weekdays[language][weekdayIndex][0];
 }
-
-type WeekdayIndexToLongNameMappings = {
-  [language in Language]: {
-    [weekdayType in WeekdayTypes]: string;
-  };
-};
-
-const weekdaysLong: WeekdayIndexToLongNameMappings = {
-  fi: {
-    1: 'maanantai',
-    2: 'tiistai',
-    3: 'keskiviikko',
-    4: 'torstai',
-    5: 'perjantai',
-    6: 'lauantai',
-    7: 'sunnuntai',
-  },
-  sv: {
-    1: 'Måndag',
-    2: 'Tisdag',
-    3: 'Onsdag',
-    4: 'Torsdag',
-    5: 'Fredag',
-    6: 'Lördag',
-    7: 'Söndag',
-  },
-  en: {
-    1: 'Monday',
-    2: 'Tuesday',
-    3: 'Wednesday',
-    4: 'Thursday',
-    5: 'Friday',
-    6: 'Saturday',
-    7: 'Sunday',
-  },
-};
 
 export function getWeekdayLongNameByIndexAndLang({
   weekdayIndex,
@@ -130,7 +94,7 @@ export function getWeekdayLongNameByIndexAndLang({
   weekdayIndex: WeekdayTypes;
   language: Language;
 }): string {
-  return weekdaysLong[language][weekdayIndex];
+  return weekdays[language][weekdayIndex][1];
 }
 
 type WeekdaySpan = {
