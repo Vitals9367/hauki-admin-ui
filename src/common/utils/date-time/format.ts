@@ -43,48 +43,58 @@ export const dropMilliseconds = (time: string): string => time.slice(0, -3);
 
 type WeekdayIndexToShortNameMappings = {
   [language in Language]: {
-    [weekdayType in WeekdayTypes]: string;
+    [weekdayType in WeekdayTypes]: [string, string];
   };
 };
 
 const weekdays: WeekdayIndexToShortNameMappings = {
   fi: {
-    1: 'ma',
-    2: 'ti',
-    3: 'ke',
-    4: 'to',
-    5: 'pe',
-    6: 'la',
-    7: 'su',
+    1: ['ma', 'Maanantai'],
+    2: ['ti', 'Tiistai'],
+    3: ['ke', 'Keskiviikko'],
+    4: ['to', 'Torstai'],
+    5: ['pe', 'Perjantai'],
+    6: ['la', 'Lauantai'],
+    7: ['su', 'Sunnutai'],
   },
   sv: {
-    1: 'Mån',
-    2: 'Tis',
-    3: 'Ons',
-    4: 'Tors',
-    5: 'Fre',
-    6: 'Lör',
-    7: 'Sön',
+    1: ['Mån', 'Måndag'],
+    2: ['Tis', 'Tisdag'],
+    3: ['Ons', 'Onsdag'],
+    4: ['Tors', 'Torsdag'],
+    5: ['Fre', 'Fredag'],
+    6: ['Lör', 'Lördag'],
+    7: ['Sön', 'Söndag'],
   },
   en: {
-    1: 'Mon.',
-    2: 'Tue.',
-    3: 'Wed.',
-    4: 'Thu.',
-    5: 'Fri.',
-    6: 'Sat.',
-    7: 'Sun.',
+    1: ['Mon.', 'Monday'],
+    2: ['Tue.', 'Tuesday'],
+    3: ['Wed.', 'Wednesday'],
+    4: ['Thu.', 'Thursday'],
+    5: ['Fri.', 'Friday'],
+    6: ['Sat.', 'Saturday'],
+    7: ['Sun.', 'Sunday'],
   },
 };
 
-function getWeekdayShortNameByIndexAndLang({
+export function getWeekdayShortNameByIndexAndLang({
   weekdayIndex,
   language,
 }: {
   weekdayIndex: WeekdayTypes;
   language: Language;
 }): string {
-  return weekdays[language][weekdayIndex];
+  return weekdays[language][weekdayIndex][0];
+}
+
+export function getWeekdayLongNameByIndexAndLang({
+  weekdayIndex,
+  language,
+}: {
+  weekdayIndex: WeekdayTypes;
+  language: Language;
+}): string {
+  return weekdays[language][weekdayIndex][1];
 }
 
 type WeekdaySpan = {
@@ -94,7 +104,7 @@ type WeekdaySpan = {
 };
 
 export function createWeekdaysStringFromIndices(
-  weekdayIndexArray: Weekdays | null,
+  weekdayIndexArray: Weekdays | number[] | null,
   language: Language
 ): string {
   if (!weekdayIndexArray) {

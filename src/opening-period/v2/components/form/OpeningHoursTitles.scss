@@ -1,0 +1,19 @@
+@import 'node_modules/hds-design-tokens/lib/all.scss';
+
+.opening-hours-titles {
+  display: grid;
+  gap: 1.5rem;
+  grid-template-columns: 1fr;
+}
+
+@media screen and (min-width: $breakpoint-m) {
+  .opening-hours-titles {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media screen and (min-width: $breakpoint-l) {
+  .opening-hours-titles {
+    grid-template-columns: 1fr 1fr 1fr;
+  }
+}

@@ -1,22 +1,24 @@
 @import 'node_modules/hds-design-tokens/lib/all.scss';
 
 .day-option {
-  display: block;
-  margin-top: 0;
-  border: $spacing-4-xs solid;
-  width: $spacing-layout-l;
-  text-align: center;
-  padding-top: 5px;
-  padding-bottom: 5px;
-  color: var(--color-coat-of-arms);
+  align-items: center;
   border-color: var(--color-coat-of-arms);
+  border: $spacing-4-xs solid;
+  box-sizing: border-box;
+  color: var(--color-coat-of-arms);
+  display: flex;
+  height: 44px;
+  justify-content: center;
+  margin-top: 0;
+  padding-bottom: 5px;
+  padding-top: 5px;
+  text-align: center;
 }
 
 label.day-label {
   position: relative;
   display: inline-block;
   cursor: pointer;
-  margin-right: $spacing-s;
   margin-top: 0;
 
   input[type='checkbox'] {
@@ -46,12 +48,5 @@ label.day-label {
 
   &::first-letter {
     text-transform: uppercase;
-  }
-}
-
-.weekdays {
-  legend {
-    font-family: HelsinkiGrotesk-Medium, Arial, sans-serif;
-    font-size: $fontsize-heading-xxs;
   }
 }

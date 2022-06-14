@@ -1,0 +1,52 @@
+@import 'node_modules/hds-design-tokens/lib/all.scss';
+
+.resource-title {
+  align-items: center;
+  border-bottom: 1px solid var(--hauki-content-border-color);
+  box-shadow: 0 2px 10px 0 rgba(212, 212, 212, 0.2);
+  display: flex;
+  gap: 1.5rem;
+  justify-content: space-between;
+  left: 0;
+  margin-top: -1rem;
+  position: sticky;
+  right: 0;
+  top: 0;
+  transition: padding 300ms;
+  z-index: 8;
+}
+
+@media screen and (min-width: $breakpoint-m) {
+  .resource-title {
+    margin: -1.5rem;
+    margin-bottom: 0;
+  }
+
+  .resource-title--on-top {
+    padding-bottom: 0.5rem;
+    padding-top: 0.5rem;
+  }
+}
+
+@media screen and (min-width: $breakpoint-l) {
+  .resource-title {
+    box-shadow: none;
+    margin: 0;
+  }
+}
+
+.mobile-preview-container {
+  margin-right: -15px;
+}
+
+@media screen and (min-width: $breakpoint-m) {
+  .mobile-preview-container {
+    margin-right: 0;
+  }
+}
+
+@media screen and (min-width: $breakpoint-l) {
+  .mobile-preview-container {
+    display: none;
+  }
+}

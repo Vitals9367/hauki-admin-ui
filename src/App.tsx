@@ -22,8 +22,8 @@ import HaukiNavigation from './components/navigation/HaukiNavigation';
 import './App.scss';
 import PrivateResourceRoute from './resource/PrivateResourceRoute';
 import ResourcePage from './resource/page/ResourcePage';
-import CreateNewOpeningPeriodPage from './opening-period/page/CreateNewOpeningPeriodPage';
-import EditOpeningPeriodPage from './opening-period/page/EditOpeningPeriodPage';
+import CreateNewOpeningPeriodPage from './opening-period/v2/pages/CreateNewOpeningPeriodPage';
+import EditOpeningPeriodPage from './opening-period/v2/pages/EditOpeningPeriodPage';
 
 type OptionalAuthTokens = AuthTokens | undefined;
 
@@ -136,7 +136,6 @@ export default function App(): JSX.Element {
                     <HaukiNavigation />
                     <Main id="main">
                       <CreateNewOpeningPeriodPage
-                        exception={false}
                         resourceId={match.params.id}
                       />
                     </Main>
@@ -156,7 +155,6 @@ export default function App(): JSX.Element {
                     <HaukiNavigation />
                     <Main id="main">
                       <CreateNewOpeningPeriodPage
-                        exception
                         resourceId={match.params.id}
                       />
                     </Main>

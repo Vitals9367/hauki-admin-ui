@@ -60,10 +60,15 @@
 }
 
 .supplementary-button.supplementary-button.supplementary-button {
+  --background-color: transparent;
+  --background-color-hover: transparent;
+  --background-color-hover-focus: transparent;
   --color: var(--color-coat-of-arms);
   --color-hover: var(--color-coat-of-arms);
   --color-focus: var(--color-coat-of-arms);
   --color-hover-focus: var(--color-coat-of-arms);
 
-  border: 0 none;
+  &:hover {
+    text-decoration: underline;
+  }
 }

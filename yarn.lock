@@ -1224,6 +1224,11 @@
     debug "^3.1.0"
     lodash.once "^4.1.1"
 
+"@emotion/styled-base@^11.0.0":
+  version "11.0.0"
+  resolved "https://registry.yarnpkg.com/@emotion/styled-base/-/styled-base-11.0.0.tgz#d84547eb39869d406db593cce1fbcbf9c435dbaa"
+  integrity sha512-/NY/PXrQkl/wI0+0E3QWd+m9kMg7h4THmjbPEe0VVnplNtdJC6db0VHDqmaC2tsEDcda6zvy3b8giM9DHa6BLw==
+
 "@hapi/address@2.x.x":
   version "2.1.4"
   resolved "https://registry.yarnpkg.com/@hapi/address/-/address-2.1.4.tgz#5d67ed43f3fd41a69d4b9ff7b56e7c0d1d0a81e5"
@@ -6626,28 +6631,34 @@ hash.js@^1.0.0, hash.js@^1.0.3:
     inherits "^2.0.3"
     minimalistic-assert "^1.0.1"
 
-hds-core@1.8.0, hds-core@^1.8.0:
-  version "1.8.0"
-  resolved "https://registry.yarnpkg.com/hds-core/-/hds-core-1.8.0.tgz#f25ba1569f8483eab9b6434c39c1e2dfd3c68a2d"
-  integrity sha512-fzTswnnJ65uVnd7QXDemq/ukdRWvkC7Vc8aM6jt+9NDvwIuMjOG5+nPWR0EtfXLJjgOfo5SWPQn58C8WEp+j/A==
+hds-core@1.12.0:
+  version "1.12.0"
+  resolved "https://registry.yarnpkg.com/hds-core/-/hds-core-1.12.0.tgz#6dc8be76bfe8552fd3d0ff19c42ee550570f4c09"
+  integrity sha512-xRpTxK0hWiztUGLqk4xHs77adAGolvPdEW3u4zpC5RYPzh+gjIQte/qFZVJ74zO8Trtu+xf4ULRgQyN+TK1/+w==
 
-hds-design-tokens@^1.8.0:
-  version "1.8.0"
-  resolved "https://registry.yarnpkg.com/hds-design-tokens/-/hds-design-tokens-1.8.0.tgz#c0f6568cfee7a9e26b6e30d87d4217c3d2ae1d3e"
-  integrity sha512-ivDPGfMzBBR02ptGUIlieSC4g0jRwXfQofDqLl2ZbvmTBdeHJhQNSN79Y/l5ufLTNTWFnY96C4s2jIrRu1dffg==
+hds-core@^1.15.0:
+  version "1.15.0"
+  resolved "https://registry.yarnpkg.com/hds-core/-/hds-core-1.15.0.tgz#9ffd51e5b75c6ef16dc9afa1366ac474c9d95a18"
+  integrity sha512-+eroRfvXK5hVMLcOshJcLkag11YnlCQlz4VxiTpiCkIcfoP70V10e3NI5c/NsChz/8VNcfqfeIjgZf2q2UxFWw==
 
-hds-react@1.8.0:
-  version "1.8.0"
-  resolved "https://registry.yarnpkg.com/hds-react/-/hds-react-1.8.0.tgz#4b3b72288947d15198a5957150aaa138c31b3b6b"
-  integrity sha512-bdYL046Ae6y/jKwlCeUS4nTkPMCoZwsj8XGEgCSupb1f4qrhC3pEJuJiOuBXn2r0c3wRd1FQ+LLkfakiazJmbg==
+hds-design-tokens@^1.15.0:
+  version "1.15.0"
+  resolved "https://registry.yarnpkg.com/hds-design-tokens/-/hds-design-tokens-1.15.0.tgz#48ba0eab88822e27a642085619b5a7bdef8ec858"
+  integrity sha512-5RaU7mf/HSqtulYMiPJn0XOOuU0SNG2sGjaz1ARHJ4448gRXyOQ3yNk2Ofirae6FIpxEVmNRAW9/cS287m7wog==
+
+hds-react@1.12.0:
+  version "1.12.0"
+  resolved "https://registry.yarnpkg.com/hds-react/-/hds-react-1.12.0.tgz#994be7138e1a06270ef82d064ec02e5eed18789a"
+  integrity sha512-HCMLTPni88hAZD1ZZo0POj4D9pZ5leEloMVzEVJpUiaZ537H0J2tCGsUX1KPiKTtxxFwFmYd5H6Y0ljTGORxPA==
   dependencies:
     "@babel/runtime" "7.11.2"
+    "@emotion/styled-base" "^11.0.0"
     "@juggle/resize-observer" "3.2.0"
     "@popperjs/core" "2.5.3"
     "@react-aria/visually-hidden" "3.2.0"
     date-fns "2.16.1"
     downshift "6.0.6"
-    hds-core "1.8.0"
+    hds-core "1.12.0"
     lodash.isequal "4.5.0"
     lodash.isfunction "3.0.9"
     lodash.uniqueid "4.0.1"
@@ -6657,6 +6668,7 @@ hds-react@1.8.0:
     react-spring "9.3.0"
     react-use-measure "2.0.1"
     react-virtual "2.2.7"
+    typescript "4.5.5"
 
 he@^1.2.0:
   version "1.2.0"
@@ -13220,6 +13232,11 @@ typedarray@^0.0.6:
   version "0.0.6"
   resolved "https://registry.yarnpkg.com/typedarray/-/typedarray-0.0.6.tgz#867ac74e3864187b1d3d47d996a78ec5c8830777"
   integrity sha1-hnrHTjhkGHsdPUfZlqeOxciDB3c=
+
+typescript@4.5.5:
+  version "4.5.5"
+  resolved "https://registry.yarnpkg.com/typescript/-/typescript-4.5.5.tgz#d8c953832d28924a9e3d37c73d729c846c5896f3"
+  integrity sha512-TCTIul70LyWe6IJWT8QSYeA54WQe8EjQFU4wY52Fasj5UKx88LNYKCgBEHcOMOrFF1rKGbD8v/xcNWVUq9SymA==
 
 typescript@~3.9.10:
   version "3.9.10"

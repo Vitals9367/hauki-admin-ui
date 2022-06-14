@@ -1,4 +1,8 @@
-import { Button as HDSButton, ButtonSize as HDSButtonSize } from 'hds-react';
+import {
+  Button as HDSButton,
+  ButtonSize,
+  ButtonSize as HDSButtonSize,
+} from 'hds-react';
 import React, { ReactNode } from 'react';
 import './Button.scss';
 
@@ -17,6 +21,7 @@ interface ButtonProps {
   disabled?: boolean;
   isLoading?: boolean;
   loadingText?: string;
+  size?: ButtonSize;
 }
 
 export function SecondaryButton({
@@ -58,6 +63,7 @@ export function PrimaryButton({
   disabled,
   isLoading,
   loadingText,
+  size,
 }: ButtonProps): JSX.Element {
   return (
     <HDSButton
@@ -71,29 +77,41 @@ export function PrimaryButton({
       iconLeft={iconLeft}
       disabled={disabled}
       isLoading={isLoading}
-      loadingText={loadingText}>
+      loadingText={loadingText}
+      size={size}>
       {children}
     </HDSButton>
   );
 }
 
-export function SupplementaryButton({
-  children,
-  dataTest,
-  onClick,
-  className = '',
-  type = 'button',
-  iconLeft,
-}: ButtonProps): JSX.Element {
-  return (
-    <HDSButton
-      type={type}
-      data-test={dataTest}
-      className={`button-common supplementary-button ${className}`}
-      variant="supplementary"
-      onClick={onClick}
-      iconLeft={iconLeft}>
-      {children}
-    </HDSButton>
-  );
-}
+export const SupplementaryButton = React.forwardRef<
+  HTMLButtonElement,
+  ButtonProps
+>(
+  (
+    {
+      children,
+      dataTest,
+      onClick,
+      className = '',
+      type = 'button',
+      iconLeft,
+      iconRight,
+    },
+    ref
+  ): JSX.Element => {
+    return (
+      <HDSButton
+        ref={ref}
+        type={type}
+        data-test={dataTest}
+        className={`button-common supplementary-button ${className}`}
+        variant="supplementary"
+        onClick={onClick}
+        iconLeft={iconLeft}
+        iconRight={iconRight}>
+        {children}
+      </HDSButton>
+    );
+  }
+);

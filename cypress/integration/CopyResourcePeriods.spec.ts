@@ -10,7 +10,7 @@ describe('User visits resource page with target resource', () => {
     );
   });
 
-  it('Contains copy section title and copy button', () => {
+  it.skip('Contains copy section title and copy button', () => {
     cy.contains('Olet valinnut joukkopäivityksessä 2 pistettä');
     cy.contains('Päivitä aukiolotiedot 1 muuhun toimipisteeseen');
   });

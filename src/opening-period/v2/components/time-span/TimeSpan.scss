@@ -1,0 +1,76 @@
+@import 'node_modules/hds-design-tokens/lib/all.scss';
+
+.time-span {
+  align-items: flex-end;
+  display: grid;
+  gap: 1.5rem 0;
+  grid-template-columns: 1fr 1fr;
+}
+
+@media screen and (min-width: $breakpoint-s) {
+  .time-span {
+    gap: 1.5rem;
+    grid-template-columns: 1fr 70px 1fr 1fr;
+  }
+}
+
+.remove-time-span-button {
+  grid-column: 1;
+  margin-left: -25px;
+}
+
+.time-span--with-extra-fields {
+  @extend .time-span;
+
+  & > .time-span__descriptions {
+    display: flex;
+    grid-column: 1/5;
+    justify-content: space-between;
+    order: 2;
+  }
+
+  & > .remove-time-span-button {
+    order: 1;
+  }
+}
+
+.time-span__range {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.time-span__range-divider {
+  margin-top: 1.5rem;
+}
+
+.time-span__resource-state-select {
+  max-width: 240px;
+}
+
+.time-span__full-day-checkbox-container {
+  display: flex;
+  justify-content: center;
+}
+
+.time-span__full-day-checkbox {
+  padding-bottom: 1rem;
+}
+
+@media screen and (min-width: $breakpoint-m) {
+  .remove-time-span-button {
+    grid-column: auto;
+  }
+}
+
+.time-span__full-day-checkbox-container--hidden,
+.time-span__range--hidden {
+  display: none;
+}
+
+@media screen and (min-width: $breakpoint-l) {
+  .time-span__full-day-checkbox-container--hidden,
+  .time-span__range--hidden {
+    opacity: 0;
+  }
+}

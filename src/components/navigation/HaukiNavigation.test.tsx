@@ -17,7 +17,7 @@ describe('<HaukiNavigation>', () => {
     const closeAppWindow = jest.fn();
     jest.mock('react-router-dom', () => ({
       ...jest.requireActual('react-router-dom'),
-      useHistory: () => ({
+      useHistory: (): { push: jest.Mock } => ({
         push: jest.fn(),
       }),
     }));

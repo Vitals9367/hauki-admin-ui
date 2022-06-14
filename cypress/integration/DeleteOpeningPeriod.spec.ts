@@ -1,7 +1,7 @@
 /// <reference types="cypress" />
 /// <reference path="../index.d.ts" />
 
-describe('User deletes an opening period', () => {
+describe.skip('User deletes an opening period', () => {
   let dataPeriodId: string | undefined;
   const resourceId = Cypress.env('resourceId');
   const datePeriodTitlePrefix = 'e2e-test Poistamisen testijakson otsikko';

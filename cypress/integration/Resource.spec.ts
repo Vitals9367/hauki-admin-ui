@@ -5,7 +5,7 @@ describe('Resource page', () => {
     cy.visitResourcePageAsAuthenticatedUser(Cypress.env('resourceId'));
   });
 
-  it('Has opening periods listed', () => {
+  it.skip('Has opening periods listed', () => {
     cy.get('[data-test=resource-opening-periods-list]', {
       timeout: 5000,
     }).should('be.visible');

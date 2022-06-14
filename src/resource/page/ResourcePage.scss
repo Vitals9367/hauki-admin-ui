@@ -15,9 +15,19 @@
 }
 
 .resource-info-title {
-  font-size: var(--fontsize-heading-l);
-  margin-top: 0;
-  margin-bottom: var(--spacing-xs);
+  font-size: var(--fontsize-heading-s);
+  margin: 0;
+  transition: font-size 300ms;
+}
+
+@media screen and (min-width: $breakpoint-m) {
+  .resource-info-title {
+    font-size: var(--fontsize-heading-l);
+  }
+
+  .resource-info-title--on-top {
+    font-size: var(--fontsize-heading-s);
+  }
 }
 
 .resource-copy-date-periods {
