@@ -49,13 +49,13 @@ type WeekdayIndexToShortNameMappings = {
 
 const weekdays: WeekdayIndexToShortNameMappings = {
   fi: {
-    1: ['Ma', 'Maanantai'],
-    2: ['Ti', 'Tiistai'],
-    3: ['Ke', 'Keskiviikko'],
-    4: ['To', 'Torstai'],
-    5: ['Pe', 'Perjantai'],
-    6: ['La', 'Lauantai'],
-    7: ['Su', 'Sunnutai'],
+    1: ['ma', 'Maanantai'],
+    2: ['ti', 'Tiistai'],
+    3: ['ke', 'Keskiviikko'],
+    4: ['to', 'Torstai'],
+    5: ['pe', 'Perjantai'],
+    6: ['la', 'Lauantai'],
+    7: ['su', 'Sunnutai'],
   },
   sv: {
     1: ['Mån', 'Måndag'],
