@@ -50,7 +50,7 @@ const resolveDescription = (
   }
 
   return timeSpan.resource_state === ResourceState.OTHER
-    ? timeSpan.description?.fi!
+    ? timeSpan.description?.fi ?? ''
     : resourceStates.find((state) => state.value === timeSpan.resource_state)
         ?.label ?? 'Tuntematon';
 };
