@@ -210,7 +210,7 @@ const OpeningHoursForm = ({
             <Accordion card heading="Ohjeet">
               WIP
             </Accordion>
-            <div className="card">
+            <div>
               <OpeningHoursTitles />
             </div>
             <OpeningHoursValidity />

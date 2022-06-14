@@ -57,11 +57,11 @@ const OpeningHours = ({
   });
   const [removedDay, setRemovedDay] = React.useState<number | null>(null);
   const [isMoving, setIsMoving] = React.useState<boolean>(false);
-  const ref = useRef<any>();
+  const ref = useRef<HTMLDivElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if (dropIn) {
+    if (dropIn && ref.current) {
       const dropInAnimation = [
         {
           marginTop: `-${
@@ -175,7 +175,7 @@ const OpeningHours = ({
                         onDayChange(
                           day,
                           checked,
-                          ref.current?.getBoundingClientRect().top
+                          ref.current?.getBoundingClientRect().top || 0
                         );
                         if (
                           !isOnlySelectedDay(day, item.weekdays) &&
