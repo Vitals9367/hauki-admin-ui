@@ -7,19 +7,15 @@ import { AuthContextProps, TokenKeys, useAuth } from '../../auth/auth-context';
 import './HaukiNavigation.scss';
 import { SecondaryButton } from '../button/Button';
 import toast from '../notification/Toast';
-import { Language } from '../../common/lib/types';
 import LanguageSelect from '../language-select/LanguageSelect';
 
-type Props = {
-  language: Language;
-  onLanguageChanged: (language: Language) => void;
-};
-
-export default function HaukiNavigation({
-  language,
-  onLanguageChanged,
-}: Props): JSX.Element {
-  const { hasOpenerWindow, closeAppWindow } = useAppContext();
+export default function HaukiNavigation(): JSX.Element {
+  const {
+    hasOpenerWindow,
+    closeAppWindow,
+    language,
+    setLanguage,
+  } = useAppContext();
   const authProps: Partial<AuthContextProps> = useAuth();
   const { authTokens, clearAuth } = authProps;
   const history = useHistory();
@@ -84,12 +80,14 @@ export default function HaukiNavigation({
               </span>
             </div>
           </Navigation.Item>
-          <LanguageSelect
-            id="language-select"
-            label="Sivun kielivalinta"
-            selectedLanguage={language}
-            onSelect={onLanguageChanged}
-          />
+          {language && setLanguage && (
+            <LanguageSelect
+              id="language-select"
+              label="Sivun kielivalinta"
+              selectedLanguage={language}
+              onSelect={setLanguage}
+            />
+          )}
           <SecondaryButton
             dataTest="close-app-button"
             className="navigation-button"

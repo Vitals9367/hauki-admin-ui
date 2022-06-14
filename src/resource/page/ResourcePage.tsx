@@ -1,5 +1,6 @@
 import React, { ReactNode, useEffect, useState } from 'react';
 import { Accordion, Notification } from 'hds-react';
+import { useAppContext } from '../../App-context';
 import api from '../../common/utils/api/api';
 import { Language, Resource } from '../../common/lib/types';
 import { isUnitResource } from '../../common/utils/resource/helper';
@@ -82,12 +83,12 @@ const ResourceDetailsSection = ({
 export default function ResourcePage({
   id,
   targetResourcesString,
-  language,
 }: {
   id: string;
   targetResourcesString?: string;
-  language: Language;
 }): JSX.Element {
+  const { language: contextLanguage } = useAppContext();
+  const language = contextLanguage || Language.FI;
   const [resource, setResource] = useState<Resource | undefined>(undefined);
   const [childResources, setChildResources] = useState<Resource[]>([]);
   const [parentResources, setParentResources] = useState<Resource[]>([]);

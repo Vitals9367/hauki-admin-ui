@@ -72,23 +72,20 @@ export default function App(): JSX.Element {
 
   return (
     <div className="App">
-      <AppContext.Provider value={{ hasOpenerWindow, closeAppWindow }}>
+      <AppContext.Provider
+        value={{ hasOpenerWindow, closeAppWindow, language, setLanguage }}>
         <AuthContext.Provider value={{ authTokens, clearAuth }}>
           <Router>
             <Switch>
               <Route exact path="/">
-                <NavigationAndFooterWrapper
-                  language={language}
-                  onLanguageChanged={setLanguage}>
+                <NavigationAndFooterWrapper>
                   <Main id="main">
                     <h1>Etusivu</h1>
                   </Main>
                 </NavigationAndFooterWrapper>
               </Route>
               <Route exact path="/not_found">
-                <NavigationAndFooterWrapper
-                  language={language}
-                  onLanguageChanged={setLanguage}>
+                <NavigationAndFooterWrapper>
                   <Main id="main">
                     <h1>Kohdetta ei löydy</h1>
                     <p>
@@ -100,18 +97,14 @@ export default function App(): JSX.Element {
                 </NavigationAndFooterWrapper>
               </Route>
               <Route exact path="/unauthorized">
-                <NavigationAndFooterWrapper
-                  language={language}
-                  onLanguageChanged={setLanguage}>
+                <NavigationAndFooterWrapper>
                   <Main id="main">
                     <h1>Puutteelliset tunnukset</h1>
                   </Main>
                 </NavigationAndFooterWrapper>
               </Route>
               <Route exact path="/unauthenticated">
-                <NavigationAndFooterWrapper
-                  language={language}
-                  onLanguageChanged={setLanguage}>
+                <NavigationAndFooterWrapper>
                   <Main id="main">
                     <h1>Puuttuvat tunnukset</h1>
                   </Main>
@@ -124,13 +117,10 @@ export default function App(): JSX.Element {
                 render={({
                   match,
                 }: RouteComponentProps<{ id: string }>): ReactElement => (
-                  <NavigationAndFooterWrapper
-                    language={language}
-                    onLanguageChanged={setLanguage}>
+                  <NavigationAndFooterWrapper>
                     <Main id="main">
                       <ResourcePage
                         id={match.params.id}
-                        language={language}
                         targetResourcesString={targetResourcesStr}
                       />
                     </Main>
@@ -147,10 +137,7 @@ export default function App(): JSX.Element {
                   id: string;
                 }>): ReactElement => (
                   <>
-                    <HaukiNavigation
-                      language={language}
-                      onLanguageChanged={setLanguage}
-                    />
+                    <HaukiNavigation />
                     <Main id="main">
                       <CreateNewOpeningPeriodPage
                         resourceId={match.params.id}
@@ -169,10 +156,7 @@ export default function App(): JSX.Element {
                   id: string;
                 }>): ReactElement => (
                   <>
-                    <HaukiNavigation
-                      language={language}
-                      onLanguageChanged={setLanguage}
-                    />
+                    <HaukiNavigation />
                     <Main id="main">
                       <CreateNewOpeningPeriodPage
                         resourceId={match.params.id}
@@ -191,10 +175,7 @@ export default function App(): JSX.Element {
                   datePeriodId: string;
                 }>): ReactElement => (
                   <>
-                    <HaukiNavigation
-                      language={language}
-                      onLanguageChanged={setLanguage}
-                    />
+                    <HaukiNavigation />
                     <Main id="main">
                       <EditOpeningPeriodPage
                         resourceId={match.params.id}
