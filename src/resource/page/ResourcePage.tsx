@@ -48,30 +48,6 @@ export const ResourceTitle = ({
   );
 };
 
-export const ResourceAddress = ({
-  resource,
-  language = Language.FI,
-}: {
-  resource?: Resource;
-  language?: Language;
-}): JSX.Element => {
-  const address =
-    resource?.address[language] ||
-    displayLangVersionNotFound({
-      language,
-      label: `${
-        resource && isUnitResource(resource) ? 'toimipisteen' : 'alakohteen'
-      } osoite`,
-    });
-
-  return (
-    <>
-      <span>Osoite: </span>
-      <address className="resource-info-address">{address}</address>
-    </>
-  );
-};
-
 export const ResourceInfo = ({
   children,
 }: {
@@ -235,7 +211,12 @@ export default function ResourcePage({
             theme="dark"
           />
         </ResourceTitle>
-        <ResourceAddress resource={resource} language={language} />
+        {childResources.length && (
+          <p>
+            Tällä toimipisteellä on {childResources.length} alakohdetta. Niiden
+            aukioloajat löytyvät alempana tällä sivulla.
+          </p>
+        )}
       </ResourceInfo>
       {!hasTargetResources && parentResources?.length > 0 && (
         <ResourceDetailsSection
@@ -272,6 +253,9 @@ export default function ResourcePage({
           ))}
         </ResourceDetailsSection>
       )}
+      <ResourceSection id="resource-opening-hours">
+        {resource && <ResourceOpeningHours resource={resource} />}
+      </ResourceSection>
       {!hasTargetResources && childResources?.length > 0 && (
         <ResourceDetailsSection
           id="child-resource-description"
@@ -309,9 +293,6 @@ export default function ResourcePage({
           ))}
         </ResourceDetailsSection>
       )}
-      <ResourceSection id="resource-opening-hours">
-        {resource && <ResourceOpeningHours resource={resource} />}
-      </ResourceSection>
     </>
   );
 }
