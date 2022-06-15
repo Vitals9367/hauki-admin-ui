@@ -47,7 +47,19 @@
 }
 
 .date-period-details-container {
-  padding: $spacing-xs;
+  align-items: flex-start;
+  display: flex;
+  flex-direction: column;
+
+  & > * {
+    flex: 1;
+  }
+}
+
+@media screen and (min-width: $breakpoint-m) {
+  .date-period-details-container {
+    flex-direction: row;
+  }
 }
 
 .date-period-description {

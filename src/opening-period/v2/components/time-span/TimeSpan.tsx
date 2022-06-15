@@ -1,16 +1,22 @@
 import { Checkbox, IconTrash, Select, TextInput, TimeInput } from 'hds-react';
 import { Controller, useFormContext } from 'react-hook-form';
 import React from 'react';
-import { ResourceState } from '../../../../common/lib/types';
+import {
+  Language,
+  ResourceState,
+  TranslatedApiChoice,
+} from '../../../../common/lib/types';
 import { SupplementaryButton } from '../../../../components/button/Button';
 import { OpeningHoursTimeSpan, OptionType } from '../../types';
 import './TimeSpan.scss';
+import { apiChoiceToOption } from '../../../../common/utils/api/api';
+import { useAppContext } from '../../../../App-context';
 
 const TimeSpan = ({
   disabled = false,
   groupLabel,
   item,
-  resourceStates,
+  resourceStates: apiResourceStates,
   namePrefix,
   onDelete,
 }: {
@@ -18,12 +24,14 @@ const TimeSpan = ({
   groupLabel: string;
   item?: OpeningHoursTimeSpan;
   namePrefix: string;
-  resourceStates: OptionType[];
+  resourceStates: TranslatedApiChoice[];
   onDelete?: () => void;
 }): JSX.Element => {
+  const { language = Language.FI } = useAppContext();
   const { control, register, watch } = useFormContext();
   const fullDay = watch(`${namePrefix}.full_day`);
   const resourceState = watch(`${namePrefix}.resource_state`);
+  const resourceStates = apiResourceStates.map(apiChoiceToOption(language));
   const sanitizedResourceStateOptions: OptionType[] = resourceStates.filter(
     ({ value }) => value !== 'undefined'
   );

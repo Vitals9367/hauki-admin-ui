@@ -1,13 +1,12 @@
 import { IconPlusCircle } from 'hds-react';
 import React, { useEffect, useRef } from 'react';
 import { useFieldArray, useFormContext } from 'react-hook-form';
-import { ResourceState } from '../../../../common/lib/types';
-import { SupplementaryButton } from '../../../../components/button/Button';
 import {
-  OpeningHoursFormValues,
-  OpeningHoursTimeSpan,
-  OptionType,
-} from '../../types';
+  ResourceState,
+  TranslatedApiChoice,
+} from '../../../../common/lib/types';
+import { SupplementaryButton } from '../../../../components/button/Button';
+import { OpeningHoursFormValues, OpeningHoursTimeSpan } from '../../types';
 import TimeSpan from './TimeSpan';
 import './TimeSpans.scss';
 
@@ -15,7 +14,7 @@ const TimeSpans = ({
   resourceStates,
   namePrefix,
 }: {
-  resourceStates: OptionType[];
+  resourceStates: TranslatedApiChoice[];
   namePrefix: string;
 }): JSX.Element => {
   const { control, watch } = useFormContext<OpeningHoursFormValues>();

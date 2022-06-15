@@ -20,10 +20,9 @@ import './OpeningHoursForm.scss';
 import {
   OpeningHours as TOpeningHours,
   OpeningHoursFormValues,
-  Rule,
 } from '../../types';
 import {
-  apiDatePeriodToFormValues as apiDatePeriodToFormValues,
+  apiDatePeriodToFormValues,
   byWeekdays,
   formValuesToApiDatePeriod,
 } from '../../helpers/opening-hours-helpers';
@@ -135,25 +134,16 @@ const OpeningHoursForm = ({
   };
 
   let resourceStates = datePeriodConfig
-    ? datePeriodConfig.resourceState.options.map((translatedApiChoice) => ({
-        value: translatedApiChoice.value,
-        label: translatedApiChoice.label.fi,
-      }))
+    ? datePeriodConfig.resourceState.options
     : [];
 
   resourceStates = [
     ...resourceStates,
     // TODO: This needs to be returned from the server
     {
-      label: 'Muu, mikä?',
+      label: { fi: 'Muu, mikä?', sv: 'Muu, mikä', en: 'Muu, mikä?' },
       value: ResourceState.OTHER,
     },
-  ];
-
-  const rules: { value: Rule; label: string }[] = [
-    { value: 'week_every', label: 'Joka viikko' },
-    { value: 'week_even', label: 'Parilliset viikot' },
-    { value: 'week_odd', label: 'Parittomat viikot' },
   ];
 
   const allDayAreUncheckedForRow = (idx: number): boolean => {
@@ -211,9 +201,9 @@ const OpeningHoursForm = ({
               titleAddon={name[language] || undefined}>
               <div className="mobile-preview-container">
                 <OpeningHoursPreviewMobile
+                  language={language}
                   openingHours={openingHours}
                   resourceStates={resourceStates}
-                  rules={rules}
                 />
               </div>
             </ResourceTitle>
@@ -231,8 +221,8 @@ const OpeningHoursForm = ({
                       dropIn={dropInRow === i}
                       offsetTop={offsetTop.current}
                       item={field as TOpeningHours}
+                      language={language}
                       resourceStates={resourceStates}
-                      rules={rules}
                       namePrefix={`openingHours[${i}]`}
                       onDayChange={(
                         day: number,
@@ -267,7 +257,6 @@ const OpeningHoursForm = ({
                   <Preview
                     openingHours={openingHours}
                     resourceStates={resourceStates}
-                    rules={rules}
                   />
                   <div className="sort-weekdays-container">
                     <SupplementaryButton

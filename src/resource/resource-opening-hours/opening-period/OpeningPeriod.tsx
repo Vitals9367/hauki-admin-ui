@@ -144,7 +144,6 @@ export default function OpeningPeriod({
         <OpeningPeriodDetails
           datePeriod={datePeriod}
           datePeriodConfig={datePeriodConfig}
-          language={language}
         />
       )}
     </div>

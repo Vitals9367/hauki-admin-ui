@@ -75,9 +75,9 @@ export type ApiChoice = {
   display_name: string | LanguageStrings;
 };
 
-export type TranslatedApiChoice = {
+export type TranslatedApiChoice<T = string> = {
   label: LanguageStrings;
-  value: string;
+  value: T;
 };
 
 export type InputOption = {

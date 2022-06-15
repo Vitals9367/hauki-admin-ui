@@ -2,7 +2,7 @@ import { Notification, Select } from 'hds-react';
 import { upperFirst } from 'lodash';
 import React, { Fragment, useEffect, useRef } from 'react';
 import { Controller, useFieldArray, useFormContext } from 'react-hook-form';
-import { Language } from '../../../../common/lib/types';
+import { Language, TranslatedApiChoice } from '../../../../common/lib/types';
 import { getWeekdayLongNameByIndexAndLang } from '../../../../common/utils/date-time/format';
 import TimeSpans from '../time-span/TimeSpans';
 import {
@@ -15,6 +15,8 @@ import {
 import DayCheckbox from './DayCheckbox';
 import { defaultTimeSpan } from '../../constants';
 import './OpeningHours.scss';
+import { uiRules } from '../../../../constants';
+import { apiChoiceToOption } from '../../../../common/utils/api/api';
 
 type InflectLabels = {
   [language in Language]: {
@@ -36,18 +38,18 @@ const isOnlySelectedDay = (day: number, weekdays: number[]): boolean =>
 const OpeningHours = ({
   dropIn,
   item,
+  language,
   offsetTop = 0,
   resourceStates,
   namePrefix,
   onDayChange,
-  rules,
 }: {
   dropIn: boolean;
   item: TOpeningHours;
+  language: Language;
   namePrefix: string;
   offsetTop?: number;
-  resourceStates: OptionType[];
-  rules: OptionType<Rule>[];
+  resourceStates: TranslatedApiChoice[];
   onDayChange: (day: number, checked: boolean, offsetTop: number) => void;
 }): JSX.Element => {
   const { control, setValue, watch } = useFormContext<OpeningHoursFormValues>();
@@ -59,6 +61,7 @@ const OpeningHours = ({
   const [isMoving, setIsMoving] = React.useState<boolean>(false);
   const ref = useRef<HTMLDivElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
+  const rules = uiRules.map(apiChoiceToOption(language));
 
   useEffect(() => {
     if (dropIn && ref.current) {
@@ -104,7 +107,6 @@ const OpeningHours = ({
       }, []);
 
   const resolveDayTranslation = (day: number, useGenitive: boolean): string => {
-    const language = Language.FI;
     const translatedDay = getWeekdayLongNameByIndexAndLang({
       weekdayIndex: day,
       language,

@@ -12,7 +12,6 @@
   border-collapse: separate;
   border-spacing: 0;
   margin-bottom: 1.5rem;
-  min-width: 100%;
   table-layout: fixed;
 }
 
@@ -21,7 +20,8 @@
 }
 
 .opening-hours-preview-table__caption {
-  font-size: 1.25rem;
+  font-size: $fontsize-heading-xs;
+  font-weight: bold;
   margin-bottom: 0.5rem;
   text-align: left;
 }
@@ -65,7 +65,7 @@ td::first-letter {
 }
 
 .opening-hours-preview__title {
-  font-size: 1.25rem;
+  font-size: $fontsize-heading-m;
   margin: 0;
   margin-bottom: 1rem;
 }
