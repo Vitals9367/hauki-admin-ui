@@ -1,6 +1,6 @@
 import React from 'react';
 import { DatePeriod, UiDatePeriodConfig } from '../../../common/lib/types';
-import { PreviewRows } from '../../../opening-period/v2/components/preview/OpeningHoursPreview';
+import OpeningHoursRows from '../../../components/opening-hours-rows/OpeningHoursRows';
 import { apiDatePeriodToOpeningHours } from '../../../opening-period/v2/helpers/opening-hours-helpers';
 
 export default function ({
@@ -14,7 +14,7 @@ export default function ({
 
   return (
     <div className="date-period-details-container">
-      <PreviewRows
+      <OpeningHoursRows
         openingHours={openingHours}
         resourceStates={datePeriodConfig.resourceState.options}
       />
