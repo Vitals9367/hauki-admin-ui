@@ -11,12 +11,14 @@ type Props = {
   className?: string;
   language: Language;
   resource?: Resource;
+  titleAddon?: string;
 };
 
 const ResourceTitle = ({
   children,
   language,
   resource,
+  titleAddon,
 }: Props): JSX.Element => {
   const [titleIsOnTop, setTitleIsOnTop] = useState(false);
   const title = useRef<HTMLHeadingElement>(null);
@@ -58,6 +60,7 @@ const ResourceTitle = ({
           titleIsOnTop ? 'resource-info-title--on-top' : ''
         }`}>
         {name}
+        {titleAddon ? ` - ${titleAddon}` : ''}
       </h1>
 
       {children}
