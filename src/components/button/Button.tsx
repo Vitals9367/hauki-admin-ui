@@ -111,8 +111,7 @@ export const SupplementaryButton = React.forwardRef<
         onClick={onClick}
         iconLeft={iconLeft}
         iconRight={iconRight}
-        size={size}
-        fullWidth>
+        size={size}>
         {children}
       </HDSButton>
     );
