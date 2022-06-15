@@ -36,6 +36,7 @@ import { formatDate } from '../../../../common/utils/date-time/format';
 import OpeningHoursTitles from './OpeningHoursTitles';
 import OpeningHoursPreviewMobile from '../preview/OpeningHoursPreviewMobile';
 import ResourceTitle from '../../../../components/resource-title/ResourceTitle';
+import { useAppContext } from '../../../../App-context';
 
 const getDefaultsValues = (
   datePeriod: DatePeriod | undefined
@@ -81,16 +82,15 @@ const getDefaultsValues = (
 const OpeningHoursForm = ({
   datePeriod,
   datePeriodConfig,
-  language,
   submitFn,
   resource,
 }: {
   datePeriod?: DatePeriod;
   datePeriodConfig: UiDatePeriodConfig;
-  language: Language;
   submitFn: (values: DatePeriod) => Promise<DatePeriod>;
   resource: Resource;
 }): JSX.Element => {
+  const { language = Language.FI } = useAppContext();
   const defaultValues: OpeningHoursFormValues = getDefaultsValues(datePeriod);
   const history = useHistory();
   const [isSaving, setSaving] = useState(false);

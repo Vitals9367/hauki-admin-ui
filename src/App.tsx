@@ -140,7 +140,6 @@ export default function App(): JSX.Element {
                     <HaukiNavigation />
                     <Main id="main">
                       <CreateNewOpeningPeriodPage
-                        language={language}
                         resourceId={match.params.id}
                       />
                     </Main>
@@ -160,7 +159,6 @@ export default function App(): JSX.Element {
                     <HaukiNavigation />
                     <Main id="main">
                       <EditOpeningPeriodPage
-                        language={language}
                         resourceId={match.params.id}
                         datePeriodId={match.params.datePeriodId}
                       />
