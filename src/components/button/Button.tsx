@@ -97,6 +97,7 @@ export const SupplementaryButton = React.forwardRef<
       type = 'button',
       iconLeft,
       iconRight,
+      size,
     },
     ref
   ): JSX.Element => {
@@ -109,7 +110,9 @@ export const SupplementaryButton = React.forwardRef<
         variant="supplementary"
         onClick={onClick}
         iconLeft={iconLeft}
-        iconRight={iconRight}>
+        iconRight={iconRight}
+        size={size}
+        fullWidth>
         {children}
       </HDSButton>
     );

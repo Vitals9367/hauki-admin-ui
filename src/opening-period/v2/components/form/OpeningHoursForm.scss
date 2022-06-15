@@ -6,23 +6,29 @@
   grid-template-columns: repeat(auto-fit, minmax(44px, 1fr));
 }
 
-.opening-hours-page {
+.opening-hours-form {
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
   padding-bottom: 110px;
+}
+
+.opening-hours-form__content {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
   margin-left: -$spacing-s;
   margin-right: -$spacing-s;
 }
 
 @media screen and (min-width: $breakpoint-m) {
-  .opening-hours-page {
+  .opening-hours-form__content {
     margin-left: 0;
     margin-right: 0;
   }
 }
 
-.opening-hours-page__actions-container {
+.opening-hours-form__actions-container {
   background: #fff;
   bottom: 0;
   box-shadow: 0 -2px 10px 0 rgba(212, 212, 212, 0.2);
@@ -33,7 +39,7 @@
   z-index: 3;
 }
 
-.opening-hours-page__actions {
+.opening-hours-form__actions {
   align-items: center;
   box-sizing: border-box;
   display: flex;
@@ -46,13 +52,13 @@
 }
 
 @media screen and (min-width: $breakpoint-m) {
-  .opening-hours-page__actions {
+  .opening-hours-form__actions {
     gap: 1.5rem;
   }
 }
 
 @media screen and (min-width: $breakpoint-l) {
-  .opening-hours-page__actions {
+  .opening-hours-form__actions {
     justify-content: left;
   }
 }
@@ -67,7 +73,7 @@
   font-weight: bold;
 }
 
-.opening-hours-page__content {
+.opening-hours-form__fields {
   display: flex;
   gap: 1.5rem;
 }
@@ -83,17 +89,33 @@
   background: #fff;
 }
 
-.aside {
+.opening-hours-form__aside {
   display: none;
 }
 
 @media screen and (min-width: $breakpoint-l) {
-  .aside {
+  .opening-hours-form__aside {
     align-self: flex-start;
     display: flex;
     flex-direction: column;
     gap: 1.5rem;
     position: sticky;
     top: 70px;
+  }
+}
+
+.mobile-preview-container {
+  margin-right: -15px;
+}
+
+@media screen and (min-width: $breakpoint-m) {
+  .mobile-preview-container {
+    margin-right: 0;
+  }
+}
+
+@media screen and (min-width: $breakpoint-l) {
+  .mobile-preview-container {
+    display: none;
   }
 }

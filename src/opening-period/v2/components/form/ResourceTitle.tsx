@@ -1,24 +1,33 @@
-import React, { useEffect, useRef, useState } from 'react';
-import { Resource } from '../../../../common/lib/types';
-import { OpeningHours, OptionType } from '../../types';
-import OpeningHoursPreviewMobile from '../preview/OpeningHoursPreviewMobile';
+import React, { ReactNode, useEffect, useRef, useState } from 'react';
+import { Language, Resource } from '../../../../common/lib/types';
+import { isUnitResource } from '../../../../common/utils/resource/helper';
+import { displayLangVersionNotFound } from '../../../../components/language-select/LanguageSelect';
 import './ResourceTitle.scss';
 
+const resourceTitleId = 'resource-title';
+
 type Props = {
-  openingHours: OpeningHours[];
-  resource: Resource;
-  resourceStates: OptionType[];
-  rules: OptionType[];
+  children?: ReactNode;
+  className?: string;
+  language: Language;
+  resource?: Resource;
 };
 
 const ResourceTitle = ({
-  openingHours,
-  resourceStates,
+  children,
+  language,
   resource,
-  rules,
 }: Props): JSX.Element => {
   const [titleIsOnTop, setTitleIsOnTop] = useState(false);
   const title = useRef<HTMLHeadingElement>(null);
+  const name =
+    resource?.name[language] ||
+    displayLangVersionNotFound({
+      language,
+      label: `${
+        resource && isUnitResource(resource) ? 'toimipisteen' : 'alakohteen'
+      } nimi`,
+    });
 
   useEffect(() => {
     const onScroll = (): void => {
@@ -36,28 +45,23 @@ const ResourceTitle = ({
   }, [title, titleIsOnTop]);
 
   return (
-    <div
+    <section
+      aria-labelledby={resourceTitleId}
       ref={title}
-      className={`card resource-title ${
+      className={`resource-title ${
         titleIsOnTop ? 'resource-title--on-top' : ''
       }`}>
-      <div>
-        <h1
-          data-test="resource-info"
-          className={`resource-info-title ${
-            titleIsOnTop ? 'resource-info-title--on-top' : ''
-          }`}>
-          {resource?.name?.fi}
-        </h1>
-      </div>
-      <div className="mobile-preview-container">
-        <OpeningHoursPreviewMobile
-          openingHours={openingHours}
-          resourceStates={resourceStates}
-          rules={rules}
-        />
-      </div>
-    </div>
+      <h1
+        id={resourceTitleId}
+        data-test="resource-info"
+        className={`resource-info-title ${
+          titleIsOnTop ? 'resource-info-title--on-top' : ''
+        }`}>
+        {name}
+      </h1>
+
+      {children}
+    </section>
   );
 };
 

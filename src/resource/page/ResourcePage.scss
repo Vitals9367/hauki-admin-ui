@@ -1,32 +1,17 @@
 @import 'node_modules/hds-design-tokens/lib/all.scss';
 
+.resource-page {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-m;
+}
+
 .resource-details-section {
   border-bottom: 1px solid var(--hauki-content-border-color);
 }
 
-.resource-info-title-wrapper {
-  align-items: center;
-  display: flex;
-}
-
 .resource-info-title-add-on {
   margin-left: auto;
-}
-
-.resource-info-title {
-  font-size: var(--fontsize-heading-s);
-  margin: 0;
-  transition: font-size 300ms;
-}
-
-@media screen and (min-width: $breakpoint-m) {
-  .resource-info-title {
-    font-size: var(--fontsize-heading-l);
-  }
-
-  .resource-info-title--on-top {
-    font-size: var(--fontsize-heading-s);
-  }
 }
 
 .resource-copy-date-periods {
@@ -63,5 +48,10 @@
 
 .child-resources-title {
   color: var(--color-coat-of-arms);
-  margin: $spacing-l 0 $spacing-s;
+  margin: $spacing-s 0 $spacing-s;
+}
+
+.resource-child-resources-description {
+  margin: 0;
+  padding: 0;
 }

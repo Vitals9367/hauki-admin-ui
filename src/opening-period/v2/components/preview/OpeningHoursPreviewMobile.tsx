@@ -1,6 +1,7 @@
 import { IconAngleDown, IconAngleUp, useAccordion } from 'hds-react';
 import React, { useRef } from 'react';
 import { SupplementaryButton } from '../../../../components/button/Button';
+import useMobile from '../../../../hooks/useMobile';
 import useOnClickOutside from '../../../../hooks/useOnClickOutside';
 import { OpeningHours, OptionType } from '../../types';
 import OpeningHoursPreview from './OpeningHoursPreview';
@@ -22,6 +23,7 @@ const OpeningHoursPreviewMobile = ({
   });
   const mobilePreview = useRef<HTMLDivElement>(null);
   useOnClickOutside(mobilePreview, closeAccordion);
+  const isMobile = useMobile();
 
   return (
     <div ref={mobilePreview}>
@@ -30,6 +32,7 @@ const OpeningHoursPreviewMobile = ({
         iconRight={
           isOpen ? <IconAngleUp aria-hidden /> : <IconAngleDown aria-hidden />
         }
+        size={isMobile ? 'small' : 'default'}
         {...buttonProps}>
         Esikatselu
       </SupplementaryButton>

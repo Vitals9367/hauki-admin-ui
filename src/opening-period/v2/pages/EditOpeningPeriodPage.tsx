@@ -4,15 +4,18 @@ import {
   DatePeriod,
   UiDatePeriodConfig,
   Resource,
+  Language,
 } from '../../../common/lib/types';
 import OpeningHoursForm from '../components/form/OpeningHoursForm';
 
 export default function EditOpeningPeriodPage({
   resourceId,
   datePeriodId,
+  language,
 }: {
   resourceId: string;
   datePeriodId: string;
+  language: Language;
 }): JSX.Element {
   const id = parseInt(datePeriodId, 10);
   const [resource, setResource] = useState<Resource>();
@@ -56,6 +59,7 @@ export default function EditOpeningPeriodPage({
     <OpeningHoursForm
       datePeriod={datePeriod}
       datePeriodConfig={datePeriodConfig}
+      language={language}
       resource={resource}
       submitFn={submitFn}
     />
