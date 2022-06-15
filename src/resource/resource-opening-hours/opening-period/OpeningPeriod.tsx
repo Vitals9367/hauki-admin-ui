@@ -20,7 +20,8 @@ import {
   useModal,
 } from '../../../components/modal/ConfirmationModal';
 import './OpeningPeriod.scss';
-import OpeningPeriodDetails from './OpeningPeriodDetails';
+import { apiDatePeriodToOpeningHours } from '../../../opening-period/v2/helpers/opening-hours-helpers';
+import OpeningHoursRows from '../../../components/opening-hours-rows/OpeningHoursRows';
 
 export default function OpeningPeriod({
   resourceId,
@@ -141,10 +142,12 @@ export default function OpeningPeriod({
         />
       </div>
       {isOpen && (
-        <OpeningPeriodDetails
-          datePeriod={datePeriod}
-          datePeriodConfig={datePeriodConfig}
-        />
+        <div className="date-period-details-container">
+          <OpeningHoursRows
+            openingHours={apiDatePeriodToOpeningHours(datePeriod)}
+            resourceStates={datePeriodConfig.resourceState.options}
+          />
+        </div>
       )}
     </div>
   );
