@@ -198,14 +198,17 @@ const OpeningHoursForm = ({
     setDropInRow(newIdx);
   };
 
-  const { openingHours } = watch();
+  const { openingHours, name } = watch();
 
   return (
     (resource && datePeriodConfig && (
       <FormProvider {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)}>
           <div className="opening-hours-form">
-            <ResourceTitle language={language} resource={resource}>
+            <ResourceTitle
+              language={language}
+              resource={resource}
+              titleAddon={name[language] || undefined}>
               <div className="mobile-preview-container">
                 <OpeningHoursPreviewMobile
                   openingHours={openingHours}
