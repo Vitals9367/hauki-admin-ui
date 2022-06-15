@@ -7,6 +7,7 @@
   padding: 6px $spacing-m;
 
   h4 {
+    font-size: $fontsize-body-l;
     margin: 0;
     word-break: break-all;
   }
@@ -52,6 +53,10 @@
 
   & > * {
     flex: 1;
+  }
+
+  & caption {
+    font-size: $fontsize-body-m;
   }
 }
 
