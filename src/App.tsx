@@ -147,25 +147,6 @@ export default function App(): JSX.Element {
                 )}
               />
               <PrivateResourceRoute
-                id="create-new-opening-period-route"
-                exact
-                path="/resource/:id/period/new-exception"
-                render={({
-                  match,
-                }: RouteComponentProps<{
-                  id: string;
-                }>): ReactElement => (
-                  <>
-                    <HaukiNavigation />
-                    <Main id="main">
-                      <CreateNewOpeningPeriodPage
-                        resourceId={match.params.id}
-                      />
-                    </Main>
-                  </>
-                )}
-              />
-              <PrivateResourceRoute
                 id="edit-opening-period-route"
                 path="/resource/:id/period/:datePeriodId"
                 render={({

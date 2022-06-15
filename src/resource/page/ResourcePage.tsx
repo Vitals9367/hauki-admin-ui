@@ -3,7 +3,6 @@ import { Accordion, Notification } from 'hds-react';
 import { useAppContext } from '../../App-context';
 import api from '../../common/utils/api/api';
 import { Language, Resource } from '../../common/lib/types';
-import { isUnitResource } from '../../common/utils/resource/helper';
 import storage from '../../common/utils/storage/storage';
 import Collapse from '../../components/collapse/Collapse';
 import { displayLangVersionNotFound } from '../../components/language-select/LanguageSelect';
@@ -13,44 +12,7 @@ import ResourcePeriodsCopyFieldset, {
   TargetResourcesProps,
 } from './ResourcePeriodsCopyFieldset';
 import './ResourcePage.scss';
-
-const resourceTitleId = 'resource-title';
-
-export const ResourceTitle = ({
-  resource,
-  language = Language.FI,
-}: {
-  resource?: Resource;
-  language?: Language;
-}): JSX.Element => {
-  const name =
-    resource?.name[language] ||
-    displayLangVersionNotFound({
-      language,
-      label: `${
-        resource && isUnitResource(resource) ? 'toimipisteen' : 'alakohteen'
-      } nimi`,
-    });
-
-  return (
-    <div className="resource-info-title-wrapper">
-      <h1
-        id={resourceTitleId}
-        data-test="resource-info"
-        className="resource-info-title">
-        {name}
-      </h1>
-    </div>
-  );
-};
-
-export const ResourceInfo = ({
-  children,
-}: {
-  children: ReactNode;
-}): JSX.Element => (
-  <section aria-labelledby={resourceTitleId}>{children}</section>
-);
+import ResourceTitle from '../../components/resource-title/ResourceTitle';
 
 const ResourceSection = ({
   id,
@@ -179,24 +141,20 @@ export default function ResourcePage({
   }
 
   return (
-    <>
-      <ResourceInfo>
-        {hasTargetResources && (
-          <ResourcePeriodsCopyFieldset
-            {...targetResourceData}
-            onChange={(resourceData): void =>
-              setTargetResourceData(resourceData)
-            }
-          />
-        )}
-        <ResourceTitle resource={resource} language={language} />
-        {childResources.length ? (
-          <p>
-            Tällä toimipisteellä on {childResources.length} alakohdetta. Niiden
-            aukioloajat löytyvät alempana tällä sivulla.
-          </p>
-        ) : null}
-      </ResourceInfo>
+    <div className="resource-page">
+      <ResourceTitle resource={resource} language={language} />
+      {childResources.length && (
+        <p className="resource-child-resources-description">
+          Tällä toimipisteellä on {childResources.length} alakohdetta. Niiden
+          aukioloajat löytyvät alempana tällä sivulla.
+        </p>
+      )}
+      {hasTargetResources && (
+        <ResourcePeriodsCopyFieldset
+          {...targetResourceData}
+          onChange={(resourceData): void => setTargetResourceData(resourceData)}
+        />
+      )}
       {!hasTargetResources && parentResources?.length > 0 && (
         <ResourceDetailsSection
           id="parent-resource-description"
@@ -239,37 +197,41 @@ export default function ResourcePage({
       </ResourceSection>
       {!hasTargetResources && childResources?.length > 0 && (
         <>
-          <h2 className="child-resources-title">Toimipisteen alakohteet</h2>
-          <p
-            data-test="child-resource-description"
-            className="resource-description-text">
-            Täällä voit määritellä toimipisteen alakohteiden aukioloaikoja.
-            Alakohteet voivat olla esimerkiksi toimipisteen eri tiloja. Voit
-            muokata alakohteiden muita tietoja tilapaikkarekisterissä.
-          </p>
-          {childResources?.map((childResource, index) => (
-            <Accordion
-              key={index}
-              heading={
-                childResource?.name[language] ||
-                displayLangVersionNotFound({
-                  language,
-                  label: 'alakohteen nimi',
-                })
-              }>
-              <p
-                data-test={`child-resource-description-${index}`}
-                className="resource-description-text related-resource-description-text">
-                {childResource?.description[language] ||
+          <section>
+            <h2 className="child-resources-title">Toimipisteen alakohteet</h2>
+            <p
+              data-test="child-resource-description"
+              className="resource-description-text">
+              Täällä voit määritellä toimipisteen alakohteiden aukioloaikoja.
+              Alakohteet voivat olla esimerkiksi toimipisteen eri tiloja. Voit
+              muokata alakohteiden muita tietoja tilapaikkarekisterissä.
+            </p>
+          </section>
+          <section>
+            {childResources?.map((childResource, index) => (
+              <Accordion
+                key={index}
+                heading={
+                  childResource?.name[language] ||
                   displayLangVersionNotFound({
                     language,
-                    label: 'alakohteen kuvaus',
-                  })}
-              </p>
-            </Accordion>
-          ))}
+                    label: 'alakohteen nimi',
+                  })
+                }>
+                <p
+                  data-test={`child-resource-description-${index}`}
+                  className="resource-description-text related-resource-description-text">
+                  {childResource?.description[language] ||
+                    displayLangVersionNotFound({
+                      language,
+                      label: 'alakohteen kuvaus',
+                    })}
+                </p>
+              </Accordion>
+            ))}
+          </section>
         </>
       )}
-    </>
+    </div>
   );
 }

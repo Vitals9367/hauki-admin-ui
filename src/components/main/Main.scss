@@ -49,12 +49,12 @@
 
 .card {
   background: #fff;
-  padding: 1rem;
+  padding: $spacing-s;
 }
 
 @media screen and (min-width: $breakpoint-m) {
   .card {
-    padding: 1.5rem;
+    padding: $spacing-m;
   }
 }
 
