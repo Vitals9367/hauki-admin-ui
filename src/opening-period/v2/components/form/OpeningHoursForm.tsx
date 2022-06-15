@@ -25,7 +25,7 @@ import {
   apiDatePeriodToFormValues,
   byWeekdays,
   formValuesToApiDatePeriod,
-} from '../../helpers/opening-hours-helpers';
+} from '../../../../common/helpers/opening-hours-helpers';
 import toast from '../../../../components/notification/Toast';
 import OpeningHours from '../opening-hours/OpeningHours';
 import { defaultTimeSpan } from '../../constants';

@@ -1,6 +1,6 @@
 /// <reference types="jest" />
 
-import { ResourceState } from '../../../common/lib/types';
+import { ResourceState } from '../lib/types';
 import {
   apiDatePeriodToFormValues,
   formValuesToApiDatePeriod,

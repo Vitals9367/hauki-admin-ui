@@ -1,4 +1,4 @@
-import { ResourceState } from '../../../../common/lib/types';
+import { ResourceState } from '../lib/types';
 import { openingHoursToPreviewRows } from './preview-helpers';
 
 describe('preview-helpers', () => {

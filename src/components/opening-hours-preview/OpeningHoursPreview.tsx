@@ -1,5 +1,6 @@
 import React, { Fragment } from 'react';
 import { useAppContext } from '../../App-context';
+import { openingHoursToPreviewRows } from '../../common/helpers/preview-helpers';
 import {
   Language,
   ResourceState,
@@ -7,7 +8,6 @@ import {
 } from '../../common/lib/types';
 import { createWeekdaysStringFromIndices } from '../../common/utils/date-time/format';
 import { uiRules } from '../../constants';
-import { openingHoursToPreviewRows } from '../../opening-period/v2/components/preview/preview-helpers';
 import {
   OpeningHours,
   OpeningHoursTimeSpan,

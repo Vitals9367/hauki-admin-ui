@@ -20,8 +20,8 @@ import {
   useModal,
 } from '../../../components/modal/ConfirmationModal';
 import './OpeningPeriod.scss';
-import { apiDatePeriodToOpeningHours } from '../../../opening-period/v2/helpers/opening-hours-helpers';
 import OpeningHoursPreview from '../../../components/opening-hours-preview/OpeningHoursPreview';
+import { apiDatePeriodToOpeningHours } from '../../../common/helpers/opening-hours-helpers';
 
 export default function OpeningPeriod({
   resourceId,
