@@ -1,18 +1,9 @@
 @import 'node_modules/hds-design-tokens/lib/all.scss';
 
-.opening-hours-preview {
-  display: flex;
-  flex-direction: column;
-  justify-self: flex-start;
-  max-height: 65vh;
-  overflow: scroll;
-}
-
 .opening-hours-preview-table {
   border-collapse: separate;
   border-spacing: 0;
   margin-bottom: 1.5rem;
-  min-width: 100%;
   table-layout: fixed;
 }
 
@@ -21,7 +12,8 @@
 }
 
 .opening-hours-preview-table__caption {
-  font-size: 1.25rem;
+  font-size: $fontsize-heading-xs;
+  font-weight: bold;
   margin-bottom: 0.5rem;
   text-align: left;
 }
@@ -62,18 +54,6 @@ td::first-letter {
 
 .time-span-rule-label {
   font-weight: bold;
-}
-
-.opening-hours-preview__title {
-  font-size: 1.25rem;
-  margin: 0;
-  margin-bottom: 1rem;
-}
-
-@media screen and (min-width: $breakpoint-l) {
-  .opening-hours-preview-title {
-    font-size: 1.5rem;
-  }
 }
 
 .opening-hours-preview-table td,

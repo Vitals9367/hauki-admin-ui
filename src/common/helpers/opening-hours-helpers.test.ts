@@ -1,8 +1,8 @@
 /// <reference types="jest" />
 
-import { ResourceState } from '../../../common/lib/types';
+import { ResourceState } from '../lib/types';
 import {
-  apiDatePeriodToOpeningHours,
+  apiDatePeriodToFormValues,
   formValuesToApiDatePeriod,
 } from './opening-hours-helpers';
 
@@ -192,7 +192,7 @@ describe('form-helpers', () => {
 
   describe('apiDatePeriodToOpeningHours', () => {
     it('should map to correct data', () => {
-      expect(apiDatePeriodToOpeningHours(datePeriod)).toEqual({
+      expect(apiDatePeriodToFormValues(datePeriod)).toEqual({
         endDate: '31.12.2022',
         fixed: true,
         name: { fi: 'Normaali aukiolo', sv: null, en: null },

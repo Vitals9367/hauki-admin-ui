@@ -9,24 +9,21 @@ import {
   Resource,
   ResourceState,
   UiDatePeriodConfig,
+  OpeningHours as TOpeningHours,
+  OpeningHoursFormValues,
 } from '../../../../common/lib/types';
 import {
   PrimaryButton,
   SecondaryButton,
   SupplementaryButton,
 } from '../../../../components/button/Button';
-import Preview from '../preview/OpeningHoursPreview';
+import Preview from '../preview/OpeningHoursFormPreview';
 import './OpeningHoursForm.scss';
 import {
-  OpeningHours as TOpeningHours,
-  OpeningHoursFormValues,
-  Rule,
-} from '../../types';
-import {
-  apiDatePeriodToOpeningHours as apiDatePeriodToFormValues,
+  apiDatePeriodToFormValues,
   byWeekdays,
   formValuesToApiDatePeriod,
-} from '../../helpers/opening-hours-helpers';
+} from '../../../../common/helpers/opening-hours-helpers';
 import toast from '../../../../components/notification/Toast';
 import OpeningHours from '../opening-hours/OpeningHours';
 import { defaultTimeSpan } from '../../constants';
@@ -34,7 +31,7 @@ import OpeningHoursValidity from './OpeningHoursValidity';
 import useMobile from '../../../../hooks/useMobile';
 import { formatDate } from '../../../../common/utils/date-time/format';
 import OpeningHoursTitles from './OpeningHoursTitles';
-import OpeningHoursPreviewMobile from '../preview/OpeningHoursPreviewMobile';
+import OpeningHoursFormPreviewMobile from '../preview/OpeningHoursFormPreviewMobile';
 import ResourceTitle from '../../../../components/resource-title/ResourceTitle';
 import { useAppContext } from '../../../../App-context';
 
@@ -134,27 +131,9 @@ const OpeningHoursForm = ({
       .finally(() => setSaving(false));
   };
 
-  let resourceStates = datePeriodConfig
-    ? datePeriodConfig.resourceState.options.map((translatedApiChoice) => ({
-        value: translatedApiChoice.value,
-        label: translatedApiChoice.label.fi,
-      }))
+  const resourceStates = datePeriodConfig
+    ? datePeriodConfig.resourceState.options
     : [];
-
-  resourceStates = [
-    ...resourceStates,
-    // TODO: This needs to be returned from the server
-    {
-      label: 'Muu, mikä?',
-      value: ResourceState.OTHER,
-    },
-  ];
-
-  const rules: { value: Rule; label: string }[] = [
-    { value: 'week_every', label: 'Joka viikko' },
-    { value: 'week_even', label: 'Parilliset viikot' },
-    { value: 'week_odd', label: 'Parittomat viikot' },
-  ];
 
   const allDayAreUncheckedForRow = (idx: number): boolean => {
     const weekdays = getValues(`openingHours[${idx}].weekdays`) as number[];
@@ -210,10 +189,10 @@ const OpeningHoursForm = ({
               resource={resource}
               titleAddon={name[language] || undefined}>
               <div className="mobile-preview-container">
-                <OpeningHoursPreviewMobile
+                <OpeningHoursFormPreviewMobile
+                  language={language}
                   openingHours={openingHours}
                   resourceStates={resourceStates}
-                  rules={rules}
                 />
               </div>
             </ResourceTitle>
@@ -232,7 +211,6 @@ const OpeningHoursForm = ({
                       offsetTop={offsetTop.current}
                       item={field as TOpeningHours}
                       resourceStates={resourceStates}
-                      rules={rules}
                       namePrefix={`openingHours[${i}]`}
                       onDayChange={(
                         day: number,
@@ -267,7 +245,6 @@ const OpeningHoursForm = ({
                   <Preview
                     openingHours={openingHours}
                     resourceStates={resourceStates}
-                    rules={rules}
                   />
                   <div className="sort-weekdays-container">
                     <SupplementaryButton

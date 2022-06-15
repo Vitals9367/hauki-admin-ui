@@ -5,19 +5,17 @@ import {
   TimeSpan,
   TimeSpanGroup,
   Weekdays,
-} from '../../../common/lib/types';
-import {
-  formatDate,
-  transformDateToApiFormat,
-} from '../../../common/utils/date-time/format';
-import { updateByWithDefault } from '../../../common/utils/fp/list';
-import {
   OpeningHours,
   OpeningHoursFormValues,
   OpeningHoursTimeSpan,
   OpeningHoursTimeSpanGroup,
   Rule,
-} from '../types';
+} from '../lib/types';
+import {
+  formatDate,
+  transformDateToApiFormat,
+} from '../utils/date-time/format';
+import { updateByWithDefault } from '../utils/fp/list';
 
 export const byWeekdays = (
   openingHours1: { weekdays: number[] },
@@ -164,12 +162,8 @@ const apiRulesToRule = (apiRules: GroupRule[]): Rule => {
 
 export const apiDatePeriodToOpeningHours = (
   datePeriod: DatePeriod
-): OpeningHoursFormValues => ({
-  name: datePeriod.name,
-  endDate: datePeriod.end_date ? formatDate(datePeriod.end_date) : null,
-  fixed: !!datePeriod.start_date && !!datePeriod.end_date,
-  startDate: datePeriod.start_date ? formatDate(datePeriod.start_date) : null,
-  openingHours: datePeriod.time_span_groups
+): OpeningHours[] =>
+  datePeriod.time_span_groups
     .reduce(
       // eslint-disable-next-line @typescript-eslint/naming-convention
       (allOpeningHours: OpeningHours[], { rules, time_spans }: TimeSpanGroup) =>
@@ -213,5 +207,14 @@ export const apiDatePeriodToOpeningHours = (
         ),
       []
     )
-    .sort(byWeekdays),
+    .sort(byWeekdays);
+
+export const apiDatePeriodToFormValues = (
+  datePeriod: DatePeriod
+): OpeningHoursFormValues => ({
+  name: datePeriod.name,
+  endDate: datePeriod.end_date ? formatDate(datePeriod.end_date) : null,
+  fixed: !!datePeriod.start_date && !!datePeriod.end_date,
+  startDate: datePeriod.start_date ? formatDate(datePeriod.start_date) : null,
+  openingHours: apiDatePeriodToOpeningHours(datePeriod),
 });

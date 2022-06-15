@@ -1,0 +1,21 @@
+@import 'node_modules/hds-design-tokens/lib/all.scss';
+
+.opening-hours-form-preview {
+  display: flex;
+  flex-direction: column;
+  justify-self: flex-start;
+  max-height: 65vh;
+  overflow: scroll;
+}
+
+.opening-hours-form-preview__title {
+  font-size: $fontsize-heading-m;
+  margin: 0;
+  margin-bottom: 1rem;
+}
+
+@media screen and (min-width: $breakpoint-l) {
+  .opening-hours-form-preview__title {
+    font-size: 1.5rem;
+  }
+}

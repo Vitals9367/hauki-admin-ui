@@ -20,7 +20,8 @@ import {
   useModal,
 } from '../../../components/modal/ConfirmationModal';
 import './OpeningPeriod.scss';
-import OpeningPeriodDetails from './OpeningPeriodDetails';
+import OpeningHoursPreview from '../../../components/opening-hours-preview/OpeningHoursPreview';
+import { apiDatePeriodToOpeningHours } from '../../../common/helpers/opening-hours-helpers';
 
 export default function OpeningPeriod({
   resourceId,
@@ -68,9 +69,6 @@ export default function OpeningPeriod({
       className="opening-period"
       data-test={`openingPeriod-${datePeriod.id}`}>
       <div className="opening-period-header">
-        <div className="opening-period-dates opening-period-header-column">
-          <div>{formattedDateRange}</div>
-        </div>
         <div className="opening-period-title opening-period-header-column">
           {datePeriodName ? (
             <h4>{datePeriodName}</h4>
@@ -82,6 +80,9 @@ export default function OpeningPeriod({
               })}
             </h4>
           )}
+        </div>
+        <div className="opening-period-dates opening-period-header-column">
+          <div>{formattedDateRange}</div>
         </div>
         <div className="opening-period-actions opening-period-header-column">
           <Link
@@ -141,11 +142,12 @@ export default function OpeningPeriod({
         />
       </div>
       {isOpen && (
-        <OpeningPeriodDetails
-          datePeriod={datePeriod}
-          datePeriodConfig={datePeriodConfig}
-          language={language}
-        />
+        <div className="date-period-details-container">
+          <OpeningHoursPreview
+            openingHours={apiDatePeriodToOpeningHours(datePeriod)}
+            resourceStates={datePeriodConfig.resourceState.options}
+          />
+        </div>
       )}
     </div>
   );

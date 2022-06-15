@@ -1,13 +1,13 @@
 import { isEqual } from 'lodash';
-import { updateByWithDefault } from '../../../../common/utils/fp/list';
-import { byWeekdays } from '../../helpers/opening-hours-helpers';
+import { updateByWithDefault } from '../utils/fp/list';
+import { byWeekdays } from './opening-hours-helpers';
 import {
   OpeningHours,
   OpeningHoursTimeSpan,
   PreviewOpeningHours,
   PreviewRow,
   Rule,
-} from '../../types';
+} from '../lib/types';
 
 const ruleOrder: Rule[] = ['week_every', 'week_even', 'week_odd'];
 

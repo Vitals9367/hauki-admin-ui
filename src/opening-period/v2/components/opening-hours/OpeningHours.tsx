@@ -2,19 +2,23 @@ import { Notification, Select } from 'hds-react';
 import { upperFirst } from 'lodash';
 import React, { Fragment, useEffect, useRef } from 'react';
 import { Controller, useFieldArray, useFormContext } from 'react-hook-form';
-import { Language } from '../../../../common/lib/types';
-import { getWeekdayLongNameByIndexAndLang } from '../../../../common/utils/date-time/format';
-import TimeSpans from '../time-span/TimeSpans';
 import {
+  InputOption,
+  Language,
+  TranslatedApiChoice,
   OpeningHours as TOpeningHours,
   OpeningHoursFormValues,
   OpeningHoursTimeSpanGroup,
-  OptionType,
   Rule,
-} from '../../types';
+} from '../../../../common/lib/types';
+import { getWeekdayLongNameByIndexAndLang } from '../../../../common/utils/date-time/format';
+import TimeSpans from '../time-span/TimeSpans';
 import DayCheckbox from './DayCheckbox';
 import { defaultTimeSpan } from '../../constants';
 import './OpeningHours.scss';
+import { uiFrequencyRules } from '../../../../constants';
+import { useAppContext } from '../../../../App-context';
+import { choiceToOption } from '../../../../common/utils/form/form';
 
 type InflectLabels = {
   [language in Language]: {
@@ -40,16 +44,15 @@ const OpeningHours = ({
   resourceStates,
   namePrefix,
   onDayChange,
-  rules,
 }: {
   dropIn: boolean;
   item: TOpeningHours;
   namePrefix: string;
   offsetTop?: number;
-  resourceStates: OptionType[];
-  rules: OptionType<Rule>[];
+  resourceStates: TranslatedApiChoice[];
   onDayChange: (day: number, checked: boolean, offsetTop: number) => void;
 }): JSX.Element => {
+  const { language = Language.FI } = useAppContext();
   const { control, setValue, watch } = useFormContext<OpeningHoursFormValues>();
   const { append, fields, remove } = useFieldArray<OpeningHoursTimeSpanGroup>({
     control,
@@ -59,6 +62,7 @@ const OpeningHours = ({
   const [isMoving, setIsMoving] = React.useState<boolean>(false);
   const ref = useRef<HTMLDivElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
+  const rules = uiFrequencyRules.map(choiceToOption(language));
 
   useEffect(() => {
     if (dropIn && ref.current) {
@@ -104,7 +108,6 @@ const OpeningHours = ({
       }, []);
 
   const resolveDayTranslation = (day: number, useGenitive: boolean): string => {
-    const language = Language.FI;
     const translatedDay = getWeekdayLongNameByIndexAndLang({
       weekdayIndex: day,
       language,
@@ -205,11 +208,11 @@ const OpeningHours = ({
                 name={`${namePrefix}.timeSpanGroups[${i}].rule`}
                 control={control}
                 render={({ onChange, value }): JSX.Element => (
-                  <Select<OptionType<Rule>>
+                  <Select<InputOption<Rule>>
                     className="rule-select"
                     defaultValue={rules[0]}
                     label="Toistuvuus"
-                    onChange={(rule: OptionType<Rule>): void => {
+                    onChange={(rule: InputOption<Rule>): void => {
                       onChange(rule.value);
 
                       const counterparts: { [key in Rule]: Rule } = {

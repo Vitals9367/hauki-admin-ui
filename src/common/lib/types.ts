@@ -75,14 +75,11 @@ export type ApiChoice = {
   display_name: string | LanguageStrings;
 };
 
-export type TranslatedApiChoice = {
-  label: LanguageStrings;
-  value: string;
-};
+export type TranslatedApiChoice = Choice<string>;
 
-export type InputOption = {
+export type InputOption<T = string> = {
   label: string;
-  value: string;
+  value: T;
 };
 
 export type TextFieldConfig = {
@@ -258,3 +255,46 @@ export interface Resource {
   parents: number[];
   resource_type: ResourceType;
 }
+
+export type OpeningHoursTimeSpan = {
+  description?: LanguageStrings;
+  end_time: string | null;
+  full_day?: boolean;
+  resource_state?: ResourceState;
+  start_time: string | null;
+};
+
+export type OpeningHoursTimeSpanGroup = {
+  rule: Rule;
+  timeSpans: OpeningHoursTimeSpan[];
+};
+
+export type OpeningHours = {
+  weekdays: number[];
+  timeSpanGroups: OpeningHoursTimeSpanGroup[];
+};
+
+export type OpeningHoursFormValues = {
+  endDate: string | null;
+  fixed: boolean;
+  name: LanguageStrings;
+  openingHours: OpeningHours[];
+  startDate: string | null;
+};
+
+export type PreviewOpeningHours = {
+  timeSpans: OpeningHoursTimeSpan[];
+  weekdays: number[];
+};
+
+export type PreviewRow = {
+  rule: Rule;
+  openingHours: PreviewOpeningHours[];
+};
+
+export type Rule = 'week_every' | 'week_odd' | 'week_even';
+
+export type Choice<T> = {
+  value: T;
+  label: LanguageStrings;
+};

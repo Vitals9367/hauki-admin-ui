@@ -7,6 +7,7 @@
   padding: 6px $spacing-m;
 
   h4 {
+    font-size: $fontsize-body-l;
     margin: 0;
     word-break: break-all;
   }
@@ -38,7 +39,6 @@
 
 .opening-period-title {
   display: flex;
-  flex-grow: 600;
   justify-content: normal;
 }
 
@@ -47,9 +47,21 @@
 }
 
 .date-period-details-container {
-  padding: $spacing-xs;
+  align-items: flex-start;
+  display: flex;
+  flex-direction: column;
+
+  & > * {
+    flex: 1;
+  }
+
+  & caption {
+    font-size: $fontsize-body-m;
+  }
 }
 
-.date-period-description {
-  margin-top: $spacing-xl;
+@media screen and (min-width: $breakpoint-m) {
+  .date-period-details-container {
+    flex-direction: row;
+  }
 }

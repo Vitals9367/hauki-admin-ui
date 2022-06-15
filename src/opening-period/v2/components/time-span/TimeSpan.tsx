@@ -1,16 +1,23 @@
 import { Checkbox, IconTrash, Select, TextInput, TimeInput } from 'hds-react';
 import { Controller, useFormContext } from 'react-hook-form';
 import React from 'react';
-import { ResourceState } from '../../../../common/lib/types';
+import {
+  InputOption,
+  Language,
+  ResourceState,
+  TranslatedApiChoice,
+  OpeningHoursTimeSpan,
+} from '../../../../common/lib/types';
 import { SupplementaryButton } from '../../../../components/button/Button';
-import { OpeningHoursTimeSpan, OptionType } from '../../types';
 import './TimeSpan.scss';
+import { useAppContext } from '../../../../App-context';
+import { choiceToOption } from '../../../../common/utils/form/form';
 
 const TimeSpan = ({
   disabled = false,
   groupLabel,
   item,
-  resourceStates,
+  resourceStates: apiResourceStates,
   namePrefix,
   onDelete,
 }: {
@@ -18,13 +25,15 @@ const TimeSpan = ({
   groupLabel: string;
   item?: OpeningHoursTimeSpan;
   namePrefix: string;
-  resourceStates: OptionType[];
+  resourceStates: TranslatedApiChoice[];
   onDelete?: () => void;
 }): JSX.Element => {
+  const { language = Language.FI } = useAppContext();
   const { control, register, watch } = useFormContext();
   const fullDay = watch(`${namePrefix}.full_day`);
   const resourceState = watch(`${namePrefix}.resource_state`);
-  const sanitizedResourceStateOptions: OptionType[] = resourceStates.filter(
+  const resourceStates = apiResourceStates.map(choiceToOption(language));
+  const sanitizedResourceStateOptions: InputOption[] = resourceStates.filter(
     ({ value }) => value !== 'undefined'
   );
 
@@ -42,13 +51,13 @@ const TimeSpan = ({
         name={`${namePrefix}.resource_state`}
         control={control}
         render={({ onChange, value }): JSX.Element => (
-          <Select<OptionType>
+          <Select<InputOption>
             disabled={disabled}
             id={`${namePrefix}-resource-state`}
             label="Aukiolon tyyppi"
             options={sanitizedResourceStateOptions}
             className="time-span__resource-state-select"
-            onChange={(option: OptionType): void => onChange(option.value)}
+            onChange={(option: InputOption): void => onChange(option.value)}
             placeholder="Valitse"
             required
             value={sanitizedResourceStateOptions.find(
