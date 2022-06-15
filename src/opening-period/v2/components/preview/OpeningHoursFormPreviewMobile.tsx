@@ -5,8 +5,8 @@ import { SupplementaryButton } from '../../../../components/button/Button';
 import useMobile from '../../../../hooks/useMobile';
 import useOnClickOutside from '../../../../hooks/useOnClickOutside';
 import { OpeningHours } from '../../types';
-import OpeningHoursPreview from './OpeningHoursPreview';
-import './OpeningHoursPreviewMobile.scss';
+import OpeningHoursFormPreview from './OpeningHoursFormPreview';
+import './OpeningHoursFormPreviewMobile.scss';
 
 type Props = {
   language: Language;
@@ -14,7 +14,7 @@ type Props = {
   resourceStates: TranslatedApiChoice[];
 };
 
-const OpeningHoursPreviewMobile = ({
+const OpeningHoursFormPreviewMobile = ({
   openingHours,
   resourceStates,
 }: Props): JSX.Element => {
@@ -42,7 +42,7 @@ const OpeningHoursPreviewMobile = ({
             ? 'opening-hours-preview-mobile--open'
             : 'opening-hours-preview-mobile--closed'
         }`}>
-        <OpeningHoursPreview
+        <OpeningHoursFormPreview
           className="opening-hours-preview-mobile-preview"
           openingHours={openingHours}
           resourceStates={resourceStates}
@@ -52,4 +52,4 @@ const OpeningHoursPreviewMobile = ({
   );
 };
 
-export default OpeningHoursPreviewMobile;
+export default OpeningHoursFormPreviewMobile;

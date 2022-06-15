@@ -12,6 +12,7 @@ import {
   OpeningHours,
   OpeningHoursTimeSpan,
 } from '../../opening-period/v2/types';
+import './OpeningHoursPreview.scss';
 
 const emptyHours = '-- : --';
 
@@ -93,7 +94,7 @@ const TimeSpanRow = ({
   </tr>
 );
 
-const OpeningHoursRows = ({
+const OpeningHoursPreview = ({
   openingHours,
   resourceStates,
 }: {
@@ -170,4 +171,4 @@ const OpeningHoursRows = ({
   );
 };
 
-export default OpeningHoursRows;
+export default OpeningHoursPreview;

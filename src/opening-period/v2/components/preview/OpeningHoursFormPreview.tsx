@@ -1,10 +1,10 @@
 import React from 'react';
 import { TranslatedApiChoice } from '../../../../common/lib/types';
-import OpeningHoursRows from '../../../../components/opening-hours-rows/OpeningHoursRows';
+import OpeningHoursPreview from '../../../../components/opening-hours-preview/OpeningHoursPreview';
 import { OpeningHours } from '../../types';
-import './OpeningHoursPreview.scss';
+import './OpeningHoursFormPreview.scss';
 
-const OpeningHoursPreview = ({
+const OpeningHoursFormPreview = ({
   openingHours,
   resourceStates,
   className,
@@ -14,18 +14,20 @@ const OpeningHoursPreview = ({
   className?: string;
 }): JSX.Element => (
   <div
-    aria-labelledby="opening-hours-preview"
-    className={`card opening-hours-preview ${className || ''}`}
+    aria-labelledby="opening-hours-form-preview"
+    className={`card opening-hours-form-preview ${className || ''}`}
     // eslint-disable-next-line jsx-a11y/no-noninteractive-tabindex
     tabIndex={0}>
-    <h2 id="opening-hours-preview" className="opening-hours-preview__title">
+    <h2
+      id="opening-hours-form-preview"
+      className="opening-hours-form-preview__title">
       Esikatselu
     </h2>
-    <OpeningHoursRows
+    <OpeningHoursPreview
       openingHours={openingHours}
       resourceStates={resourceStates}
     />
   </div>
 );
 
-export default OpeningHoursPreview;
+export default OpeningHoursFormPreview;

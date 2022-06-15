@@ -15,7 +15,7 @@ import {
   SecondaryButton,
   SupplementaryButton,
 } from '../../../../components/button/Button';
-import Preview from '../preview/OpeningHoursPreview';
+import Preview from '../preview/OpeningHoursFormPreview';
 import './OpeningHoursForm.scss';
 import {
   OpeningHours as TOpeningHours,
@@ -33,7 +33,7 @@ import OpeningHoursValidity from './OpeningHoursValidity';
 import useMobile from '../../../../hooks/useMobile';
 import { formatDate } from '../../../../common/utils/date-time/format';
 import OpeningHoursTitles from './OpeningHoursTitles';
-import OpeningHoursPreviewMobile from '../preview/OpeningHoursPreviewMobile';
+import OpeningHoursFormPreviewMobile from '../preview/OpeningHoursFormPreviewMobile';
 import ResourceTitle from '../../../../components/resource-title/ResourceTitle';
 import { useAppContext } from '../../../../App-context';
 
@@ -191,7 +191,7 @@ const OpeningHoursForm = ({
               resource={resource}
               titleAddon={name[language] || undefined}>
               <div className="mobile-preview-container">
-                <OpeningHoursPreviewMobile
+                <OpeningHoursFormPreviewMobile
                   language={language}
                   openingHours={openingHours}
                   resourceStates={resourceStates}
