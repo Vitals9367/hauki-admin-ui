@@ -16,7 +16,7 @@ import TimeSpans from '../time-span/TimeSpans';
 import DayCheckbox from './DayCheckbox';
 import { defaultTimeSpan } from '../../constants';
 import './OpeningHours.scss';
-import { uiRules } from '../../../../constants';
+import { uiFrequencyRules } from '../../../../constants';
 import { useAppContext } from '../../../../App-context';
 import { choiceToOption } from '../../../../common/utils/form/form';
 
@@ -62,7 +62,7 @@ const OpeningHours = ({
   const [isMoving, setIsMoving] = React.useState<boolean>(false);
   const ref = useRef<HTMLDivElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
-  const rules = uiRules.map(choiceToOption(language));
+  const rules = uiFrequencyRules.map(choiceToOption(language));
 
   useEffect(() => {
     if (dropIn && ref.current) {

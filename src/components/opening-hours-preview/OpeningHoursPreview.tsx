@@ -9,7 +9,7 @@ import {
   OpeningHoursTimeSpan,
 } from '../../common/lib/types';
 import { createWeekdaysStringFromIndices } from '../../common/utils/date-time/format';
-import { uiRules } from '../../constants';
+import { uiFrequencyRules } from '../../constants';
 import './OpeningHoursPreview.scss';
 
 const emptyHours = '-- : --';
@@ -110,9 +110,9 @@ const OpeningHoursPreview = ({
             {previewRow.rule === 'week_every' ? null : (
               <caption className="opening-hours-preview-table__caption">
                 {
-                  uiRules.find((rule) => rule.value === previewRow.rule)?.label[
-                    language
-                  ]
+                  uiFrequencyRules.find(
+                    (rule) => rule.value === previewRow.rule
+                  )?.label[language]
                 }
               </caption>
             )}

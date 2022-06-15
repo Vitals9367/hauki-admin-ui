@@ -275,14 +275,7 @@ export default {
     return {
       name: configResponse.name,
       resourceState: {
-        options: [
-          ...resourceStateOptions,
-          // TODO: This needs to be returned from the server
-          {
-            label: { fi: 'Muu, mikä?', sv: 'Muu, mikä', en: 'Muu, mikä?' },
-            value: ResourceState.OTHER,
-          },
-        ],
+        options: resourceStateOptions,
       },
       timeSpanGroup: {
         rule: {
