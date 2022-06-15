@@ -133,18 +133,9 @@ const OpeningHoursForm = ({
       .finally(() => setSaving(false));
   };
 
-  let resourceStates = datePeriodConfig
+  const resourceStates = datePeriodConfig
     ? datePeriodConfig.resourceState.options
     : [];
-
-  resourceStates = [
-    ...resourceStates,
-    // TODO: This needs to be returned from the server
-    {
-      label: { fi: 'Muu, mikä?', sv: 'Muu, mikä', en: 'Muu, mikä?' },
-      value: ResourceState.OTHER,
-    },
-  ];
 
   const allDayAreUncheckedForRow = (idx: number): boolean => {
     const weekdays = getValues(`openingHours[${idx}].weekdays`) as number[];
