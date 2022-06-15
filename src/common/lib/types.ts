@@ -75,10 +75,7 @@ export type ApiChoice = {
   display_name: string | LanguageStrings;
 };
 
-export type TranslatedApiChoice<T = string> = {
-  label: LanguageStrings;
-  value: T;
-};
+export type TranslatedApiChoice = Choice<string>;
 
 export type InputOption<T = string> = {
   label: string;
@@ -296,3 +293,8 @@ export type PreviewRow = {
 };
 
 export type Rule = 'week_every' | 'week_odd' | 'week_even';
+
+export type Choice<T> = {
+  value: T;
+  label: LanguageStrings;
+};

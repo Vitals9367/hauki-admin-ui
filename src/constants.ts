@@ -1,7 +1,7 @@
-import { Rule, TranslatedApiChoice } from './common/lib/types';
+import { LanguageStrings, Rule } from './common/lib/types';
 
 // eslint-disable-next-line import/prefer-default-export
-export const uiRules: TranslatedApiChoice<Rule>[] = [
+export const uiRules: { label: LanguageStrings; value: Rule }[] = [
   {
     value: 'week_every',
     label: { fi: 'Joka viikko', sv: 'Joka viikko', en: 'Joka viikko' },

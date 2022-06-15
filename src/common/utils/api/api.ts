@@ -11,8 +11,6 @@ import {
   ResourceState,
   TimeSpanGroup,
   TranslatedApiChoice,
-  Language,
-  InputOption,
 } from '../../lib/types';
 import { AuthTokens, getTokens } from '../../../auth/auth-context';
 
@@ -351,10 +349,3 @@ export default {
     return permission.has_permission;
   },
 };
-
-export const apiChoiceToOption = (language: Language) => <T>(
-  apiTranslation: TranslatedApiChoice<T>
-): InputOption<T> => ({
-  value: apiTranslation.value,
-  label: apiTranslation.label[language] ?? '',
-});

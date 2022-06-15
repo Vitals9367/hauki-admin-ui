@@ -17,8 +17,8 @@ import DayCheckbox from './DayCheckbox';
 import { defaultTimeSpan } from '../../constants';
 import './OpeningHours.scss';
 import { uiRules } from '../../../../constants';
-import { apiChoiceToOption } from '../../../../common/utils/api/api';
 import { useAppContext } from '../../../../App-context';
+import { choiceToOption } from '../../../../common/utils/form/form';
 
 type InflectLabels = {
   [language in Language]: {
@@ -62,7 +62,7 @@ const OpeningHours = ({
   const [isMoving, setIsMoving] = React.useState<boolean>(false);
   const ref = useRef<HTMLDivElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
-  const rules = uiRules.map(apiChoiceToOption(language));
+  const rules = uiRules.map(choiceToOption(language));
 
   useEffect(() => {
     if (dropIn && ref.current) {

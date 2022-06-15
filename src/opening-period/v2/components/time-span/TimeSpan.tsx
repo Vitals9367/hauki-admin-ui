@@ -10,8 +10,8 @@ import {
 } from '../../../../common/lib/types';
 import { SupplementaryButton } from '../../../../components/button/Button';
 import './TimeSpan.scss';
-import { apiChoiceToOption } from '../../../../common/utils/api/api';
 import { useAppContext } from '../../../../App-context';
+import { choiceToOption } from '../../../../common/utils/form/form';
 
 const TimeSpan = ({
   disabled = false,
@@ -32,7 +32,7 @@ const TimeSpan = ({
   const { control, register, watch } = useFormContext();
   const fullDay = watch(`${namePrefix}.full_day`);
   const resourceState = watch(`${namePrefix}.resource_state`);
-  const resourceStates = apiResourceStates.map(apiChoiceToOption(language));
+  const resourceStates = apiResourceStates.map(choiceToOption(language));
   const sanitizedResourceStateOptions: InputOption[] = resourceStates.filter(
     ({ value }) => value !== 'undefined'
   );
