@@ -4,7 +4,6 @@ import { datePeriodOptions } from '../../../../test/fixtures/api-options';
 import { datePeriod } from '../../../../test/fixtures/api-date-period';
 import {
   DatePeriod,
-  Language,
   ResourceState,
   UiDatePeriodConfig,
 } from '../../../common/lib/types';
@@ -74,7 +73,6 @@ describe(`<OpeningPeriodDetails />`, () => {
     const { container } = render(
       <OpeningPeriodDetails
         datePeriod={testDatePeriod}
-        language={Language.FI}
         datePeriodConfig={testDatePeriodOptions}
       />
     );
@@ -100,7 +98,6 @@ describe(`<OpeningPeriodDetails />`, () => {
     const { container } = render(
       <OpeningPeriodDetails
         datePeriod={testPeriodWithNonSupportedFeatures}
-        language={Language.FI}
         datePeriodConfig={testDatePeriodOptions}
       />
     );
