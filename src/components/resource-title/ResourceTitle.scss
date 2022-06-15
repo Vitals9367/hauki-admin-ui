@@ -2,14 +2,14 @@
 
 .resource-title {
   align-items: center;
-  background: #fff;
+  background: $color-white;
   display: flex;
   justify-content: space-between;
   left: 0;
-  margin-left: -1rem;
-  margin-right: -1rem;
-  margin-top: -1rem;
-  padding: 1rem;
+  margin-left: -$spacing-s;
+  margin-right: -$spacing-s;
+  margin-top: -$spacing-s;
+  padding: $spacing-s;
   position: sticky;
   right: 0;
   top: 0;
@@ -19,7 +19,7 @@
 
 @media screen and (min-width: $breakpoint-m) {
   .resource-title {
-    margin: -1.5rem;
+    margin: -$spacing-m;
     margin-bottom: 0;
   }
 }
@@ -29,20 +29,20 @@
     background: transparent;
     margin-left: 0;
     margin-right: 0;
-    padding: 1.5rem 0 0 0;
+    padding: $spacing-m 0 0 0;
   }
 
   .resource-title--on-top {
-    padding-left: 1.5rem;
-    padding-right: 1.5rem;
+    padding-left: $spacing-m;
+    padding-right: $spacing-m;
   }
 }
 
 .resource-title--on-top {
-  background: #fff;
+  background: $color-white;
   box-shadow: 0 2px 10px 0 rgba(212, 212, 212, 0.2);
-  padding-bottom: 1rem;
-  padding-top: 1rem;
+  padding-bottom: $spacing-s;
+  padding-top: $spacing-s;
 }
 
 .resource-info-title {
