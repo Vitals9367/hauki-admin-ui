@@ -17,6 +17,7 @@ import { defaultTimeSpan } from '../../constants';
 import './OpeningHours.scss';
 import { uiRules } from '../../../../constants';
 import { apiChoiceToOption } from '../../../../common/utils/api/api';
+import { useAppContext } from '../../../../App-context';
 
 type InflectLabels = {
   [language in Language]: {
@@ -38,7 +39,6 @@ const isOnlySelectedDay = (day: number, weekdays: number[]): boolean =>
 const OpeningHours = ({
   dropIn,
   item,
-  language,
   offsetTop = 0,
   resourceStates,
   namePrefix,
@@ -46,12 +46,12 @@ const OpeningHours = ({
 }: {
   dropIn: boolean;
   item: TOpeningHours;
-  language: Language;
   namePrefix: string;
   offsetTop?: number;
   resourceStates: TranslatedApiChoice[];
   onDayChange: (day: number, checked: boolean, offsetTop: number) => void;
 }): JSX.Element => {
+  const { language = Language.FI } = useAppContext();
   const { control, setValue, watch } = useFormContext<OpeningHoursFormValues>();
   const { append, fields, remove } = useFieldArray<OpeningHoursTimeSpanGroup>({
     control,

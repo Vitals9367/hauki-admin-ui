@@ -221,7 +221,6 @@ const OpeningHoursForm = ({
                       dropIn={dropInRow === i}
                       offsetTop={offsetTop.current}
                       item={field as TOpeningHours}
-                      language={language}
                       resourceStates={resourceStates}
                       namePrefix={`openingHours[${i}]`}
                       onDayChange={(
