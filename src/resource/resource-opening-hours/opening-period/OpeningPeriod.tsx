@@ -69,9 +69,6 @@ export default function OpeningPeriod({
       className="opening-period"
       data-test={`openingPeriod-${datePeriod.id}`}>
       <div className="opening-period-header">
-        <div className="opening-period-dates opening-period-header-column">
-          <div>{formattedDateRange}</div>
-        </div>
         <div className="opening-period-title opening-period-header-column">
           {datePeriodName ? (
             <h4>{datePeriodName}</h4>
@@ -83,6 +80,9 @@ export default function OpeningPeriod({
               })}
             </h4>
           )}
+        </div>
+        <div className="opening-period-dates opening-period-header-column">
+          <div>{formattedDateRange}</div>
         </div>
         <div className="opening-period-actions opening-period-header-column">
           <Link
