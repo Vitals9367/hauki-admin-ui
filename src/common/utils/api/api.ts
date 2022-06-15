@@ -12,9 +12,9 @@ import {
   TimeSpanGroup,
   TranslatedApiChoice,
   Language,
+  InputOption,
 } from '../../lib/types';
 import { AuthTokens, getTokens } from '../../../auth/auth-context';
-import { OptionType } from '../../../opening-period/v2/types';
 
 const apiBaseUrl: string = window.ENV?.API_URL || 'http://localhost:8000';
 
@@ -354,7 +354,7 @@ export default {
 
 export const apiChoiceToOption = (language: Language) => <T>(
   apiTranslation: TranslatedApiChoice<T>
-): OptionType<T> => ({
+): InputOption<T> => ({
   value: apiTranslation.value,
-  label: apiTranslation.label[language],
+  label: apiTranslation.label[language] ?? '',
 });

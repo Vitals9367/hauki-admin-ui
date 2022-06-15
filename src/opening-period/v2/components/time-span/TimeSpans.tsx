@@ -2,11 +2,12 @@ import { IconPlusCircle } from 'hds-react';
 import React, { useEffect, useRef } from 'react';
 import { useFieldArray, useFormContext } from 'react-hook-form';
 import {
+  OpeningHoursFormValues,
+  OpeningHoursTimeSpan,
   ResourceState,
   TranslatedApiChoice,
 } from '../../../../common/lib/types';
 import { SupplementaryButton } from '../../../../components/button/Button';
-import { OpeningHoursFormValues, OpeningHoursTimeSpan } from '../../types';
 import TimeSpan from './TimeSpan';
 import './TimeSpans.scss';
 

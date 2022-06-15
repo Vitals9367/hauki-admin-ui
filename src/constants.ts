@@ -1,5 +1,4 @@
-import { TranslatedApiChoice } from './common/lib/types';
-import { Rule } from './opening-period/v2/types';
+import { Rule, TranslatedApiChoice } from './common/lib/types';
 
 // eslint-disable-next-line import/prefer-default-export
 export const uiRules: TranslatedApiChoice<Rule>[] = [

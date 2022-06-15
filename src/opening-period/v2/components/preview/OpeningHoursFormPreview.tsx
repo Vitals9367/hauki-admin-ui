@@ -1,7 +1,9 @@
 import React from 'react';
-import { TranslatedApiChoice } from '../../../../common/lib/types';
+import {
+  OpeningHours,
+  TranslatedApiChoice,
+} from '../../../../common/lib/types';
 import OpeningHoursPreview from '../../../../components/opening-hours-preview/OpeningHoursPreview';
-import { OpeningHours } from '../../types';
 import './OpeningHoursFormPreview.scss';
 
 const OpeningHoursFormPreview = ({

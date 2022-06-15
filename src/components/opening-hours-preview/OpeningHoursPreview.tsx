@@ -5,13 +5,11 @@ import {
   Language,
   ResourceState,
   TranslatedApiChoice,
+  OpeningHours,
+  OpeningHoursTimeSpan,
 } from '../../common/lib/types';
 import { createWeekdaysStringFromIndices } from '../../common/utils/date-time/format';
 import { uiRules } from '../../constants';
-import {
-  OpeningHours,
-  OpeningHoursTimeSpan,
-} from '../../opening-period/v2/types';
 import './OpeningHoursPreview.scss';
 
 const emptyHours = '-- : --';

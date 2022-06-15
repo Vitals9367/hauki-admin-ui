@@ -2,12 +2,13 @@ import { Checkbox, IconTrash, Select, TextInput, TimeInput } from 'hds-react';
 import { Controller, useFormContext } from 'react-hook-form';
 import React from 'react';
 import {
+  InputOption,
   Language,
   ResourceState,
   TranslatedApiChoice,
+  OpeningHoursTimeSpan,
 } from '../../../../common/lib/types';
 import { SupplementaryButton } from '../../../../components/button/Button';
-import { OpeningHoursTimeSpan, OptionType } from '../../types';
 import './TimeSpan.scss';
 import { apiChoiceToOption } from '../../../../common/utils/api/api';
 import { useAppContext } from '../../../../App-context';
@@ -32,7 +33,7 @@ const TimeSpan = ({
   const fullDay = watch(`${namePrefix}.full_day`);
   const resourceState = watch(`${namePrefix}.resource_state`);
   const resourceStates = apiResourceStates.map(apiChoiceToOption(language));
-  const sanitizedResourceStateOptions: OptionType[] = resourceStates.filter(
+  const sanitizedResourceStateOptions: InputOption[] = resourceStates.filter(
     ({ value }) => value !== 'undefined'
   );
 
@@ -50,13 +51,13 @@ const TimeSpan = ({
         name={`${namePrefix}.resource_state`}
         control={control}
         render={({ onChange, value }): JSX.Element => (
-          <Select<OptionType>
+          <Select<InputOption>
             disabled={disabled}
             id={`${namePrefix}-resource-state`}
             label="Aukiolon tyyppi"
             options={sanitizedResourceStateOptions}
             className="time-span__resource-state-select"
-            onChange={(option: OptionType): void => onChange(option.value)}
+            onChange={(option: InputOption): void => onChange(option.value)}
             placeholder="Valitse"
             required
             value={sanitizedResourceStateOptions.find(

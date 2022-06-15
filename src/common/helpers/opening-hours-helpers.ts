@@ -5,19 +5,17 @@ import {
   TimeSpan,
   TimeSpanGroup,
   Weekdays,
+  OpeningHours,
+  OpeningHoursFormValues,
+  OpeningHoursTimeSpan,
+  OpeningHoursTimeSpanGroup,
+  Rule,
 } from '../lib/types';
 import {
   formatDate,
   transformDateToApiFormat,
 } from '../utils/date-time/format';
 import { updateByWithDefault } from '../utils/fp/list';
-import {
-  OpeningHours,
-  OpeningHoursFormValues,
-  OpeningHoursTimeSpan,
-  OpeningHoursTimeSpanGroup,
-  Rule,
-} from '../../opening-period/v2/types';
 
 export const byWeekdays = (
   openingHours1: { weekdays: number[] },

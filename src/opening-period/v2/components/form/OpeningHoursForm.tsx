@@ -9,6 +9,8 @@ import {
   Resource,
   ResourceState,
   UiDatePeriodConfig,
+  OpeningHours as TOpeningHours,
+  OpeningHoursFormValues,
 } from '../../../../common/lib/types';
 import {
   PrimaryButton,
@@ -17,10 +19,6 @@ import {
 } from '../../../../components/button/Button';
 import Preview from '../preview/OpeningHoursFormPreview';
 import './OpeningHoursForm.scss';
-import {
-  OpeningHours as TOpeningHours,
-  OpeningHoursFormValues,
-} from '../../types';
 import {
   apiDatePeriodToFormValues,
   byWeekdays,

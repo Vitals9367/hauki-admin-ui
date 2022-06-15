@@ -1,10 +1,13 @@
 import { IconAngleDown, IconAngleUp, useAccordion } from 'hds-react';
 import React, { useRef } from 'react';
-import { Language, TranslatedApiChoice } from '../../../../common/lib/types';
+import {
+  Language,
+  OpeningHours,
+  TranslatedApiChoice,
+} from '../../../../common/lib/types';
 import { SupplementaryButton } from '../../../../components/button/Button';
 import useMobile from '../../../../hooks/useMobile';
 import useOnClickOutside from '../../../../hooks/useOnClickOutside';
-import { OpeningHours } from '../../types';
 import OpeningHoursFormPreview from './OpeningHoursFormPreview';
 import './OpeningHoursFormPreviewMobile.scss';
 

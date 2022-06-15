@@ -7,7 +7,7 @@ import {
   PreviewOpeningHours,
   PreviewRow,
   Rule,
-} from '../../opening-period/v2/types';
+} from '../lib/types';
 
 const ruleOrder: Rule[] = ['week_every', 'week_even', 'week_odd'];
 

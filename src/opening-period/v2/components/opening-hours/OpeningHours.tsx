@@ -2,16 +2,17 @@ import { Notification, Select } from 'hds-react';
 import { upperFirst } from 'lodash';
 import React, { Fragment, useEffect, useRef } from 'react';
 import { Controller, useFieldArray, useFormContext } from 'react-hook-form';
-import { Language, TranslatedApiChoice } from '../../../../common/lib/types';
-import { getWeekdayLongNameByIndexAndLang } from '../../../../common/utils/date-time/format';
-import TimeSpans from '../time-span/TimeSpans';
 import {
+  InputOption,
+  Language,
+  TranslatedApiChoice,
   OpeningHours as TOpeningHours,
   OpeningHoursFormValues,
   OpeningHoursTimeSpanGroup,
-  OptionType,
   Rule,
-} from '../../types';
+} from '../../../../common/lib/types';
+import { getWeekdayLongNameByIndexAndLang } from '../../../../common/utils/date-time/format';
+import TimeSpans from '../time-span/TimeSpans';
 import DayCheckbox from './DayCheckbox';
 import { defaultTimeSpan } from '../../constants';
 import './OpeningHours.scss';
@@ -207,11 +208,11 @@ const OpeningHours = ({
                 name={`${namePrefix}.timeSpanGroups[${i}].rule`}
                 control={control}
                 render={({ onChange, value }): JSX.Element => (
-                  <Select<OptionType<Rule>>
+                  <Select<InputOption<Rule>>
                     className="rule-select"
                     defaultValue={rules[0]}
                     label="Toistuvuus"
-                    onChange={(rule: OptionType<Rule>): void => {
+                    onChange={(rule: InputOption<Rule>): void => {
                       onChange(rule.value);
 
                       const counterparts: { [key in Rule]: Rule } = {
