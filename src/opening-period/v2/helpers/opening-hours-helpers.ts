@@ -162,7 +162,7 @@ const apiRulesToRule = (apiRules: GroupRule[]): Rule => {
   return 'week_every';
 };
 
-export const apiDatePeriodToOpeningHours = (
+export const apiDatePeriodToFormValues = (
   datePeriod: DatePeriod
 ): OpeningHoursFormValues => ({
   name: datePeriod.name,

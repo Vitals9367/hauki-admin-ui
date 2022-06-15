@@ -23,7 +23,7 @@ import {
   Rule,
 } from '../../types';
 import {
-  apiDatePeriodToOpeningHours as apiDatePeriodToFormValues,
+  apiDatePeriodToFormValues as apiDatePeriodToFormValues,
   byWeekdays,
   formValuesToApiDatePeriod,
 } from '../../helpers/opening-hours-helpers';
