@@ -1,7 +1,7 @@
 import React, { ReactNode, useEffect, useRef, useState } from 'react';
-import { Language, Resource } from '../../../../common/lib/types';
-import { isUnitResource } from '../../../../common/utils/resource/helper';
-import { displayLangVersionNotFound } from '../../../../components/language-select/LanguageSelect';
+import { Language, Resource } from '../../common/lib/types';
+import { isUnitResource } from '../../common/utils/resource/helper';
+import { displayLangVersionNotFound } from '../language-select/LanguageSelect';
 import './ResourceTitle.scss';
 
 const resourceTitleId = 'resource-title';

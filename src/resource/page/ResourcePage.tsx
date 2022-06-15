@@ -12,7 +12,7 @@ import ResourcePeriodsCopyFieldset, {
   TargetResourcesProps,
 } from './ResourcePeriodsCopyFieldset';
 import './ResourcePage.scss';
-import ResourceTitle from '../../opening-period/v2/components/form/ResourceTitle';
+import ResourceTitle from '../../components/resource-title/ResourceTitle';
 
 const ResourceSection = ({
   id,
