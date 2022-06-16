@@ -6,10 +6,10 @@ import {
   Route,
   RouteComponentProps,
 } from 'react-router-dom';
-import api from '../common/utils/api/api';
-import * as AuthContext from '../auth/auth-context';
+import api from '../../common/utils/api/api';
+import * as AuthContext from '../../auth/auth-context';
 import PrivateResourceRoute from './PrivateResourceRoute';
-import { AuthTokens } from '../auth/auth-context';
+import { AuthTokens } from '../../auth/auth-context';
 
 const testTokens: AuthTokens = {
   hsa_username: 'admin@hel.fi',

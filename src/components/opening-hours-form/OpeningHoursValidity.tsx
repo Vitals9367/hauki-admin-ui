@@ -1,7 +1,7 @@
 import { DateInput, RadioButton, SelectionGroup } from 'hds-react';
 import React from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
-import { OpeningHoursFormValues } from '../../../../common/lib/types';
+import { OpeningHoursFormValues } from '../../common/lib/types';
 import './OpeningHoursValidity.scss';
 
 const OpeningHoursValidity = (): JSX.Element => {

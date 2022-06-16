@@ -7,11 +7,11 @@ import {
   ResourceState,
   TranslatedApiChoice,
   OpeningHoursTimeSpan,
-} from '../../../../common/lib/types';
-import { SupplementaryButton } from '../../../../components/button/Button';
+} from '../../common/lib/types';
+import { SupplementaryButton } from '../button/Button';
 import './TimeSpan.scss';
-import { useAppContext } from '../../../../App-context';
-import { choiceToOption } from '../../../../common/utils/form/form';
+import { useAppContext } from '../../App-context';
+import { choiceToOption } from '../../common/utils/form/form';
 
 const TimeSpan = ({
   disabled = false,

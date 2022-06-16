@@ -6,8 +6,8 @@ import {
   datetimeFormFormat,
 } from '../../common/utils/date-time/format';
 import { useAppContext } from '../../App-context';
-import { PrimaryButton } from '../../components/button/Button';
-import toast from '../../components/notification/Toast';
+import { PrimaryButton } from '../button/Button';
+import toast from '../notification/Toast';
 
 export type TargetResourcesProps = {
   mainResourceName?: string;

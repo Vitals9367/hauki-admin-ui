@@ -3,7 +3,7 @@ import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { AppContext } from '../../App-context';
 import api from '../../common/utils/api/api';
-import toast from '../../components/notification/Toast';
+import toast from '../notification/Toast';
 import ResourcePeriodsCopyFieldset, {
   TargetResourcesProps,
 } from './ResourcePeriodsCopyFieldset';

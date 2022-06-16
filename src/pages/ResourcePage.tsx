@@ -1,18 +1,18 @@
 import React, { ReactNode, useEffect, useState } from 'react';
 import { Accordion, Notification } from 'hds-react';
-import { useAppContext } from '../../App-context';
-import api from '../../common/utils/api/api';
-import { Language, Resource } from '../../common/lib/types';
-import storage from '../../common/utils/storage/storage';
-import Collapse from '../../components/collapse/Collapse';
-import { displayLangVersionNotFound } from '../../components/language-select/LanguageSelect';
-import { Link } from '../../components/link/Link';
-import ResourceOpeningHours from '../resource-opening-hours/ResourceOpeningHours';
+import { useAppContext } from '../App-context';
+import api from '../common/utils/api/api';
+import { Language, Resource } from '../common/lib/types';
+import storage from '../common/utils/storage/storage';
+import Collapse from '../components/collapse/Collapse';
+import { displayLangVersionNotFound } from '../components/language-select/LanguageSelect';
+import { Link } from '../components/link/Link';
+import ResourceOpeningHours from '../components/resource-opening-hours/ResourceOpeningHours';
 import ResourcePeriodsCopyFieldset, {
   TargetResourcesProps,
-} from './ResourcePeriodsCopyFieldset';
+} from '../components/resource-opening-hours/ResourcePeriodsCopyFieldset';
 import './ResourcePage.scss';
-import ResourceTitle from '../../components/resource-title/ResourceTitle';
+import ResourceTitle from '../components/resource-title/ResourceTitle';
 
 const ResourceSection = ({
   id,

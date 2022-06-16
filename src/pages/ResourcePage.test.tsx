@@ -2,15 +2,15 @@ import React from 'react';
 import { act } from 'react-dom/test-utils';
 import { render, screen } from '@testing-library/react';
 import { BrowserRouter as Router } from 'react-router-dom';
-import { datePeriodOptions } from '../../../test/fixtures/api-options';
+import { datePeriodOptions } from '../../test/fixtures/api-options';
 import {
   DatePeriod,
   Resource,
   ResourceState,
   ResourceType,
   UiDatePeriodConfig,
-} from '../../common/lib/types';
-import api from '../../common/utils/api/api';
+} from '../common/lib/types';
+import api from '../common/utils/api/api';
 import ResourcePage from './ResourcePage';
 
 const testResource: Resource = {

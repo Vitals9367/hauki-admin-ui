@@ -11,29 +11,29 @@ import {
   UiDatePeriodConfig,
   OpeningHours as TOpeningHours,
   OpeningHoursFormValues,
-} from '../../../../common/lib/types';
+} from '../../common/lib/types';
 import {
   PrimaryButton,
   SecondaryButton,
   SupplementaryButton,
-} from '../../../../components/button/Button';
-import Preview from '../preview/OpeningHoursFormPreview';
+} from '../button/Button';
+import Preview from '../opening-hours-form-preview/OpeningHoursFormPreview';
 import './OpeningHoursForm.scss';
 import {
   apiDatePeriodToFormValues,
   byWeekdays,
   formValuesToApiDatePeriod,
-} from '../../../../common/helpers/opening-hours-helpers';
-import toast from '../../../../components/notification/Toast';
-import OpeningHours from '../opening-hours/OpeningHours';
-import { defaultTimeSpan } from '../../../../constants';
+} from '../../common/helpers/opening-hours-helpers';
+import toast from '../notification/Toast';
+import OpeningHoursWeekdays from '../opening-hours-weekdays/OpeningHoursWeekdays';
+import { defaultTimeSpan } from '../../constants';
 import OpeningHoursValidity from './OpeningHoursValidity';
-import useMobile from '../../../../hooks/useMobile';
-import { formatDate } from '../../../../common/utils/date-time/format';
+import useMobile from '../../hooks/useMobile';
+import { formatDate } from '../../common/utils/date-time/format';
 import OpeningHoursTitles from './OpeningHoursTitles';
-import OpeningHoursFormPreviewMobile from '../preview/OpeningHoursFormPreviewMobile';
-import ResourceTitle from '../../../../components/resource-title/ResourceTitle';
-import { useAppContext } from '../../../../App-context';
+import OpeningHoursFormPreviewMobile from '../opening-hours-form-preview/OpeningHoursFormPreviewMobile';
+import ResourceTitle from '../resource-title/ResourceTitle';
+import { useAppContext } from '../../App-context';
 
 const getDefaultsValues = (
   datePeriod: DatePeriod | undefined
@@ -205,7 +205,7 @@ const OpeningHoursForm = ({
               <div className="opening-hours-form__fields">
                 <section className="opening-hours-section">
                   {fields.map((field, i) => (
-                    <OpeningHours
+                    <OpeningHoursWeekdays
                       key={field.id}
                       dropIn={dropInRow === i}
                       offsetTop={offsetTop.current}

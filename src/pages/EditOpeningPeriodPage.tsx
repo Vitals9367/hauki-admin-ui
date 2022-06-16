@@ -1,11 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import api from '../../../common/utils/api/api';
-import {
-  DatePeriod,
-  UiDatePeriodConfig,
-  Resource,
-} from '../../../common/lib/types';
-import OpeningHoursForm from '../components/form/OpeningHoursForm';
+import api from '../common/utils/api/api';
+import { DatePeriod, UiDatePeriodConfig, Resource } from '../common/lib/types';
+import OpeningHoursForm from '../components/opening-hours-form/OpeningHoursForm';
 
 export default function EditOpeningPeriodPage({
   resourceId,

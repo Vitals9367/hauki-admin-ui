@@ -4,10 +4,10 @@ import {
   Language,
   OpeningHours,
   TranslatedApiChoice,
-} from '../../../../common/lib/types';
-import { SupplementaryButton } from '../../../../components/button/Button';
-import useMobile from '../../../../hooks/useMobile';
-import useOnClickOutside from '../../../../hooks/useOnClickOutside';
+} from '../../common/lib/types';
+import { SupplementaryButton } from '../button/Button';
+import useMobile from '../../hooks/useMobile';
+import useOnClickOutside from '../../hooks/useOnClickOutside';
 import OpeningHoursFormPreview from './OpeningHoursFormPreview';
 import './OpeningHoursFormPreviewMobile.scss';
 
