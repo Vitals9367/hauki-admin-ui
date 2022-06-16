@@ -20,11 +20,13 @@ import Main from './components/main/Main';
 import NavigationAndFooterWrapper from './components/navigation-and-footer-wrapper/NavigationAndFooterWrapper';
 import HaukiNavigation from './components/navigation/HaukiNavigation';
 import './App.scss';
-import PrivateResourceRoute from './resource/PrivateResourceRoute';
-import ResourcePage from './resource/page/ResourcePage';
-import CreateNewOpeningPeriodPage from './opening-period/v2/pages/CreateNewOpeningPeriodPage';
-import EditOpeningPeriodPage from './opening-period/v2/pages/EditOpeningPeriodPage';
+
+import CreateNewOpeningPeriodPage from './pages/CreateNewOpeningPeriodPage';
+
 import { Language } from './common/lib/types';
+import PrivateResourceRoute from './components/router/PrivateResourceRoute';
+import ResourcePage from './pages/ResourcePage';
+import EditOpeningPeriodPage from './pages/EditOpeningPeriodPage';
 
 type OptionalAuthTokens = AuthTokens | undefined;
 

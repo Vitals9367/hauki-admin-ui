@@ -6,8 +6,8 @@ import {
   OpeningHoursTimeSpan,
   ResourceState,
   TranslatedApiChoice,
-} from '../../../../common/lib/types';
-import { SupplementaryButton } from '../../../../components/button/Button';
+} from '../../common/lib/types';
+import { SupplementaryButton } from '../button/Button';
 import TimeSpan from './TimeSpan';
 import './TimeSpans.scss';
 

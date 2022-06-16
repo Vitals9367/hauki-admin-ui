@@ -6,10 +6,10 @@ import {
   Route,
   RouteComponentProps,
 } from 'react-router-dom';
-import api from '../common/utils/api/api';
-import * as AuthContext from '../auth/auth-context';
+import api from '../../common/utils/api/api';
+import * as AuthContext from '../../auth/auth-context';
 import PrivateResourceRoute from './PrivateResourceRoute';
-import { AuthTokens } from '../auth/auth-context';
+import { AuthTokens } from '../../auth/auth-context';
 
 const testTokens: AuthTokens = {
   hsa_username: 'admin@hel.fi',
@@ -34,7 +34,7 @@ const renderRoutesWithPrivateRoute = (): ReactWrapper => {
         <h1>Test not found</h1>
       </Route>
       <Route exact path="/unauthenticated">
-        <h1>Test unauthenticated</h1>
+        <h1>T pest unauthenticated</h1>
       </Route>
       <Route exact path="/unauthorized">
         <h1>Test unauthorized</h1>

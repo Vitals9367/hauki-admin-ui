@@ -10,14 +10,14 @@ import {
   OpeningHoursFormValues,
   OpeningHoursTimeSpanGroup,
   Rule,
-} from '../../../../common/lib/types';
-import { getWeekdayLongNameByIndexAndLang } from '../../../../common/utils/date-time/format';
+} from '../../common/lib/types';
+import { getWeekdayLongNameByIndexAndLang } from '../../common/utils/date-time/format';
 import TimeSpans from '../time-span/TimeSpans';
 import DayCheckbox from './DayCheckbox';
-import './OpeningHours.scss';
-import { defaultTimeSpan, uiFrequencyRules } from '../../../../constants';
-import { useAppContext } from '../../../../App-context';
-import { choiceToOption } from '../../../../common/utils/form/form';
+import './OpeningHoursWeekdays.scss';
+import { defaultTimeSpan, uiFrequencyRules } from '../../constants';
+import { useAppContext } from '../../App-context';
+import { choiceToOption } from '../../common/utils/form/form';
 
 type InflectLabels = {
   [language in Language]: {
@@ -36,7 +36,7 @@ const languageGenitiveInflects: InflectLabels = {
 const isOnlySelectedDay = (day: number, weekdays: number[]): boolean =>
   weekdays.length === 1 && weekdays[0] === day;
 
-const OpeningHours = ({
+const OpeningHoursWeekdays = ({
   dropIn,
   item,
   offsetTop = 0,
@@ -258,4 +258,4 @@ const OpeningHours = ({
   );
 };
 
-export default OpeningHours;
+export default OpeningHoursWeekdays;

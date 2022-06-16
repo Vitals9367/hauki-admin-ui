@@ -1,6 +1,6 @@
 import React from 'react';
-import { Language } from '../../../../common/lib/types';
-import { getWeekdayShortNameByIndexAndLang } from '../../../../common/utils/date-time/format';
+import { Language } from '../../common/lib/types';
+import { getWeekdayShortNameByIndexAndLang } from '../../common/utils/date-time/format';
 import './DayCheckbox.scss';
 
 const DayCheckbox = ({

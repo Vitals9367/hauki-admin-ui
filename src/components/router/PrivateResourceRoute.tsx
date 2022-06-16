@@ -7,9 +7,9 @@ import {
   useLocation,
   useHistory,
 } from 'react-router-dom';
-import { AuthContextProps, useAuth } from '../auth/auth-context';
-import api from '../common/utils/api/api';
-import Main from '../components/main/Main';
+import { AuthContextProps, useAuth } from '../../auth/auth-context';
+import api from '../../common/utils/api/api';
+import Main from '../main/Main';
 
 const PermissionResolver = ({
   id,
