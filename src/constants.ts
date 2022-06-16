@@ -1,6 +1,5 @@
-import { LanguageStrings, Rule } from './common/lib/types';
+import { LanguageStrings, ResourceState, Rule } from './common/lib/types';
 
-// eslint-disable-next-line import/prefer-default-export
 export const uiFrequencyRules: { label: LanguageStrings; value: Rule }[] = [
   {
     value: 'week_every',
@@ -23,3 +22,10 @@ export const uiFrequencyRules: { label: LanguageStrings; value: Rule }[] = [
     },
   },
 ];
+
+export const defaultTimeSpan = {
+  start_time: null,
+  end_time: null,
+  full_day: false,
+  resourceState: ResourceState.OPEN,
+};
