@@ -34,7 +34,7 @@ const renderRoutesWithPrivateRoute = (): ReactWrapper => {
         <h1>Test not found</h1>
       </Route>
       <Route exact path="/unauthenticated">
-        <h1>T pest unauthenticated</h1>
+        <h1>Test unauthenticated</h1>
       </Route>
       <Route exact path="/unauthorized">
         <h1>Test unauthorized</h1>
