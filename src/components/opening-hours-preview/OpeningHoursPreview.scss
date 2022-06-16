@@ -1,9 +1,9 @@
 @import 'node_modules/hds-design-tokens/lib/all.scss';
 
 .opening-hours-preview-table {
-  border-collapse: separate;
   border-spacing: 0;
   margin-bottom: 1.5rem;
+  padding: 3px 0;
   table-layout: fixed;
 }
 
