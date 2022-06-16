@@ -1,5 +1,20 @@
 .custom-language-select {
   font-weight: bold !important;
+  position: relative;
+}
+
+.custom-language-select:focus-within {
+  box-shadow: none;
+}
+
+.custom-language-select:focus-within::after {
+  border: 2px solid #fff;
+  bottom: -2px;
+  content: ' ';
+  left: -2px;
+  position: absolute;
+  right: -2px;
+  top: -2px;
 }
 
 .custom-language-select--dark {
