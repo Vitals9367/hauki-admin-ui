@@ -26,7 +26,7 @@ import {
 } from '../../../../common/helpers/opening-hours-helpers';
 import toast from '../../../../components/notification/Toast';
 import OpeningHours from '../opening-hours/OpeningHours';
-import { defaultTimeSpan } from '../../constants';
+import { defaultTimeSpan } from '../../../../constants';
 import OpeningHoursValidity from './OpeningHoursValidity';
 import useMobile from '../../../../hooks/useMobile';
 import { formatDate } from '../../../../common/utils/date-time/format';
