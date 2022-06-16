@@ -55,7 +55,7 @@ export default function OpeningPeriod({
     </>
   );
   const { isModalOpen, openModal, closeModal } = useModal();
-  const { isOpen, toggleAccordion } = useAccordion({
+  const { buttonProps, isOpen } = useAccordion({
     initiallyOpen,
   });
   const AccordionIcon = (): JSX.Element =>
@@ -105,7 +105,7 @@ export default function OpeningPeriod({
             className="button-icon"
             data-test={`openingPeriodAccordionButton-${datePeriod.id}`}
             type="button"
-            onClick={(): void => toggleAccordion()}>
+            {...buttonProps}>
             <AccordionIcon />
             <span className="hiddenFromScreen">{`Näytä aukioloajat jaksosta ${
               datePeriodName || 'nimetön'
