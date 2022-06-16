@@ -15,10 +15,7 @@ import {
 import { formatDateRange } from '../../../common/utils/date-time/format';
 import toast from '../../notification/Toast';
 import { displayLangVersionNotFound } from '../../language-select/LanguageSelect';
-import {
-  ConfirmationModal,
-  useModal,
-} from '../../modal/ConfirmationModal';
+import { ConfirmationModal, useModal } from '../../modal/ConfirmationModal';
 import './OpeningPeriod.scss';
 import OpeningHoursPreview from '../../opening-hours-preview/OpeningHoursPreview';
 import { apiDatePeriodToOpeningHours } from '../../../common/helpers/opening-hours-helpers';

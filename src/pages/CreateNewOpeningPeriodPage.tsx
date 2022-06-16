@@ -1,9 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import {
-  Resource,
-  UiDatePeriodConfig,
-  DatePeriod,
-} from '../common/lib/types';
+import { Resource, UiDatePeriodConfig, DatePeriod } from '../common/lib/types';
 import api from '../common/utils/api/api';
 import OpeningHoursForm from '../components/opening-hours-form/OpeningHoursForm';
 
