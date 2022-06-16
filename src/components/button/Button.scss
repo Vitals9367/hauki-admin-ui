@@ -59,7 +59,7 @@
   --focus-outline-color: var(--color-coat-of-arms);
 }
 
-.secondary-button-light.secondary-button-light.secondary-button-light:focus:after {
+.secondary-button-light.secondary-button-light.secondary-button-light:focus::after {
   border-color: var(--color-white);
 }
 
