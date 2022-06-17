@@ -15,7 +15,7 @@ describe('Authenticated user', () => {
     cy.visitResourcePageAsAuthenticatedUser(Cypress.env('resourceId'));
   });
 
-  it.skip('should logout permanently on application close', () => {
+  it('should logout permanently on application close', () => {
     cy.location()
       .its('href')
       .then((resourcePageUrl) => {
