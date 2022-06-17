@@ -143,7 +143,7 @@ export default function ResourcePage({
   return (
     <div className="resource-page">
       <ResourceTitle resource={resource} language={language} />
-      {childResources.length && (
+      {childResources.length > 0 && (
         <p className="resource-child-resources-description">
           Tällä toimipisteellä on {childResources.length} alakohdetta. Niiden
           aukioloajat löytyvät alempana tällä sivulla.
@@ -218,15 +218,11 @@ export default function ResourcePage({
                     label: 'alakohteen nimi',
                   })
                 }>
-                <p
-                  data-test={`child-resource-description-${index}`}
-                  className="resource-description-text related-resource-description-text">
-                  {childResource?.description[language] ||
-                    displayLangVersionNotFound({
-                      language,
-                      label: 'alakohteen kuvaus',
-                    })}
-                </p>
+                <ResourceOpeningHours
+                  language={language}
+                  parentId={resource!.id}
+                  resource={childResource}
+                />
               </Accordion>
             ))}
           </section>

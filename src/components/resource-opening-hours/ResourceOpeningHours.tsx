@@ -19,7 +19,7 @@ enum PeriodsListTheme {
 
 const OpeningPeriodsList = ({
   id,
-  exception,
+  parentId,
   addNewOpeningPeriodButtonDataTest,
   resourceId,
   title,
@@ -31,7 +31,7 @@ const OpeningPeriodsList = ({
   language,
 }: {
   id: string;
-  exception: boolean;
+  parentId?: number;
   addNewOpeningPeriodButtonDataTest?: string;
   resourceId: number;
   title: string;
@@ -60,8 +60,10 @@ const OpeningPeriodsList = ({
           className="opening-period-header-button"
           light
           onClick={(): void => {
-            if (exception) {
-              history.push(`/resource/${resourceId}/period/new-exception`);
+            if (parentId) {
+              history.push(
+                `/resource/${parentId}/child/${resourceId}/period/new`
+              );
             } else {
               history.push(`/resource/${resourceId}/period/new`);
             }
@@ -81,6 +83,7 @@ const OpeningPeriodsList = ({
                   language={language}
                   deletePeriod={deletePeriod}
                   initiallyOpen={index <= 10}
+                  parentId={parentId}
                 />
               </li>
             ))
@@ -111,9 +114,11 @@ const partitionByOverride = (datePeriods: DatePeriod[]): DatePeriod[][] =>
 
 export default function ResourceOpeningHours({
   language,
+  parentId,
   resource,
 }: {
   language: Language;
+  parentId?: number;
   resource: Resource;
 }): JSX.Element | null {
   const resourceId = resource.id;
@@ -164,7 +169,7 @@ export default function ResourceOpeningHours({
   return (
     <OpeningPeriodsList
       id="resource-opening-periods-list"
-      exception={false}
+      parentId={parentId}
       addNewOpeningPeriodButtonDataTest="add-new-opening-period-button"
       resourceId={resourceId}
       title="Aukioloajat"

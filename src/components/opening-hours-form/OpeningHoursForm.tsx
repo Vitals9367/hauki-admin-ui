@@ -80,11 +80,13 @@ const OpeningHoursForm = ({
   datePeriod,
   datePeriodConfig,
   submitFn,
+  parentId,
   resource,
 }: {
   datePeriod?: DatePeriod;
   datePeriodConfig: UiDatePeriodConfig;
   submitFn: (values: DatePeriod) => Promise<DatePeriod>;
+  parentId?: string;
   resource: Resource;
 }): JSX.Element => {
   const { language = Language.FI } = useAppContext();
@@ -104,8 +106,10 @@ const OpeningHoursForm = ({
   });
   const isMobile = useMobile();
 
+  console.log(parentId);
+
   const returnToResourcePage = (): void =>
-    history.push(`/resource/${resource.id}`);
+    history.push(`/resource/${parentId ? `${parentId}` : resource.id}`);
 
   const onSubmit = (values: OpeningHoursFormValues): void => {
     if (!resource) {

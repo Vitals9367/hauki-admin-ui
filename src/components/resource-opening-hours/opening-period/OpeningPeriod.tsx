@@ -27,6 +27,7 @@ export default function OpeningPeriod({
   language,
   deletePeriod,
   initiallyOpen = false,
+  parentId,
 }: {
   resourceId: number;
   datePeriod: DatePeriod;
@@ -34,6 +35,7 @@ export default function OpeningPeriod({
   language: Language;
   deletePeriod: (id: number) => Promise<void>;
   initiallyOpen: boolean;
+  parentId?: number;
 }): JSX.Element {
   const datePeriodName = datePeriod.name[language];
   const formattedDateRange = formatDateRange({
@@ -85,7 +87,11 @@ export default function OpeningPeriod({
           <Link
             className="opening-period-edit-link button-icon"
             data-test={`openingPeriodEditLink-${datePeriod.id}`}
-            to={`/resource/${resourceId}/period/${datePeriod.id}`}>
+            to={
+              parentId
+                ? `/resource/${parentId}/child/${resourceId}/period/${datePeriod.id}`
+                : `/resource/${resourceId}/period/${datePeriod.id}`
+            }>
             <IconPenLine aria-hidden="true" />
             <span className="hiddenFromScreen">{`Muokkaa ${
               datePeriodName || 'nimettömän'

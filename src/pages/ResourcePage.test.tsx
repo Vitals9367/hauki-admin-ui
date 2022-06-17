@@ -195,33 +195,6 @@ describe(`<ResourcePage />`, () => {
     });
   });
 
-  it('should show child resources', async () => {
-    let container: Element;
-    await act(async () => {
-      container = render(
-        <Router>
-          <ResourcePage id="tprek:8100" />
-        </Router>
-      ).container;
-    });
-
-    await act(async () => {
-      expect(screen.getByText('Toimipisteen alakohteet')).toBeInTheDocument();
-
-      expect(
-        await container.querySelector(
-          'p[data-test="child-resource-description"]'
-        )
-      ).toBeInTheDocument();
-
-      expect(
-        await container.querySelector(
-          'p[data-test="child-resource-description-0"]'
-        )
-      ).toHaveTextContent(testChildResource.description.fi);
-    });
-  });
-
   it('should show parent resources', async () => {
     let container: Element;
     await act(async () => {
