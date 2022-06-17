@@ -31,7 +31,7 @@ steps:
   displayName: 'Yarn run tests'
 
 # - script: |
-#    CI=true yarn test-cypress-with-new-test-api
+#     CI=true yarn test-cypress-with-new-test-api
 #   displayName: 'Yarn run cypress (e2e) tests'
 
 - task: PublishBuildArtifacts@1

@@ -59,6 +59,10 @@
   --focus-outline-color: var(--color-coat-of-arms);
 }
 
+.secondary-button-light.secondary-button-light.secondary-button-light:focus::after {
+  border-color: var(--color-white);
+}
+
 .supplementary-button.supplementary-button.supplementary-button {
   --background-color: transparent;
   --background-color-hover: transparent;
