@@ -115,14 +115,18 @@ export default function App(): JSX.Element {
               <PrivateResourceRoute
                 id="resource-route"
                 exact
-                path="/resource/:id"
+                path={['/resource/:id', '/resource/:id/child/:childId']}
                 render={({
                   match,
-                }: RouteComponentProps<{ id: string }>): ReactElement => (
+                }: RouteComponentProps<{
+                  id: string;
+                  childId: string;
+                }>): ReactElement => (
                   <NavigationAndFooterWrapper>
                     <Main id="main">
                       <ResourcePage
                         id={match.params.id}
+                        childId={match.params.childId}
                         targetResourcesString={targetResourcesStr}
                       />
                     </Main>

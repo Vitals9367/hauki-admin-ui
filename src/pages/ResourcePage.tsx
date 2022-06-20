@@ -43,9 +43,11 @@ const ResourceDetailsSection = ({
 );
 
 export default function ResourcePage({
+  childId,
   id,
   targetResourcesString,
 }: {
+  childId?: string;
   id: string;
   targetResourcesString?: string;
 }): JSX.Element {
@@ -211,6 +213,7 @@ export default function ResourcePage({
             {childResources?.map((childResource, index) => (
               <Accordion
                 key={index}
+                initiallyOpen={childId === `${childResource.id}`}
                 heading={
                   childResource?.name[language] ||
                   displayLangVersionNotFound({
