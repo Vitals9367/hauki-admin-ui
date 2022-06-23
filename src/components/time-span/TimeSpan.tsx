@@ -17,7 +17,7 @@ const TimeSpan = ({
   disabled = false,
   groupLabel,
   item,
-  resourceStates: apiResourceStates,
+  resourceStates,
   namePrefix,
   onDelete,
 }: {
@@ -32,8 +32,8 @@ const TimeSpan = ({
   const { control, register, watch } = useFormContext();
   const fullDay = watch(`${namePrefix}.full_day`);
   const resourceState = watch(`${namePrefix}.resource_state`);
-  const resourceStates = apiResourceStates.map(choiceToOption(language));
-  const sanitizedResourceStateOptions: InputOption[] = resourceStates.filter(
+  const resourceStateOptions = resourceStates.map(choiceToOption(language));
+  const sanitizedResourceStateOptions: InputOption[] = resourceStateOptions.filter(
     ({ value }) => value !== 'undefined'
   );
 

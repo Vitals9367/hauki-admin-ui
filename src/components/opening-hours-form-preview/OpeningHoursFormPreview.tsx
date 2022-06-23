@@ -7,16 +7,18 @@ const OpeningHoursFormPreview = ({
   openingHours,
   resourceStates,
   className,
+  tabIndex,
 }: {
   openingHours: OpeningHours[];
   resourceStates: TranslatedApiChoice[];
+  tabIndex?: number;
   className?: string;
 }): JSX.Element => (
   <div
     aria-labelledby="opening-hours-form-preview"
     className={`card opening-hours-form-preview ${className || ''}`}
     // eslint-disable-next-line jsx-a11y/no-noninteractive-tabindex
-    tabIndex={0}>
+    tabIndex={tabIndex}>
     <h2
       id="opening-hours-form-preview"
       className="opening-hours-form-preview__title">

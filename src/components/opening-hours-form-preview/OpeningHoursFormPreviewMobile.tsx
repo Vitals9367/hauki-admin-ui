@@ -49,6 +49,7 @@ const OpeningHoursFormPreviewMobile = ({
           className="opening-hours-preview-mobile-preview"
           openingHours={openingHours}
           resourceStates={resourceStates}
+          tabIndex={isMobile && isOpen ? 0 : -1}
         />
       </div>
     </div>

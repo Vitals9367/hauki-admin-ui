@@ -44,7 +44,7 @@ const TimeSpans = ({
       {fields.map((field, i) => (
         <TimeSpan
           key={field.id}
-          groupLabel={`aukiolomääritys ${i + 1}`}
+          groupLabel={`Aukioloaika ${i + 1}`}
           item={field as OpeningHoursTimeSpan}
           resourceStates={resourceStates.filter((resourceState) =>
             i === 0 ? true : resourceState.value !== ResourceState.CLOSED
