@@ -28,6 +28,7 @@
   flex: 1;
   align-items: center;
   display: flex;
+  gap: $spacing-m;
   justify-content: space-between;
 }
 
@@ -35,6 +36,10 @@
   flex-basis: 18ch;
   flex-grow: 1;
   line-height: $lineheight-l;
+}
+
+.opening-period-dates-status {
+  flex: 1;
 }
 
 .opening-period-title {

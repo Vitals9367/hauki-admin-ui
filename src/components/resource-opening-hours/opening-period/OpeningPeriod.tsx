@@ -6,6 +6,7 @@ import {
   useAccordion,
   IconPenLine,
   IconTrash,
+  StatusLabel,
 } from 'hds-react';
 import {
   DatePeriod,
@@ -21,6 +22,7 @@ import OpeningHoursPreview from '../../opening-hours-preview/OpeningHoursPreview
 import { apiDatePeriodToOpeningHours } from '../../../common/helpers/opening-hours-helpers';
 
 export default function OpeningPeriod({
+  current,
   resourceId,
   datePeriod,
   datePeriodConfig,
@@ -29,6 +31,7 @@ export default function OpeningPeriod({
   initiallyOpen = false,
   parentId,
 }: {
+  current?: boolean;
   resourceId: number;
   datePeriod: DatePeriod;
   datePeriodConfig: UiDatePeriodConfig;
@@ -82,6 +85,11 @@ export default function OpeningPeriod({
         </div>
         <div className="opening-period-dates opening-period-header-column">
           <div>{formattedDateRange}</div>
+          {current && (
+            <StatusLabel className="opening-period-dates-status" type="info">
+              Voimassa nyt
+            </StatusLabel>
+          )}
         </div>
         <div className="opening-period-actions opening-period-header-column">
           <Link

@@ -218,3 +218,32 @@ export const apiDatePeriodToFormValues = (
   startDate: datePeriod.start_date ? formatDate(datePeriod.start_date) : null,
   openingHours: apiDatePeriodToOpeningHours(datePeriod),
 });
+
+const isWithinRange = (date: string, datePeriod: DatePeriod): boolean =>
+  (datePeriod.start_date == null || datePeriod.start_date) <= date &&
+  (datePeriod.end_date === null || datePeriod.end_date >= date);
+
+const dateRangeIsShorter = (
+  other: DatePeriod,
+  datePeriod: DatePeriod
+): boolean =>
+  new Date(datePeriod.end_date ?? '2045-01-01').getTime() -
+    new Date(datePeriod.start_date ?? '1975-01-01').getTime() <
+  new Date(other.end_date ?? '2045-01-01').getTime() -
+    new Date(other.start_date ?? '1975-01-01').getTime();
+
+export const getActiveDatePeriod = (
+  date: string,
+  dates: DatePeriod[]
+): DatePeriod | undefined => {
+  return dates.reduce((acc: DatePeriod | undefined, current: DatePeriod) => {
+    if (
+      isWithinRange(date, current) &&
+      (!acc || dateRangeIsShorter(acc, current))
+    ) {
+      return current;
+    }
+
+    return acc;
+  }, undefined);
+};

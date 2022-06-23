@@ -9,8 +9,10 @@ import {
 } from '../../common/lib/types';
 import api from '../../common/utils/api/api';
 import { SecondaryButton } from '../button/Button';
+
 import OpeningPeriod from './opening-period/OpeningPeriod';
 import './ResourceOpeningHours.scss';
+import { getActiveDatePeriod } from '../../common/helpers/opening-hours-helpers';
 
 enum PeriodsListTheme {
   DEFAULT = 'DEFAULT',
@@ -48,6 +50,10 @@ const OpeningPeriodsList = ({
       : 'opening-periods-header';
 
   const history = useHistory();
+  const currentDatePeriod = getActiveDatePeriod(
+    new Date().toISOString().split('T')[0],
+    datePeriods
+  );
 
   return (
     <section className="opening-periods-section">
@@ -77,6 +83,7 @@ const OpeningPeriodsList = ({
             datePeriods.map((datePeriod: DatePeriod, index) => (
               <li key={datePeriod.id}>
                 <OpeningPeriod
+                  current={currentDatePeriod === datePeriod}
                   datePeriodConfig={datePeriodConfig}
                   datePeriod={datePeriod}
                   resourceId={resourceId}
