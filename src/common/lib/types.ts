@@ -42,7 +42,7 @@ export type TimeSpan = {
   modified?: string;
   is_removed?: boolean;
   name?: LanguageStrings;
-  description?: LanguageStrings;
+  description: LanguageStrings;
   full_day?: boolean;
   resource_state?: ResourceState;
   group?: number;
@@ -125,7 +125,7 @@ type BaseFieldConfig = {
 };
 
 export type UiOptionsFieldConfig = {
-  options: TranslatedApiChoice[];
+  options: Choice<string>[];
 };
 
 type RuleFieldConfigWithTranslatedOptions = BaseFieldConfig &
@@ -257,7 +257,7 @@ export interface Resource {
 }
 
 export type OpeningHoursTimeSpan = {
-  description?: LanguageStrings;
+  description: LanguageStrings;
   end_time: string | null;
   full_day?: boolean;
   resource_state?: ResourceState;

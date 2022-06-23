@@ -14,7 +14,13 @@
 }
 
 .rule-select {
-  width: 200px;
+  width: 100%;
+}
+
+@media screen and (min-width: $breakpoint-m) {
+  .rule-select {
+    width: 200px;
+  }
 }
 
 .weekdays-label {

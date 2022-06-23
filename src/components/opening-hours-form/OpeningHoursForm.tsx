@@ -105,6 +105,9 @@ const OpeningHoursForm = ({
     name: 'openingHours',
   });
   const isMobile = useMobile();
+  const {
+    resourceState: { options: resourceStates = [] },
+  } = datePeriodConfig;
 
   const returnToResourcePage = (): void =>
     history.push(
@@ -134,10 +137,6 @@ const OpeningHoursForm = ({
       })
       .finally(() => setSaving(false));
   };
-
-  const resourceStates = datePeriodConfig
-    ? datePeriodConfig.resourceState.options
-    : [];
 
   const allDayAreUncheckedForRow = (idx: number): boolean => {
     const weekdays = getValues(`openingHours[${idx}].weekdays`) as number[];

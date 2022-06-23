@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Resource, UiDatePeriodConfig, DatePeriod } from '../common/lib/types';
 import api from '../common/utils/api/api';
 import OpeningHoursForm from '../components/opening-hours-form/OpeningHoursForm';
+import { getDatePeriodFormConfig } from '../services/datePeriodFormConfig';
 
 export default function CreateNewOpeningPeriodPage({
   parentId,
@@ -20,7 +21,7 @@ export default function CreateNewOpeningPeriodPage({
       try {
         const [apiResource, uiDatePeriodOptions] = await Promise.all([
           api.getResource(resourceId),
-          api.getDatePeriodFormConfig(),
+          getDatePeriodFormConfig(),
         ]);
         setResource(apiResource);
         setDatePeriodConfig(uiDatePeriodOptions);

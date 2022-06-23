@@ -15,14 +15,14 @@ const openingHours = [
         rule: 'week_every' as const,
         timeSpans: [
           {
-            description: undefined,
+            description: { en: null, fi: null, sv: null },
             end_time: '16:00',
             full_day: false,
             resource_state: ResourceState.OPEN,
             start_time: '08:00',
           },
           {
-            description: undefined,
+            description: { en: null, fi: null, sv: null },
             end_time: '17:00',
             full_day: false,
             resource_state: ResourceState.SELF_SERVICE,
@@ -39,16 +39,16 @@ const openingHours = [
         rule: 'week_even' as const,
         timeSpans: [
           {
-            description: undefined,
+            description: { en: null, fi: null, sv: null },
             end_time: '16:00',
             full_day: false,
             resource_state: ResourceState.OPEN,
             start_time: '10:00',
           },
           {
-            description: undefined,
+            description: { en: null, fi: null, sv: null },
             end_time: null,
-            full_day: true,
+            full_day: false,
             resource_state: ResourceState.CLOSED,
             start_time: null,
           },
@@ -58,7 +58,7 @@ const openingHours = [
         rule: 'week_odd' as const,
         timeSpans: [
           {
-            description: undefined,
+            description: { en: null, fi: null, sv: null },
             end_time: '16:00',
             full_day: false,
             resource_state: ResourceState.OPEN,
@@ -75,7 +75,7 @@ const openingHours = [
         rule: 'week_every' as const,
         timeSpans: [
           {
-            description: undefined,
+            description: { en: null, fi: null, sv: null },
             end_time: null,
             full_day: false,
             resource_state: ResourceState.OPEN,
@@ -106,6 +106,7 @@ const datePeriod = {
           start_time: '08:00',
           weekdays: [1, 2, 3, 4, 5],
           end_time_on_next_day: false,
+          description: { en: null, fi: null, sv: null },
         },
         {
           end_time: '17:00',
@@ -114,6 +115,7 @@ const datePeriod = {
           start_time: '16:00',
           weekdays: [1, 2, 3, 4, 5],
           end_time_on_next_day: false,
+          description: { en: null, fi: null, sv: null },
         },
         {
           end_time: null,
@@ -122,6 +124,7 @@ const datePeriod = {
           start_time: null,
           weekdays: [7],
           end_time_on_next_day: false,
+          description: { en: null, fi: null, sv: null },
         },
       ],
     },
@@ -142,6 +145,7 @@ const datePeriod = {
           start_time: '10:00',
           weekdays: [6],
           end_time_on_next_day: false,
+          description: { en: null, fi: null, sv: null },
         },
         {
           end_time_on_next_day: false,
@@ -150,6 +154,7 @@ const datePeriod = {
           resource_state: ResourceState.CLOSED,
           start_time: null,
           weekdays: [6],
+          description: { en: null, fi: null, sv: null },
         },
       ],
     },
@@ -170,6 +175,7 @@ const datePeriod = {
           start_time: '10:00',
           weekdays: [6],
           end_time_on_next_day: false,
+          description: { en: null, fi: null, sv: null },
         },
       ],
     },

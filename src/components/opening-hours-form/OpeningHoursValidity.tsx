@@ -1,10 +1,12 @@
 import { DateInput, RadioButton, SelectionGroup } from 'hds-react';
 import React from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
-import { OpeningHoursFormValues } from '../../common/lib/types';
+import { useAppContext } from '../../App-context';
+import { Language, OpeningHoursFormValues } from '../../common/lib/types';
 import './OpeningHoursValidity.scss';
 
 const OpeningHoursValidity = (): JSX.Element => {
+  const { language = Language.FI } = useAppContext();
   const { control, register, watch } = useFormContext<OpeningHoursFormValues>();
   const fixed = watch('fixed');
   const startDate = watch('startDate');
@@ -46,28 +48,27 @@ const OpeningHoursValidity = (): JSX.Element => {
                   className="opening-hours-validity__date"
                   initialMonth={new Date()}
                   label="Astuu voimaan"
-                  language="fi"
+                  language={language}
                   name="startDate"
                   value={startDate ?? ''}
                 />
-                <span
-                  className={`opening-hours-validity__range-divider ${
-                    fixed ? '' : 'opening-hours-validity__range-divider--hidden'
-                  }`}>
-                  -
-                </span>
-                <DateInput
-                  ref={register()}
-                  id="opening-hours-end-date"
-                  className={`opening-hours-validity__date ${
-                    fixed ? '' : 'opening-hours-validity__date--hidden'
-                  }`}
-                  initialMonth={new Date()}
-                  label="Päättyy"
-                  language="fi"
-                  name="endDate"
-                  value={endDate ?? ''}
-                />
+                {fixed && (
+                  <>
+                    <span className="opening-hours-validity__range-divider">
+                      -
+                    </span>
+                    <DateInput
+                      ref={register()}
+                      id="opening-hours-end-date"
+                      className="opening-hours-validity__date"
+                      initialMonth={new Date()}
+                      label="Päättyy"
+                      language={language}
+                      name="endDate"
+                      value={endDate ?? ''}
+                    />
+                  </>
+                )}
               </div>
             </>
           )}

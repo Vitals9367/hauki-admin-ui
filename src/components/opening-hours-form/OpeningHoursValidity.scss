@@ -31,8 +31,6 @@
 @media screen and (min-width: $breakpoint-m) {
   .opening-hours-validity__dates {
     flex-direction: row;
-    justify-content: space-between;
-    gap: 0.5rem;
   }
 }
 
@@ -63,15 +61,12 @@
   gap: 1.5rem;
 }
 
-.opening-hours-validity__range-divider--hidden,
-.opening-hours-validity__date--hidden {
-  display: none;
+.opening-hours-validity__date {
+  width: 100%;
 }
 
 @media screen and (min-width: $breakpoint-m) {
-  .opening-hours-validity__range-divider--hidden,
-  .opening-hours-validity__date--hidden {
-    display: block;
-    opacity: 0;
+  .opening-hours-validity__date {
+    max-width: 165px;
   }
 }

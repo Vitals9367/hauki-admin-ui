@@ -13,6 +13,7 @@ import { SecondaryButton } from '../button/Button';
 import OpeningPeriod from './opening-period/OpeningPeriod';
 import './ResourceOpeningHours.scss';
 import { getActiveDatePeriod } from '../../common/helpers/opening-hours-helpers';
+import { getDatePeriodFormConfig } from '../../services/datePeriodFormConfig';
 
 enum PeriodsListTheme {
   DEFAULT = 'DEFAULT',
@@ -141,7 +142,7 @@ export default function ResourceOpeningHours({
     try {
       const [apiDatePeriods, uiDatePeriodOptions] = await Promise.all([
         api.getDatePeriods(id),
-        api.getDatePeriodFormConfig(),
+        getDatePeriodFormConfig(),
       ]);
       const datePeriodLists = partitionByOverride(apiDatePeriods);
       setDividedDatePeriods(datePeriodLists);

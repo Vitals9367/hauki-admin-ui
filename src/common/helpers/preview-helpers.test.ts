@@ -10,14 +10,14 @@ describe('preview-helpers', () => {
           rule: 'week_every' as const,
           timeSpans: [
             {
-              description: undefined,
+              description: { en: null, fi: null, sv: null },
               end_time: '16:00',
               full_day: false,
               resource_state: ResourceState.OPEN,
               start_time: '08:00',
             },
             {
-              description: undefined,
+              description: { en: null, fi: null, sv: null },
               end_time: '17:00',
               full_day: false,
               resource_state: ResourceState.SELF_SERVICE,
@@ -34,14 +34,14 @@ describe('preview-helpers', () => {
           rule: 'week_every' as const,
           timeSpans: [
             {
-              description: undefined,
+              description: { en: null, fi: null, sv: null },
               end_time: '16:00',
               full_day: false,
               resource_state: ResourceState.OPEN,
               start_time: '10:00',
             },
             {
-              description: undefined,
+              description: { en: null, fi: null, sv: null },
               end_time: '16:00',
               full_day: false,
               resource_state: ResourceState.CLOSED,
@@ -58,7 +58,7 @@ describe('preview-helpers', () => {
           rule: 'week_every' as const,
           timeSpans: [
             {
-              description: undefined,
+              description: { en: null, fi: null, sv: null },
               end_time: null,
               full_day: false,
               resource_state: ResourceState.OPEN,
@@ -78,14 +78,22 @@ describe('preview-helpers', () => {
             Object {
               "timeSpans": Array [
                 Object {
-                  "description": undefined,
+                  "description": Object {
+                    "en": null,
+                    "fi": null,
+                    "sv": null,
+                  },
                   "end_time": "16:00",
                   "full_day": false,
                   "resource_state": "open",
                   "start_time": "08:00",
                 },
                 Object {
-                  "description": undefined,
+                  "description": Object {
+                    "en": null,
+                    "fi": null,
+                    "sv": null,
+                  },
                   "end_time": "17:00",
                   "full_day": false,
                   "resource_state": "self_service",
@@ -103,14 +111,22 @@ describe('preview-helpers', () => {
             Object {
               "timeSpans": Array [
                 Object {
-                  "description": undefined,
+                  "description": Object {
+                    "en": null,
+                    "fi": null,
+                    "sv": null,
+                  },
                   "end_time": "16:00",
                   "full_day": false,
                   "resource_state": "open",
                   "start_time": "10:00",
                 },
                 Object {
-                  "description": undefined,
+                  "description": Object {
+                    "en": null,
+                    "fi": null,
+                    "sv": null,
+                  },
                   "end_time": "16:00",
                   "full_day": false,
                   "resource_state": "closed",
@@ -124,7 +140,11 @@ describe('preview-helpers', () => {
             Object {
               "timeSpans": Array [
                 Object {
-                  "description": undefined,
+                  "description": Object {
+                    "en": null,
+                    "fi": null,
+                    "sv": null,
+                  },
                   "end_time": null,
                   "full_day": false,
                   "resource_state": "open",

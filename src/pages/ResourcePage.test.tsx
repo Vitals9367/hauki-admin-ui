@@ -11,6 +11,7 @@ import {
   UiDatePeriodConfig,
 } from '../common/lib/types';
 import api from '../common/utils/api/api';
+import * as datePeriodConfigService from '../services/datePeriodFormConfig';
 import ResourcePage from './ResourcePage';
 
 const testResource: Resource = {
@@ -119,7 +120,7 @@ describe(`<ResourcePage />`, () => {
       .mockImplementation(() => Promise.resolve([testDatePeriod]));
 
     jest
-      .spyOn(api, 'getDatePeriodFormConfig')
+      .spyOn(datePeriodConfigService, 'getDatePeriodFormConfig')
       .mockImplementation(() => Promise.resolve(testDatePeriodOptions));
 
     jest
