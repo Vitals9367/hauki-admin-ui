@@ -71,3 +71,19 @@
     flex-direction: row;
   }
 }
+
+.opening-period-actions {
+  flex: 1 1;
+}
+
+@media screen and (min-width: $breakpoint-l) {
+  .opening-period-actions {
+    flex: 0.8 0.8;
+  }
+}
+
+@media screen and (min-width: $breakpoint-xl) {
+  .opening-period-actions {
+    flex: 0.65 0.65;
+  }
+}

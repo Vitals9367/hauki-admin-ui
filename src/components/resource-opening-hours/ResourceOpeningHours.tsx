@@ -14,6 +14,30 @@ import OpeningPeriod from './opening-period/OpeningPeriod';
 import './ResourceOpeningHours.scss';
 import { getActiveDatePeriod } from '../../common/helpers/opening-hours-helpers';
 import { getDatePeriodFormConfig } from '../../services/datePeriodFormConfig';
+import OpeningPeriodAccordion from '../opening-period-accordion/OpeningPeriodAccordion';
+
+const ExceptionPeriodsList = () => (
+  <section className="opening-periods-section">
+    <header className="exception-periods-header">
+      <h3 className="exception-periods-title">Poikkeavat päivät</h3>
+    </header>
+    <ul className="opening-periods-list">
+      <li>
+        <OpeningPeriodAccordion
+          periodName="Juhlapyhien aukioloajat"
+          dateRange={
+            <>
+              Seuraava juhlapyhä <strong>pyhäinpäivä</strong> - Ei poikkeavia
+              aukioloaikoja
+            </>
+          }
+          onEdit={(): void => undefined}>
+          WIP
+        </OpeningPeriodAccordion>
+      </li>
+    </ul>
+  </section>
+);
 
 enum PeriodsListTheme {
   DEFAULT = 'DEFAULT',
@@ -175,18 +199,21 @@ export default function ResourceOpeningHours({
   }
 
   return (
-    <OpeningPeriodsList
-      id="resource-opening-periods-list"
-      parentId={parentId}
-      addNewOpeningPeriodButtonDataTest="add-new-opening-period-button"
-      resourceId={resourceId}
-      title="Aukioloajat"
-      datePeriods={defaultPeriods}
-      datePeriodConfig={datePeriodConfig}
-      theme={PeriodsListTheme.DEFAULT}
-      notFoundLabel="Ei aukiolojaksoja."
-      deletePeriod={deletePeriod}
-      language={language}
-    />
+    <>
+      <OpeningPeriodsList
+        id="resource-opening-periods-list"
+        parentId={parentId}
+        addNewOpeningPeriodButtonDataTest="add-new-opening-period-button"
+        resourceId={resourceId}
+        title="Aukioloajat"
+        datePeriods={defaultPeriods}
+        datePeriodConfig={datePeriodConfig}
+        theme={PeriodsListTheme.DEFAULT}
+        notFoundLabel="Ei aukiolojaksoja."
+        deletePeriod={deletePeriod}
+        language={language}
+      />
+      <ExceptionPeriodsList />
+    </>
   );
 }

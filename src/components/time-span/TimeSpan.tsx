@@ -165,7 +165,7 @@ const TimeSpan = ({
       <div className="remove-time-span-button">
         {onDelete && (
           <SupplementaryButton iconLeft={<IconTrash />} onClick={onDelete}>
-            Poista rivi<span className="sr-only">{groupLabel}</span>
+            Poista rivi<span className="hiddenFromScreen">{groupLabel}</span>
           </SupplementaryButton>
         )}
       </div>
