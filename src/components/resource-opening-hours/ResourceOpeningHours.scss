@@ -93,6 +93,10 @@
   margin-bottom: $spacing-2-xl;
 }
 
+.exception-opening-periods-list {
+  @extend .opening-periods-list;
+}
+
 .exception-periods-header {
   @extend .opening-periods-header;
 
@@ -103,4 +107,17 @@
   @extend .opening-periods-header-title;
 
   color: $color-coat-of-arms;
+}
+
+.exception-periods-holidays-title {
+  color: $color-coat-of-arms;
+  font-size: $fontsize-heading-m !important;
+}
+
+.exception-periods-holidays-info-text {
+  margin-bottom: $spacing-m;
+}
+
+.exception-holidays-container {
+  padding: $spacing-m 0;
 }

@@ -7,6 +7,7 @@ import {
   useAccordion,
 } from 'hds-react';
 import React, { ReactNode } from 'react';
+import { Link } from 'react-router-dom';
 import { useAppContext } from '../../App-context';
 import { Language } from '../../common/lib/types';
 import { displayLangVersionNotFound } from '../language-select/LanguageSelect';
@@ -16,10 +17,10 @@ import toast from '../notification/Toast';
 type Props = {
   children: ReactNode;
   dateRange: ReactNode;
+  editUrl?: string;
   id?: number;
   initiallyOpen?: boolean;
   isActive?: boolean;
-  onEdit?: () => void;
   onDelete?: () => void | Promise<void>;
   periodName?: string | null;
 };
@@ -27,11 +28,11 @@ type Props = {
 const OpeningPeriodAccordion = ({
   children,
   dateRange,
+  editUrl,
   id,
   initiallyOpen = false,
   isActive = false,
   onDelete,
-  onEdit,
   periodName,
 }: Props): JSX.Element => {
   const deleteModalTitle = 'Oletko varma että haluat poistaa aukiolojakson?';
@@ -80,17 +81,17 @@ const OpeningPeriodAccordion = ({
         </div>
         <div className="opening-period-actions opening-period-header-column">
           <div>
-            {onEdit && (
-              <button
+            {editUrl && (
+              <Link
                 className="opening-period-edit-link button-icon"
                 data-test={`openingPeriodEditLink-${id}`}
-                onClick={onEdit}
+                to={editUrl}
                 type="button">
                 <IconPenLine aria-hidden="true" />
                 <span className="hiddenFromScreen">{`Muokkaa ${
                   periodName || 'nimettömän'
                 } aukiolojakson tietoja`}</span>
-              </button>
+              </Link>
             )}
             {onDelete && (
               <button

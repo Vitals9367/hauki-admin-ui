@@ -183,7 +183,6 @@ export const apiDatePeriodToOpeningHours = (
 ): OpeningHours[] =>
   datePeriod.time_span_groups
     .reduce(
-      // eslint-disable-next-line @typescript-eslint/naming-convention
       (allOpeningHours: OpeningHours[], { rules, time_spans }: TimeSpanGroup) =>
         time_spans.reduce(
           (timeSpanOpeningHours, timeSpan) =>

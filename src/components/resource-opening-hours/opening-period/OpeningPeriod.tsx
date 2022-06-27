@@ -1,5 +1,4 @@
 import React from 'react';
-import { useHistory } from 'react-router-dom';
 import {
   DatePeriod,
   Language,
@@ -30,7 +29,6 @@ export default function OpeningPeriod({
   initiallyOpen: boolean;
   parentId?: number;
 }): JSX.Element {
-  const history = useHistory();
   const datePeriodName = datePeriod.name[language];
   const formattedDateRange = formatDateRange({
     startDate: datePeriod.start_date ?? null,
@@ -43,12 +41,10 @@ export default function OpeningPeriod({
       periodName={datePeriodName}
       dateRange={formattedDateRange}
       onDelete={(): Promise<void> => deletePeriod(datePeriod.id!)}
-      onEdit={(): void =>
-        history.push(
-          parentId
-            ? `/resource/${parentId}/child/${resourceId}/period/${datePeriod.id}`
-            : `/resource/${resourceId}/period/${datePeriod.id}`
-        )
+      editUrl={
+        parentId
+          ? `/resource/${parentId}/child/${resourceId}/period/${datePeriod.id}`
+          : `/resource/${resourceId}/period/${datePeriod.id}`
       }
       initiallyOpen={initiallyOpen}
       isActive={current}>

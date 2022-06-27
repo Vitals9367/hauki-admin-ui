@@ -8,7 +8,6 @@ const resourceTitleId = 'resource-title';
 
 type Props = {
   children?: ReactNode;
-  className?: string;
   language: Language;
   resource?: Resource;
   titleAddon?: string;

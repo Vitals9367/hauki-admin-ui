@@ -54,6 +54,10 @@ module.exports = {
         selector: 'enumMember',
         format: ['camelCase', 'snake_case', 'UPPER_CASE'],
       },
+      {
+        selector: 'parameter',
+        format: ['camelCase', 'snake_case'],
+      }
     ],
     "jsx-a11y/label-has-associated-control": [
       "error",
