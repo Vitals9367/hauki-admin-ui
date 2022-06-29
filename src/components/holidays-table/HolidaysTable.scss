@@ -1,0 +1,80 @@
+@import 'node_modules/hds-design-tokens/lib/all.scss';
+
+.holidays-title {
+  color: $color-coat-of-arms;
+  font-size: $fontsize-heading-m !important;
+}
+
+.holidays-description {
+  margin-bottom: $spacing-m;
+}
+
+.holidays-container {
+  padding: $spacing-m 0;
+}
+
+.holidays-table__row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+
+@media screen and (min-width: $breakpoint-m) {
+  .holidays-table__row {
+    grid-template-columns: 180px 120px 5fr;
+  }
+}
+
+.holidays-table__row:nth-child(even) {
+  background: $color-silver;
+}
+
+.holidays-table__header {
+  background: $color-coat-of-arms;
+}
+
+.holidays-table__header-cell {
+  padding: $spacing-xs;
+  color: $color-white;
+}
+
+@media screen and (max-width: $breakpoint-m) {
+  .holidays-table__header-cell--opening-hours {
+    position: absolute !important;
+    top: -9999px !important;
+    left: -9999px !important;
+  }
+}
+
+@media screen and (min-width: $breakpoint-m) {
+  .holidays-table__header-cell--opening-hours {
+    display: block;
+  }
+}
+
+.holidays-table__cell {
+  padding: $spacing-xs;
+}
+
+.holidays-table__cell--name {
+  font-weight: bold;
+}
+
+.holidays-table__cell--date {
+  text-align: right;
+}
+
+@media screen and (min-width: $breakpoint-m) {
+  .holidays-table__cell--date {
+    text-align: left;
+  }
+}
+
+.holidays-table__cell--opening-hours {
+  grid-column: 1/3;
+}
+
+@media screen and (min-width: $breakpoint-m) {
+  .holidays-table__cell--opening-hours {
+    grid-column: auto;
+  }
+}

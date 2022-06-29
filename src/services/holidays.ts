@@ -1,10 +1,5 @@
 import Holidays from 'date-holidays';
-
-type Holiday = {
-  start_date: string;
-  end_date: string;
-  name: string;
-};
+import { Holiday } from '../common/lib/types';
 
 const formatDate = (date: Date): string => date.toISOString().split('T')[0];
 
