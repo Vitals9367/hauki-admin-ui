@@ -7,6 +7,7 @@ import {
   ResourceState,
   TranslatedApiChoice,
 } from '../../common/lib/types';
+import { getUiId } from '../../common/utils/form/form';
 import { SupplementaryButton } from '../button/Button';
 import TimeSpan from './TimeSpan';
 import './TimeSpans.scss';
@@ -64,12 +65,13 @@ const TimeSpans = ({
       {firstTimeSpanResourceState !== ResourceState.CLOSED && (
         <div>
           <SupplementaryButton
+            dataTest={getUiId([namePrefix, 'add-time-span-button'])}
             ref={ref}
             className="add-time-span-button"
             iconLeft={<IconPlusCircle />}
             onClick={(): void => append({})}
             type="button">
-            <span>Lisää aukiolomääritys</span>
+            Lisää aukiolomääritys
           </SupplementaryButton>
         </div>
       )}

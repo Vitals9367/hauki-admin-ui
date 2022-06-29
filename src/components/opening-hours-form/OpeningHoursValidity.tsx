@@ -33,6 +33,7 @@ const OpeningHoursValidity = (): JSX.Element => {
                   onChange={(): void => onChange(false)}
                 />
                 <RadioButton
+                  data-test="opening-hours-validity-fixed-option"
                   id="opening-hours-validity-fixed"
                   checked={value}
                   name={name}
@@ -43,13 +44,16 @@ const OpeningHoursValidity = (): JSX.Element => {
               </SelectionGroup>
               <div className="opening-hours-validity__dates">
                 <DateInput
+                  data-test="opening-period-begin-date"
                   ref={register()}
                   id="opening-hours-start-date"
                   className="opening-hours-validity__date"
+                  disableConfirmation
                   initialMonth={new Date()}
                   label="Astuu voimaan"
                   language={language}
                   name="startDate"
+                  openButtonAriaLabel="Valitse alkupäivämäärä"
                   value={startDate ?? ''}
                 />
                 {fixed && (
@@ -58,13 +62,16 @@ const OpeningHoursValidity = (): JSX.Element => {
                       -
                     </span>
                     <DateInput
+                      data-test="opening-period-end-date"
                       ref={register()}
                       id="opening-hours-end-date"
                       className="opening-hours-validity__date"
+                      disableConfirmation
                       initialMonth={new Date()}
                       label="Päättyy"
                       language={language}
                       name="endDate"
+                      openButtonAriaLabel="Valitse loppupäivämäärä"
                       value={endDate ?? ''}
                     />
                   </>

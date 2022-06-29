@@ -268,6 +268,7 @@ const OpeningHoursForm = ({
           <div className="opening-hours-form__actions-container">
             <div className="card opening-hours-form__actions">
               <PrimaryButton
+                dataTest="submit-opening-hours-button"
                 isLoading={isSaving}
                 loadingText="Tallentaa aukioloaikoja"
                 type="submit"

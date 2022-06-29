@@ -202,11 +202,7 @@ Cypress.Commands.add(
     subject: PrevSubject | undefined,
     { id, hours, minutes }: { id: string; hours: string; minutes: string }
   ) => {
-    const timeInputContainer = cy.get(`input#${id}`).parent();
-
-    return timeInputContainer.within(() => {
-      cy.get(`input#${id}-hours`).type(hours);
-      cy.get(`input#${id}-minutes`).type(minutes);
-    });
+    cy.get(`#${id}-hours`).type(hours);
+    cy.get(`#${id}-minutes`).type(minutes);
   }
 );

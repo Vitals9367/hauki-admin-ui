@@ -11,7 +11,7 @@ import {
 import { SupplementaryButton } from '../button/Button';
 import './TimeSpan.scss';
 import { useAppContext } from '../../App-context';
-import { choiceToOption } from '../../common/utils/form/form';
+import { choiceToOption, getUiId } from '../../common/utils/form/form';
 
 const TimeSpan = ({
   disabled = false,
@@ -50,10 +50,10 @@ const TimeSpan = ({
         defaultValue={item?.resource_state ?? ResourceState.OPEN}
         name={`${namePrefix}.resource_state`}
         control={control}
-        render={({ onChange, value }): JSX.Element => (
+        render={({ name, onChange, value }): JSX.Element => (
           <Select<InputOption>
             disabled={disabled}
-            id={`${namePrefix}-resource-state`}
+            id={getUiId([name])}
             label="Aukiolon tyyppi"
             options={sanitizedResourceStateOptions}
             className="time-span__resource-state-select"
@@ -78,7 +78,7 @@ const TimeSpan = ({
             <Checkbox
               className="time-span__full-day-checkbox"
               disabled={disabled}
-              id={`${namePrefix}-full-day`}
+              id={getUiId([namePrefix, 'full-day'])}
               name={`${namePrefix}.full_day`}
               label="24 h"
               onChange={(e): void => {
@@ -100,7 +100,7 @@ const TimeSpan = ({
         <TimeInput
           ref={register()}
           disabled={disabled || fullDay}
-          id={`${namePrefix}-start-time`}
+          id={getUiId([namePrefix, 'start-time'])}
           hoursLabel="tunnit"
           minutesLabel="minuutit"
           label="Alkaen"
@@ -112,7 +112,7 @@ const TimeSpan = ({
         <TimeInput
           ref={register()}
           disabled={disabled || fullDay}
-          id={`${namePrefix}-end-time`}
+          id={getUiId([namePrefix, 'end-time'])}
           hoursLabel="tunnit"
           minutesLabel="minuutit"
           label="Päättyen"
@@ -126,9 +126,9 @@ const TimeSpan = ({
           <Controller
             defaultValue={item?.description.fi ?? ''}
             name={`${namePrefix}.description.fi`}
-            render={({ onChange, value }): JSX.Element => (
+            render={({ name, onChange, value }): JSX.Element => (
               <TextInput
-                id={`${namePrefix}-description-fi`}
+                id={getUiId([name])}
                 label="Kuvaus suomeksi"
                 onChange={onChange}
                 value={value}
@@ -138,9 +138,9 @@ const TimeSpan = ({
           <Controller
             defaultValue={item?.description.sv ?? ''}
             name={`${namePrefix}.description.sv`}
-            render={({ onChange, value }): JSX.Element => (
+            render={({ name, onChange, value }): JSX.Element => (
               <TextInput
-                id={`${namePrefix}-description-sv`}
+                id={getUiId([name])}
                 label="Kuvaus ruotsiksi"
                 onChange={onChange}
                 value={value}
@@ -150,9 +150,9 @@ const TimeSpan = ({
           <Controller
             defaultValue={item?.description.en ?? ''}
             name={`${namePrefix}.description.en`}
-            render={({ onChange, value }): JSX.Element => (
+            render={({ name, onChange, value }): JSX.Element => (
               <TextInput
-                id={`${namePrefix}-description-en`}
+                id={getUiId([name])}
                 label="Kuvaus englanniksi"
                 name={`${namePrefix}.description.en`}
                 onChange={onChange}
