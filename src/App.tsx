@@ -27,6 +27,7 @@ import { Language } from './common/lib/types';
 import PrivateResourceRoute from './components/router/PrivateResourceRoute';
 import ResourcePage from './pages/ResourcePage';
 import EditOpeningPeriodPage from './pages/EditOpeningPeriodPage';
+import EditHolidaysPage from './pages/EditHolidaysPage';
 
 type OptionalAuthTokens = AuthTokens | undefined;
 
@@ -178,6 +179,22 @@ export default function App(): JSX.Element {
                         datePeriodId={match.params.datePeriodId}
                         parentId={match.params.parentId}
                       />
+                    </Main>
+                  </>
+                )}
+              />
+              <PrivateResourceRoute
+                id="edit-holidays-route"
+                path={['/resource/:id/holidays']}
+                render={({
+                  match,
+                }: RouteComponentProps<{
+                  id: string;
+                }>): ReactElement => (
+                  <>
+                    <HaukiNavigation />
+                    <Main id="main">
+                      <EditHolidaysPage resourceId={match.params.id} />
                     </Main>
                   </>
                 )}

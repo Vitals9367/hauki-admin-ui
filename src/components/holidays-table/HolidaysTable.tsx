@@ -1,20 +1,27 @@
 import React from 'react';
+import { Holiday } from '../../common/lib/types';
 import { formatDate } from '../../common/utils/date-time/format';
 import { getHolidays } from '../../services/holidays';
 import OpeningPeriodAccordion from '../opening-period-accordion/OpeningPeriodAccordion';
 import './HolidaysTable.scss';
+
+export const UpcomingHolidayNotification = ({
+  holiday,
+}: {
+  holiday: Holiday;
+}): JSX.Element => (
+  <>
+    Seuraava juhlapyhä: <strong>{holiday.name}</strong> — Ei poikkeavia
+    aukioloaikoja
+  </>
+);
 
 const HolidaysTable = (): JSX.Element => {
   const holidays = getHolidays();
   return (
     <OpeningPeriodAccordion
       periodName="Juhlapyhien aukioloajat"
-      dateRange={
-        <>
-          Seuraava juhlapyhä: <strong>{holidays[0].name}</strong> — Ei
-          poikkeavia aukioloaikoja
-        </>
-      }
+      dateRange={<UpcomingHolidayNotification holiday={holidays[0]} />}
       editUrl="">
       <div className="holidays-container">
         <h4 id="holidays-title" className="holidays-title">
@@ -51,7 +58,7 @@ const HolidaysTable = (): JSX.Element => {
         </div>
         <div role="rowgroup">
           {holidays.map((holiday) => (
-            <div className="holidays-table__row" role="row">
+            <div className="holidays-table__row" role="row" key={holiday.date}>
               <div
                 className="holidays-table__cell holidays-table__cell--name"
                 role="cell">
@@ -60,7 +67,7 @@ const HolidaysTable = (): JSX.Element => {
               <div
                 className="holidays-table__cell holidays-table__cell--date"
                 role="cell">
-                {formatDate(holiday.start_date).substring(0, 6)}
+                {formatDate(holiday.date)}
               </div>
               <div
                 className="holidays-table__cell holidays-table__cell--opening-hours"

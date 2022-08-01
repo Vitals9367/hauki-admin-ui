@@ -69,24 +69,26 @@ const groupByConsecutiveDays = (
       groups[i] = [];
     });
 
-  return groups
-    .reduce(
-      (result, group) => [
-        ...result,
-        group.reduce((newOpeningHour: PreviewOpeningHours, openingHour) => {
-          return {
-            ...openingHour,
-            weekdays: [...newOpeningHour.weekdays, ...openingHour.weekdays],
-          };
-        }),
-      ],
-      []
-    )
-    .map((openingHour: PreviewOpeningHours) => ({
-      ...openingHour,
-      timeSpans: openingHour.timeSpans.sort(byStartTime),
-    }))
-    .sort(byWeekdays);
+  return groups[0].length > 0
+    ? groups
+        .reduce(
+          (result, group) => [
+            ...result,
+            group.reduce((newOpeningHour: PreviewOpeningHours, openingHour) => {
+              return {
+                ...openingHour,
+                weekdays: [...newOpeningHour.weekdays, ...openingHour.weekdays],
+              };
+            }),
+          ],
+          []
+        )
+        .map((openingHour: PreviewOpeningHours) => ({
+          ...openingHour,
+          timeSpans: openingHour.timeSpans.sort(byStartTime),
+        }))
+        .sort(byWeekdays)
+    : [];
 };
 
 // eslint-disable-next-line import/prefer-default-export

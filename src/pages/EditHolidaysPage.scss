@@ -1,0 +1,45 @@
+@import 'node_modules/hds-design-tokens/lib/all.scss';
+
+.holidays-page-title {
+  display: flex;
+  align-items: center;
+  font-size: $fontsize-body-m;
+}
+
+.holidays-page-title-addon {
+  margin-left: $spacing-2-xl;
+  font-weight: normal;
+}
+
+.holidays-list {
+  padding: 0;
+}
+
+.holidays-list-item {
+  align-items: flex-start;
+  display: flex;
+  gap: $spacing-l $spacing-m;
+  margin-top: $spacing-m !important;
+  flex-wrap: wrap;
+}
+
+.holiday-list-checkbox {
+  width: 25ch;
+  white-space: nowrap;
+}
+
+.holiday-form-container {
+  display: flex;
+  gap: $spacing-l $spacing-2-xl;
+  flex: 1;
+  flex-wrap: wrap;
+  margin-top: -1rem;
+}
+
+.holiday-form-actions {
+  margin: $spacing-s 0 $spacing-3-xl;
+}
+
+.holiday-form-fields + .holiday-form-actions {
+  margin-top: $spacing-l;
+}

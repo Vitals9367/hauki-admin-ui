@@ -20,9 +20,8 @@ export const getHolidays = (): Holiday[] => {
     .map((year) => hd.getHolidays(year))
     .flat()
     .map((date) => ({
-      start_date: formatDate(date.start),
-      end_date: formatDate(date.end),
+      date: date.date.split(' ')[0],
       name: date.name,
     }))
-    .filter((date) => date.start_date >= start && date.end_date <= end);
+    .filter((date) => date.date >= start && date.date <= end);
 };

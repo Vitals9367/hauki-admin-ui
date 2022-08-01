@@ -5,6 +5,7 @@ import {
   apiDatePeriodToFormValues,
   formValuesToApiDatePeriod,
   getActiveDatePeriod,
+  isHoliday,
 } from './opening-hours-helpers';
 
 const openingHours = [
@@ -410,5 +411,67 @@ describe('opening-hours-helpers', () => {
         },
       ])?.id
     ).toEqual(1039083);
+  });
+
+  describe('isHoliday', () => {
+    const holidays = [
+      {
+        date: '2022-12-31',
+        end_date: '2022-12-31',
+        name: 'Uudenvuodenaatto',
+        start_date: '2022-12-31',
+      },
+      {
+        date: '2023-01-01',
+        end_date: '2023-01-01',
+        name: 'Uudenvuodenpäivä',
+        start_date: '2022-12-31',
+      },
+    ];
+
+    it('should return true when datePeriod is override and matches with holiday', () => {
+      expect(
+        isHoliday(
+          {
+            ...datePeriod,
+            start_date: '2022-12-31',
+            end_date: '2022-12-31',
+            name: { fi: 'Uudenvuodenaatto', sv: '', en: '' },
+            override: true,
+          },
+          holidays
+        )
+      ).toBe(true);
+    });
+
+    it('should return false when datePeriod is override but the range does not match with holiday', () => {
+      expect(
+        isHoliday(
+          {
+            ...datePeriod,
+            start_date: '2022-12-25',
+            end_date: '2022-12-31',
+            name: { fi: 'Uudenvuodenaatto', sv: '', en: '' },
+            override: true,
+          },
+          holidays
+        )
+      ).toBe(false);
+    });
+
+    it('should return false when datePeriod is override and name does not match with holiday', () => {
+      expect(
+        isHoliday(
+          {
+            ...datePeriod,
+            start_date: '2022-12-31',
+            end_date: '2022-12-31',
+            name: { fi: 'Talvi', sv: '', en: '' },
+            override: true,
+          },
+          holidays
+        )
+      ).toBe(false);
+    });
   });
 });
