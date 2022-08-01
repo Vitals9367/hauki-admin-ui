@@ -16,14 +16,18 @@ import { getActiveDatePeriod } from '../../common/helpers/opening-hours-helpers'
 import { getDatePeriodFormConfig } from '../../services/datePeriodFormConfig';
 import HolidaysTable from '../holidays-table/HolidaysTable';
 
-const ExceptionPeriodsList = (): JSX.Element => (
+const ExceptionPeriodsList = ({
+  resourceId,
+}: {
+  resourceId: number;
+}): JSX.Element => (
   <section className="opening-periods-section">
     <header className="exception-periods-header">
       <h3 className="exception-periods-title">Poikkeavat päivät</h3>
     </header>
     <ul className="opening-periods-list">
       <li>
-        <HolidaysTable />
+        <HolidaysTable resourceId={resourceId} />
       </li>
     </ul>
   </section>
@@ -203,7 +207,7 @@ export default function ResourceOpeningHours({
         deletePeriod={deletePeriod}
         language={language}
       />
-      <ExceptionPeriodsList />
+      <ExceptionPeriodsList resourceId={resourceId} />
     </>
   );
 }

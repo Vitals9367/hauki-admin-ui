@@ -16,13 +16,13 @@ export const UpcomingHolidayNotification = ({
   </>
 );
 
-const HolidaysTable = (): JSX.Element => {
+const HolidaysTable = ({ resourceId }: { resourceId: number }): JSX.Element => {
   const holidays = getHolidays();
   return (
     <OpeningPeriodAccordion
       periodName="Juhlapyhien aukioloajat"
       dateRange={<UpcomingHolidayNotification holiday={holidays[0]} />}
-      editUrl="">
+      editUrl={`/resource/${resourceId}/holidays`}>
       <div className="holidays-container">
         <h4 id="holidays-title" className="holidays-title">
           Seuraavat juhlapyhät
