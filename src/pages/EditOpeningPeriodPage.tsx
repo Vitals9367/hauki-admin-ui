@@ -7,11 +7,9 @@ import { getDatePeriodFormConfig } from '../services/datePeriodFormConfig';
 export default function EditOpeningPeriodPage({
   resourceId,
   datePeriodId,
-  parentId,
 }: {
   resourceId: string;
   datePeriodId: string;
-  parentId?: string;
 }): JSX.Element {
   const id = parseInt(datePeriodId, 10);
   const [resource, setResource] = useState<Resource>();
@@ -57,7 +55,6 @@ export default function EditOpeningPeriodPage({
       datePeriodConfig={datePeriodConfig}
       resource={resource}
       submitFn={submitFn}
-      parentId={parentId}
     />
   );
 }

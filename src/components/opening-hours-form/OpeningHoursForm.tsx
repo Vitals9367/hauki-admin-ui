@@ -2,7 +2,6 @@
 import { Accordion, IconSort } from 'hds-react';
 import React, { useRef, useState } from 'react';
 import { FormProvider, useFieldArray, useForm } from 'react-hook-form';
-import { useHistory } from 'react-router-dom';
 import {
   DatePeriod,
   Language,
@@ -34,6 +33,7 @@ import OpeningHoursTitles from './OpeningHoursTitles';
 import OpeningHoursFormPreviewMobile from '../opening-hours-form-preview/OpeningHoursFormPreviewMobile';
 import ResourceTitle from '../resource-title/ResourceTitle';
 import { useAppContext } from '../../App-context';
+import useReturnToResourcePage from '../../hooks/useReturnToResourcePage';
 
 const getDefaultsValues = (
   datePeriod: DatePeriod | undefined
@@ -80,18 +80,15 @@ const OpeningHoursForm = ({
   datePeriod,
   datePeriodConfig,
   submitFn,
-  parentId,
   resource,
 }: {
   datePeriod?: DatePeriod;
   datePeriodConfig: UiDatePeriodConfig;
   submitFn: (values: DatePeriod) => Promise<DatePeriod>;
-  parentId?: string;
   resource: Resource;
 }): JSX.Element => {
   const { language = Language.FI } = useAppContext();
   const defaultValues: OpeningHoursFormValues = getDefaultsValues(datePeriod);
-  const history = useHistory();
   const [isSaving, setSaving] = useState(false);
   const [dropInRow, setDropInRow] = useState<number>();
   const offsetTop = useRef<number>();
@@ -109,11 +106,7 @@ const OpeningHoursForm = ({
     resourceState: { options: resourceStates = [] },
   } = datePeriodConfig;
 
-  const returnToResourcePage = (): void =>
-    history.push(
-      `/resource/${parentId ? `${parentId}/child/${resource.id}` : resource.id}`
-    );
-
+  const returnToResourcePage = useReturnToResourcePage();
   const onSubmit = (values: OpeningHoursFormValues): void => {
     if (!resource) {
       throw new Error('Resource not found');

@@ -25,7 +25,7 @@ import api from '../common/utils/api/api';
 import { getDatePeriodFormConfig } from '../services/datePeriodFormConfig';
 import { getHolidays } from '../services/holidays';
 import { formatDate } from '../common/utils/date-time/format';
-import { PrimaryButton } from '../components/button/Button';
+import { PrimaryButton, SecondaryButton } from '../components/button/Button';
 import { UpcomingHolidayNotification } from '../components/holidays-table/HolidaysTable';
 import {
   ConfirmationModal,
@@ -37,6 +37,8 @@ import TimeSpans from '../components/time-span/TimeSpans';
 
 import { useAppContext } from '../App-context';
 import './EditHolidaysPage.scss';
+import useReturnToResourcePage from '../hooks/useReturnToResourcePage';
+import useMobile from '../hooks/useMobile';
 
 type FormActions = {
   create: (values: OpeningHoursFormValues) => Promise<void>;
@@ -410,6 +412,9 @@ export default function EditHolidaysPage({
       });
   };
 
+  const isMobile = useMobile();
+  const returnToResourcePage = useReturnToResourcePage();
+
   useEffect((): void => {
     const fetchHolidayValues = async (): Promise<void> => {
       try {
@@ -434,7 +439,13 @@ export default function EditHolidaysPage({
 
   return (
     <>
-      <ResourceTitle language={language} resource={resource} />
+      <ResourceTitle language={language} resource={resource}>
+        <SecondaryButton
+          onClick={returnToResourcePage}
+          size={isMobile ? 'small' : 'default'}>
+          Palaa etusivulle
+        </SecondaryButton>
+      </ResourceTitle>
       <div className="holidays-page card">
         <div className="holidays-page-title">
           <h3>Juhlapyhien aukioloajat</h3>

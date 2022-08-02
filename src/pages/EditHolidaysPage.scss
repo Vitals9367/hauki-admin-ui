@@ -1,5 +1,9 @@
 @import 'node_modules/hds-design-tokens/lib/all.scss';
 
+.holidays-page {
+  margin-top: $spacing-m;
+}
+
 .holidays-page-title {
   display: flex;
   align-items: center;

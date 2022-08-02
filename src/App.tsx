@@ -145,14 +145,12 @@ export default function App(): JSX.Element {
                   match,
                 }: RouteComponentProps<{
                   id: string;
-                  parentId: string;
                 }>): ReactElement => (
                   <>
                     <HaukiNavigation />
                     <Main id="main">
                       <CreateNewOpeningPeriodPage
                         resourceId={match.params.id}
-                        parentId={match.params.parentId}
                       />
                     </Main>
                   </>
@@ -169,7 +167,6 @@ export default function App(): JSX.Element {
                 }: RouteComponentProps<{
                   id: string;
                   datePeriodId: string;
-                  parentId?: string;
                 }>): ReactElement => (
                   <>
                     <HaukiNavigation />
@@ -177,7 +174,6 @@ export default function App(): JSX.Element {
                       <EditOpeningPeriodPage
                         resourceId={match.params.id}
                         datePeriodId={match.params.datePeriodId}
-                        parentId={match.params.parentId}
                       />
                     </Main>
                   </>
@@ -185,7 +181,10 @@ export default function App(): JSX.Element {
               />
               <PrivateResourceRoute
                 id="edit-holidays-route"
-                path={['/resource/:id/holidays']}
+                path={[
+                  '/resource/:parentId/child/:id/holidays',
+                  '/resource/:id/holidays',
+                ]}
                 render={({
                   match,
                 }: RouteComponentProps<{

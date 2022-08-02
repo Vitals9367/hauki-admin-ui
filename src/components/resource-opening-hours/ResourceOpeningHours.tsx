@@ -24,10 +24,12 @@ import { getHolidays } from '../../services/holidays';
 const ExceptionPeriodsList = ({
   datePeriodConfig,
   datePeriods,
+  parentId,
   resourceId,
 }: {
   datePeriodConfig?: UiDatePeriodConfig;
   datePeriods: DatePeriod[];
+  parentId?: number;
   resourceId: number;
 }): JSX.Element => {
   const holidays = getHolidays();
@@ -46,6 +48,7 @@ const ExceptionPeriodsList = ({
             datePeriodConfig={datePeriodConfig}
             datePeriods={holidayDatePeriods}
             holidays={holidays}
+            parentId={parentId}
             resourceId={resourceId}
           />
         </li>
@@ -223,6 +226,7 @@ export default function ResourceOpeningHours({
       <ExceptionPeriodsList
         datePeriodConfig={datePeriodConfig}
         datePeriods={exceptions}
+        parentId={parentId}
         resourceId={resourceId}
       />
     </>

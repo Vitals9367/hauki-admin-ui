@@ -8,6 +8,7 @@ import {
   TranslatedApiChoice,
 } from '../../common/lib/types';
 import { getUiId } from '../../common/utils/form/form';
+import { defaultTimeSpan } from '../../constants';
 import { SupplementaryButton } from '../button/Button';
 import TimeSpan from './TimeSpan';
 import './TimeSpans.scss';
@@ -69,7 +70,7 @@ const TimeSpans = ({
             ref={ref}
             className="add-time-span-button"
             iconLeft={<IconPlusCircle />}
-            onClick={(): void => append({})}
+            onClick={(): void => append(defaultTimeSpan)}
             type="button">
             Lisää aukiolomääritys
           </SupplementaryButton>
