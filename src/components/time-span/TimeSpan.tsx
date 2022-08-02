@@ -103,7 +103,7 @@ const TimeSpan = ({
           id={getUiId([namePrefix, 'start-time'])}
           hoursLabel="tunnit"
           minutesLabel="minuutit"
-          label="Alkaen"
+          label="Alkaen klo"
           name={`${namePrefix}.start_time`}
           required
           value={item?.start_time || ''}
@@ -115,7 +115,7 @@ const TimeSpan = ({
           id={getUiId([namePrefix, 'end-time'])}
           hoursLabel="tunnit"
           minutesLabel="minuutit"
-          label="Päättyen"
+          label="Päättyen klo"
           name={`${namePrefix}.end_time`}
           required
           value={item?.end_time || ''}

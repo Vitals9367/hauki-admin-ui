@@ -4,7 +4,7 @@
   font-family: HelsinkiGrotesk-Regular, Arial, sans-serif;
   box-sizing: border-box;
   background-color: var(--opening-period-background-color);
-  padding: 6px $spacing-m;
+  padding: $spacing-xs $spacing-m;
 
   h4 {
     font-size: $fontsize-body-l;

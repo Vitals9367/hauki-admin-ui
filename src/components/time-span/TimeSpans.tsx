@@ -41,7 +41,7 @@ const TimeSpans = ({
   }, [fields, firstTimeSpanResourceState, namePrefix, remove]);
 
   return (
-    <>
+    <div className="time-spans">
       {fields.map((field, i) => (
         <TimeSpan
           key={field.id}
@@ -75,7 +75,7 @@ const TimeSpans = ({
           </SupplementaryButton>
         </div>
       )}
-    </>
+    </div>
   );
 };
 

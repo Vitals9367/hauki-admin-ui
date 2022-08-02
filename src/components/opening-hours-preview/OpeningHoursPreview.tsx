@@ -12,67 +12,82 @@ import { createWeekdaysStringFromIndices } from '../../common/utils/date-time/fo
 import { uiFrequencyRules } from '../../constants';
 import './OpeningHoursPreview.scss';
 
-const emptyHours = '-- : --';
-
-const TimeSpan = ({
-  start,
-  end,
+const TimeSpanDescription = ({
+  language,
+  resourceStates,
+  timeSpan,
 }: {
-  start?: string | null;
-  end?: string | null;
-}): JSX.Element => (
-  <>
-    <span className="opening-hours-preview-time-span__time">
-      {start || emptyHours}
-    </span>
-    <span>-</span>
-    <span className="opening-hours-preview-time-span__time">
-      {end || emptyHours}
-    </span>
-  </>
-);
-
-const renderStartAndEndTimes = (
-  timeSpan?: OpeningHoursTimeSpan
-): JSX.Element => (
-  <span className="opening-hours-preview-time-span">
-    {timeSpan?.full_day ? (
-      '24h'
-    ) : (
-      <TimeSpan start={timeSpan?.start_time} end={timeSpan?.end_time} />
-    )}
-  </span>
-);
-
-const resolveDescription = (
-  language: Language,
-  resourceStates: TranslatedApiChoice[],
-  timeSpan?: OpeningHoursTimeSpan
-): string => {
+  language: Language;
+  resourceStates: TranslatedApiChoice[];
+  timeSpan?: OpeningHoursTimeSpan;
+}): JSX.Element | null => {
   if (!timeSpan) {
-    return 'Tuntematon';
+    return <>Tuntematon</>;
   }
 
   if (timeSpan.resource_state === ResourceState.OPEN) {
-    return '';
+    return null;
   }
 
-  return timeSpan.resource_state === ResourceState.OTHER
-    ? timeSpan.description?.fi ?? ''
-    : resourceStates.find((state) => state.value === timeSpan.resource_state)
-        ?.label[language] ?? 'Tuntematon';
+  return (
+    <>
+      {timeSpan.resource_state === ResourceState.OTHER
+        ? timeSpan.description?.fi ?? ''
+        : resourceStates.find(
+            (state) => state.value === timeSpan.resource_state
+          )?.label[language] ?? 'Tuntematon'}
+    </>
+  );
+};
+
+const emptyHours = '-- : --';
+
+export const TimeSpan = ({
+  resourceStates,
+  timeSpan,
+}: {
+  resourceStates: TranslatedApiChoice[];
+  timeSpan?: OpeningHoursTimeSpan;
+}): JSX.Element | null => {
+  const { language = Language.FI } = useAppContext();
+  if (!timeSpan || timeSpan?.resource_state === ResourceState.CLOSED) {
+    return null;
+  }
+
+  return (
+    <span className="opening-hours-preview-time-span-container">
+      <span className="opening-hours-preview-time-span">
+        {timeSpan?.full_day ? (
+          '24h'
+        ) : (
+          <>
+            <span className="opening-hours-preview-time-span__time">
+              {timeSpan?.start_time?.substring(0, 5) || emptyHours}
+            </span>
+            <span>-</span>
+            <span className="opening-hours-preview-time-span__time">
+              {timeSpan?.end_time?.substring(0, 5) || emptyHours}
+            </span>
+          </>
+        )}
+      </span>
+      <TimeSpanDescription
+        language={language}
+        resourceStates={resourceStates}
+        timeSpan={timeSpan}
+      />
+    </span>
+  );
 };
 
 const TimeSpanRow = ({
   className,
   label,
-  language,
   resourceStates,
   timeSpan,
 }: {
   className: string;
   label?: string;
-  language: Language;
   resourceStates: TranslatedApiChoice[];
   timeSpan?: OpeningHoursTimeSpan;
 }): JSX.Element => (
@@ -82,12 +97,7 @@ const TimeSpanRow = ({
       className={`opening-hours-preview-table__time-span-column ${
         className ?? ''
       }`}>
-      <span className="opening-hours-preview-table__opening-hours">
-        {timeSpan?.resource_state === ResourceState.CLOSED
-          ? ''
-          : renderStartAndEndTimes(timeSpan)}
-        <span>{resolveDescription(language, resourceStates, timeSpan)}</span>
-      </span>
+      <TimeSpan resourceStates={resourceStates} timeSpan={timeSpan} />
     </td>
   </tr>
 );
@@ -100,6 +110,7 @@ const OpeningHoursPreview = ({
   resourceStates: TranslatedApiChoice[];
 }): JSX.Element => {
   const { language = Language.FI } = useAppContext();
+
   return (
     <>
       {openingHoursToPreviewRows(openingHours).map(
@@ -144,7 +155,6 @@ const OpeningHoursPreview = ({
                         <TimeSpanRow
                           key={`time-span-row-${timeSpanIdx}`}
                           className={rowClass}
-                          language={language}
                           label={
                             timeSpanIdx === 0
                               ? createWeekdaysStringFromIndices(

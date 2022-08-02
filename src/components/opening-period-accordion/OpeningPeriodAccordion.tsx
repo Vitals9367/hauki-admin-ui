@@ -72,7 +72,7 @@ const OpeningPeriodAccordion = ({
           )}
         </div>
         <div className="opening-period-dates opening-period-header-column">
-          <div>{dateRange}</div>
+          {dateRange}
           {isActive && (
             <StatusLabel className="opening-period-dates-status" type="info">
               Voimassa nyt

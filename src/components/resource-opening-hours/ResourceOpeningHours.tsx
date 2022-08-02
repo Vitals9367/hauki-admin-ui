@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Notification } from 'hds-react';
 import { useHistory } from 'react-router-dom';
+import { partition } from 'lodash';
 import {
   DatePeriod,
   Language,
@@ -12,26 +13,46 @@ import { SecondaryButton } from '../button/Button';
 
 import OpeningPeriod from './opening-period/OpeningPeriod';
 import './ResourceOpeningHours.scss';
-import { getActiveDatePeriod } from '../../common/helpers/opening-hours-helpers';
+import {
+  getActiveDatePeriod,
+  isHoliday,
+} from '../../common/helpers/opening-hours-helpers';
 import { getDatePeriodFormConfig } from '../../services/datePeriodFormConfig';
 import HolidaysTable from '../holidays-table/HolidaysTable';
+import { getHolidays } from '../../services/holidays';
 
 const ExceptionPeriodsList = ({
+  datePeriodConfig,
+  datePeriods,
   resourceId,
 }: {
+  datePeriodConfig?: UiDatePeriodConfig;
+  datePeriods: DatePeriod[];
   resourceId: number;
-}): JSX.Element => (
-  <section className="opening-periods-section">
-    <header className="exception-periods-header">
-      <h3 className="exception-periods-title">Poikkeavat päivät</h3>
-    </header>
-    <ul className="opening-periods-list">
-      <li>
-        <HolidaysTable resourceId={resourceId} />
-      </li>
-    </ul>
-  </section>
-);
+}): JSX.Element => {
+  const holidays = getHolidays();
+  const [holidayDatePeriods] = partition(datePeriods, (datePeriod) =>
+    isHoliday(datePeriod, holidays)
+  );
+
+  return (
+    <section className="opening-periods-section">
+      <header className="exception-periods-header">
+        <h3 className="exception-periods-title">Poikkeavat päivät</h3>
+      </header>
+      <ul className="opening-periods-list">
+        <li>
+          <HolidaysTable
+            datePeriodConfig={datePeriodConfig}
+            datePeriods={holidayDatePeriods}
+            holidays={holidays}
+            resourceId={resourceId}
+          />
+        </li>
+      </ul>
+    </section>
+  );
+};
 
 enum PeriodsListTheme {
   DEFAULT = 'DEFAULT',
@@ -128,16 +149,6 @@ const OpeningPeriodsNotFound = ({ text }: { text: string }): JSX.Element => (
   <p className="opening-periods-not-found">{text}</p>
 );
 
-const partitionByOverride = (datePeriods: DatePeriod[]): DatePeriod[][] =>
-  datePeriods.reduce(
-    ([defaults = [], exceptions = []]: DatePeriod[][], current: DatePeriod) => {
-      return current.override
-        ? [defaults, [...exceptions, current]]
-        : [[...defaults, current], exceptions];
-    },
-    [[], []]
-  );
-
 export default function ResourceOpeningHours({
   language,
   parentId,
@@ -152,17 +163,19 @@ export default function ResourceOpeningHours({
   const [datePeriodConfig, setDatePeriodConfig] = useState<
     UiDatePeriodConfig
   >();
-  const [[defaultPeriods], setDividedDatePeriods] = useState<DatePeriod[][]>([
-    [],
-    [],
-  ]);
+  const [[defaultPeriods, exceptions], setDividedDatePeriods] = useState<
+    [DatePeriod[], DatePeriod[]]
+  >([[], []]);
   const fetchDatePeriods = async (id: number): Promise<void> => {
     try {
       const [apiDatePeriods, uiDatePeriodOptions] = await Promise.all([
         api.getDatePeriods(id),
         getDatePeriodFormConfig(),
       ]);
-      const datePeriodLists = partitionByOverride(apiDatePeriods);
+      const datePeriodLists = partition(
+        apiDatePeriods,
+        (datePeriod) => !datePeriod.override
+      );
       setDividedDatePeriods(datePeriodLists);
       setDatePeriodConfig(uiDatePeriodOptions);
     } catch (e) {
@@ -207,7 +220,11 @@ export default function ResourceOpeningHours({
         deletePeriod={deletePeriod}
         language={language}
       />
-      <ExceptionPeriodsList resourceId={resourceId} />
+      <ExceptionPeriodsList
+        datePeriodConfig={datePeriodConfig}
+        datePeriods={exceptions}
+        resourceId={resourceId}
+      />
     </>
   );
 }

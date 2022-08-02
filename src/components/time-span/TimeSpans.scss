@@ -1,3 +1,9 @@
+.time-spans {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
 .add-time-span-button {
   margin-left: -25px;
 }
