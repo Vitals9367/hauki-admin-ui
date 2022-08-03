@@ -1,0 +1,12 @@
+@import 'node_modules/hds-design-tokens/lib/all.scss';
+
+.exception-opening-hours-form {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-layout-xs;
+  padding-bottom: $spacing-layout-xl;
+}
+
+.exception-date {
+  width: max-content;
+}

@@ -1,12 +1,6 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import {
-  Checkbox,
-  LoadingSpinner,
-  RadioButton,
-  SelectionGroup,
-} from 'hds-react';
+import { Checkbox, LoadingSpinner } from 'hds-react';
 import { FormProvider, useForm } from 'react-hook-form';
-import getDay from 'date-fns/getDay';
 import {
   DatePeriod,
   Holiday,
@@ -24,7 +18,10 @@ import {
 import api from '../common/utils/api/api';
 import { getDatePeriodFormConfig } from '../services/datePeriodFormConfig';
 import { getHolidays } from '../services/holidays';
-import { formatDate } from '../common/utils/date-time/format';
+import {
+  formatDate,
+  getNumberOfTheWeekday,
+} from '../common/utils/date-time/format';
 import { PrimaryButton, SecondaryButton } from '../components/button/Button';
 import { UpcomingHolidayNotification } from '../components/holidays-table/HolidaysTable';
 import {
@@ -33,12 +30,12 @@ import {
 } from '../components/modal/ConfirmationModal';
 import ResourceTitle from '../components/resource-title/ResourceTitle';
 import toast from '../components/notification/Toast';
-import TimeSpans from '../components/time-span/TimeSpans';
 
 import { useAppContext } from '../App-context';
 import './EditHolidaysPage.scss';
 import useReturnToResourcePage from '../hooks/useReturnToResourcePage';
 import useMobile from '../hooks/useMobile';
+import ExceptionOpeningHours from '../components/exception-opening-hours-form-inputs/ExceptionOpeningHoursFormInputs';
 
 type FormActions = {
   create: (values: OpeningHoursFormValues) => Promise<void>;
@@ -62,12 +59,6 @@ const getDefaultFormValues = ({
   openingHours: [],
 });
 
-const getNumberOfTheWeekday = (date: string): number => {
-  // Date-fns returns index and it starts from Sunday.
-  const dateFnsWeekdayIndex: number = getDay(new Date(date));
-  return dateFnsWeekdayIndex === 0 ? 7 : dateFnsWeekdayIndex;
-};
-
 const HolidayForm = ({
   holiday,
   value,
@@ -82,11 +73,7 @@ const HolidayForm = ({
   const { name, date: holidayDate } = holiday;
   const [isSaving, setIsSaving] = useState<boolean>(false);
   const valueToUse = value || getDefaultFormValues({ name, holidayDate });
-  const [isOpen, setIsOpen] = useState<boolean>(
-    valueToUse && valueToUse.resourceState
-      ? valueToUse.resourceState !== ResourceState.CLOSED
-      : false
-  );
+
   const form = useForm<OpeningHoursFormValues>({
     defaultValues: valueToUse,
     shouldUnregister: false,
@@ -95,7 +82,6 @@ const HolidayForm = ({
   const { reset } = form;
 
   const onClosedSelect = (): void => {
-    setIsOpen(false);
     reset({
       ...valueToUse,
       resourceState: ResourceState.CLOSED,
@@ -103,7 +89,6 @@ const HolidayForm = ({
   };
 
   const onOpenSelect = (): void => {
-    setIsOpen(true);
     reset({
       ...valueToUse,
       resourceState: ResourceState.UNDEFINED,
@@ -139,50 +124,35 @@ const HolidayForm = ({
   };
 
   return (
-    <>
-      <SelectionGroup label="">
-        <RadioButton
-          id={`${holidayDate}-closed-state-checkbox`}
-          name={`${holidayDate}-closed-state-checkbox`}
-          checked={!isOpen}
-          label="Suljettu koko päivän"
-          onChange={(): void => onClosedSelect()}
+    <FormProvider {...form}>
+      <form
+        onSubmit={
+          value?.id
+            ? form.handleSubmit(saveExisting)
+            : form.handleSubmit(createNew)
+        }>
+        <ExceptionOpeningHours
+          id={holidayDate}
+          isOpen={
+            valueToUse && valueToUse.resourceState
+              ? valueToUse.resourceState !== ResourceState.CLOSED
+              : false
+          }
+          onClose={onClosedSelect}
+          onOpen={onOpenSelect}
+          resourceStates={resourceStates}
         />
-        <RadioButton
-          id={`${holidayDate}-open-state-checkbox`}
-          name={`${holidayDate}-open-state-checkbox`}
-          checked={isOpen}
-          label="Voimassa tietyn ajan"
-          onChange={(): void => onOpenSelect()}
-        />
-      </SelectionGroup>
-      <FormProvider {...form}>
-        <form
-          onSubmit={
-            value?.id
-              ? form.handleSubmit(saveExisting)
-              : form.handleSubmit(createNew)
-          }>
-          {isOpen && (
-            <div className="holiday-form-fields">
-              <TimeSpans
-                resourceStates={resourceStates}
-                namePrefix="openingHours[0].timeSpanGroups[0].timeSpans"
-              />
-            </div>
-          )}
-          <div className="holiday-form-actions">
-            <PrimaryButton
-              dataTest="submit-opening-hours-button"
-              isLoading={isSaving}
-              loadingText="Tallentaa poikkeusaukioloa"
-              type="submit">
-              Tallenna
-            </PrimaryButton>
-          </div>
-        </form>
-      </FormProvider>
-    </>
+        <div className="holiday-form-actions">
+          <PrimaryButton
+            dataTest="submit-opening-hours-button"
+            isLoading={isSaving}
+            loadingText="Tallentaa poikkeusaukioloa"
+            type="submit">
+            Tallenna
+          </PrimaryButton>
+        </div>
+      </form>
+    </FormProvider>
   );
 };
 
@@ -349,7 +319,7 @@ export default function EditHolidaysPage({
       })
       .catch(() => {
         toast.error({
-          dataTestId: 'holiday-form-success-error',
+          dataTestId: 'holiday-form-error',
           label: 'Aukiolon lisääminen epäonnistui',
           text: `${values.name.fi} aukiolon lisääminen epäonnistui`,
         });

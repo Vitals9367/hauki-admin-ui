@@ -32,6 +32,7 @@ const ExceptionPeriodsList = ({
   parentId?: number;
   resourceId: number;
 }): JSX.Element => {
+  const history = useHistory();
   const holidays = getHolidays();
   const [holidayDatePeriods] = partition(datePeriods, (datePeriod) =>
     isHoliday(datePeriod, holidays)
@@ -41,6 +42,18 @@ const ExceptionPeriodsList = ({
     <section className="opening-periods-section">
       <header className="exception-periods-header">
         <h3 className="exception-periods-title">Poikkeavat päivät</h3>
+        <SecondaryButton
+          onClick={() => {
+            if (parentId) {
+              history.push(
+                `/resource/${parentId}/child/${resourceId}/exception/new`
+              );
+            } else {
+              history.push(`/resource/${resourceId}/exception/new`);
+            }
+          }}>
+          + Lisää poikkeava päivä
+        </SecondaryButton>
       </header>
       <ul className="opening-periods-list">
         <li>

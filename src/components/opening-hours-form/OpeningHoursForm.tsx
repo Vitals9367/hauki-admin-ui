@@ -11,11 +11,7 @@ import {
   OpeningHours as TOpeningHours,
   OpeningHoursFormValues,
 } from '../../common/lib/types';
-import {
-  PrimaryButton,
-  SecondaryButton,
-  SupplementaryButton,
-} from '../button/Button';
+import { SupplementaryButton } from '../button/Button';
 import OpeningHoursFormPreview from '../opening-hours-form-preview/OpeningHoursFormPreview';
 import './OpeningHoursForm.scss';
 import {
@@ -34,6 +30,7 @@ import OpeningHoursFormPreviewMobile from '../opening-hours-form-preview/Opening
 import ResourceTitle from '../resource-title/ResourceTitle';
 import { useAppContext } from '../../App-context';
 import useReturnToResourcePage from '../../hooks/useReturnToResourcePage';
+import OpeningHoursFormActions from './OpeningHoursFormActions';
 
 const getDefaultsValues = (
   datePeriod: DatePeriod | undefined
@@ -258,23 +255,7 @@ const OpeningHoursForm = ({
               </div>
             </section>
           </div>
-          <div className="opening-hours-form__actions-container">
-            <div className="card opening-hours-form__actions">
-              <PrimaryButton
-                dataTest="submit-opening-hours-button"
-                isLoading={isSaving}
-                loadingText="Tallentaa aukioloaikoja"
-                type="submit"
-                size={isMobile ? 'small' : 'default'}>
-                Tallenna
-              </PrimaryButton>
-              <SecondaryButton
-                onClick={returnToResourcePage}
-                size={isMobile ? 'small' : 'default'}>
-                Peruuta
-              </SecondaryButton>
-            </div>
-          </div>
+          <OpeningHoursFormActions isSaving={isSaving} />
         </form>
       </FormProvider>
     )) || <h1>Ladataan...</h1>
