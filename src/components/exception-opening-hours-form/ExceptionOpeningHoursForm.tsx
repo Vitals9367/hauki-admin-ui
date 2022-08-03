@@ -2,7 +2,10 @@ import { DateInput } from 'hds-react';
 import React, { useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { useAppContext } from '../../App-context';
-import { formValuesToApiDatePeriod } from '../../common/helpers/opening-hours-helpers';
+import {
+  apiDatePeriodToFormValues,
+  formValuesToApiDatePeriod,
+} from '../../common/helpers/opening-hours-helpers';
 import {
   DatePeriod,
   Language,
@@ -11,8 +14,11 @@ import {
   ResourceState,
   UiDatePeriodConfig,
 } from '../../common/lib/types';
-import { formatDate } from '../../common/utils/date-time/format';
-import { defaultTimeSpan } from '../../constants';
+import {
+  formatDate,
+  getNumberOfTheWeekday,
+} from '../../common/utils/date-time/format';
+import { defaultTimeSpanGroup } from '../../constants';
 import useReturnToResourcePage from '../../hooks/useReturnToResourcePage';
 import ExceptionOpeningHours from '../exception-opening-hours-form-inputs/ExceptionOpeningHoursFormInputs';
 import toast from '../notification/Toast';
@@ -21,11 +27,38 @@ import OpeningHoursTitles from '../opening-hours-form/OpeningHoursTitles';
 import ResourceTitle from '../resource-title/ResourceTitle';
 import './ExceptionOpeningHoursForm.scss';
 
+function resolveWeekday(
+  values: OpeningHoursFormValues
+): OpeningHoursFormValues {
+  if (values.resourceState === ResourceState.CLOSED) {
+    return values;
+  }
+
+  if (!values.startDate) {
+    throw new Error('No start date set by default');
+  }
+
+  return {
+    ...values,
+    openingHours: [
+      {
+        ...values.openingHours[0],
+        weekdays: [getNumberOfTheWeekday(values.startDate)],
+      },
+    ],
+  };
+}
+
 const formValuesToException = (
   resourceIdToSave: number,
   values: OpeningHoursFormValues
 ): DatePeriod => {
-  const data = formValuesToApiDatePeriod(resourceIdToSave, values, values.id);
+  const data = formValuesToApiDatePeriod(
+    resourceIdToSave,
+    resolveWeekday(values),
+    values.id
+  );
+
   return {
     ...data,
     end_date: data.start_date,
@@ -33,34 +66,40 @@ const formValuesToException = (
   };
 };
 
-const getDefaultFormValues = ({
-  date,
-  name,
-}: {
-  date?: string;
-  name?: string;
-}): OpeningHoursFormValues => ({
-  startDate: date ?? formatDate(new Date().toISOString()),
-  endDate: date ?? formatDate(new Date().toISOString()),
-  fixed: true,
-  name: { fi: name ?? '', sv: '', en: '' },
-  override: true,
-  resourceState: ResourceState.CLOSED,
-  openingHours: [],
-});
+const getDefaultFormValues = (
+  datePeriod: DatePeriod | undefined
+): OpeningHoursFormValues => {
+  if (datePeriod) {
+    return apiDatePeriodToFormValues(datePeriod);
+  }
+
+  const now = new Date().toISOString();
+  return {
+    startDate: formatDate(now),
+    endDate: formatDate(now),
+    fixed: true,
+    name: { fi: '', sv: '', en: '' },
+    override: true,
+    resourceState: ResourceState.CLOSED,
+    openingHours: [],
+  };
+};
 
 const ExceptionOpeningHoursForm = ({
+  datePeriod,
   datePeriodConfig,
   resource,
   submitFn,
 }: {
+  datePeriod?: DatePeriod;
   datePeriodConfig: UiDatePeriodConfig;
   resource: Resource;
   submitFn: (datePeriod: DatePeriod) => Promise<DatePeriod>;
 }): JSX.Element => {
   const { language = Language.FI } = useAppContext();
+  const defaultValues = getDefaultFormValues(datePeriod);
   const form = useForm<OpeningHoursFormValues>({
-    defaultValues: getDefaultFormValues({}),
+    defaultValues,
     shouldUnregister: false,
   });
   const { register, setValue, watch } = form;
@@ -121,16 +160,16 @@ const ExceptionOpeningHoursForm = ({
                   setValue('resourceState', ResourceState.UNDEFINED);
                   setValue('openingHours', [
                     {
-                      timeSpanGroups: [
-                        {
-                          timeSpans: [defaultTimeSpan],
-                        },
-                      ],
+                      timeSpanGroups: [defaultTimeSpanGroup],
                     },
                   ]);
                 }}
                 resourceStates={datePeriodConfig.resourceState.options}
-                isOpen={false}
+                isOpen={
+                  defaultValues.resourceState
+                    ? defaultValues.resourceState !== ResourceState.CLOSED
+                    : false
+                }
               />
             </div>
           </div>

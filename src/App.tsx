@@ -29,6 +29,7 @@ import ResourcePage from './pages/ResourcePage';
 import EditOpeningPeriodPage from './pages/EditOpeningPeriodPage';
 import EditHolidaysPage from './pages/EditHolidaysPage';
 import CreateNewExceptionPage from './pages/CreateNewExceptionPage';
+import EditExceptionPage from './pages/EditExceptionPage';
 
 type OptionalAuthTokens = AuthTokens | undefined;
 
@@ -214,6 +215,29 @@ export default function App(): JSX.Element {
                     <HaukiNavigation />
                     <Main id="main">
                       <CreateNewExceptionPage resourceId={match.params.id} />
+                    </Main>
+                  </>
+                )}
+              />
+              <PrivateResourceRoute
+                id="add-exception-route"
+                path={[
+                  '/resource/:parentId/child/:id/exception/:datePeriodId',
+                  '/resource/:id/exception/:datePeriodId',
+                ]}
+                render={({
+                  match,
+                }: RouteComponentProps<{
+                  id: string;
+                  datePeriodId: string;
+                }>): ReactElement => (
+                  <>
+                    <HaukiNavigation />
+                    <Main id="main">
+                      <EditExceptionPage
+                        datePeriodId={match.params.datePeriodId}
+                        resourceId={match.params.id}
+                      />
                     </Main>
                   </>
                 )}

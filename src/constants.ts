@@ -30,3 +30,8 @@ export const defaultTimeSpan = {
   full_day: false,
   resourceState: ResourceState.OPEN,
 };
+
+export const defaultTimeSpanGroup = {
+  rule: 'week_every' as const,
+  timeSpans: [defaultTimeSpan],
+};

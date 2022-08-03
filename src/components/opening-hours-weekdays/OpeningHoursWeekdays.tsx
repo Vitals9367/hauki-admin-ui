@@ -15,7 +15,7 @@ import { getWeekdayLongNameByIndexAndLang } from '../../common/utils/date-time/f
 import TimeSpans from '../time-span/TimeSpans';
 import DayCheckbox from './DayCheckbox';
 import './OpeningHoursWeekdays.scss';
-import { defaultTimeSpan, uiFrequencyRules } from '../../constants';
+import { defaultTimeSpanGroup, uiFrequencyRules } from '../../constants';
 import { useAppContext } from '../../App-context';
 import { choiceToOption, getUiId } from '../../common/utils/form/form';
 
@@ -230,8 +230,8 @@ const OpeningHoursWeekdays = ({
 
                         if (fields.length === 1) {
                           append({
+                            ...defaultTimeSpanGroup,
                             rule: pair.newValue,
-                            timeSpans: [defaultTimeSpan],
                           });
                         } else if (rule.value === 'week_every') {
                           remove(pair.idx);

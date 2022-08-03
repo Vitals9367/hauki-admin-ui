@@ -73,7 +73,7 @@ const ExceptionPeriodsList = ({
           />
         </li>
         {exceptions.map((exception, i) => (
-          <li>
+          <li key={exception.id}>
             <OpeningPeriodAccordion
               editUrl={
                 parentId

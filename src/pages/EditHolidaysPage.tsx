@@ -36,6 +36,7 @@ import './EditHolidaysPage.scss';
 import useReturnToResourcePage from '../hooks/useReturnToResourcePage';
 import useMobile from '../hooks/useMobile';
 import ExceptionOpeningHours from '../components/exception-opening-hours-form-inputs/ExceptionOpeningHoursFormInputs';
+import { defaultTimeSpanGroup } from '../constants';
 
 type FormActions = {
   create: (values: OpeningHoursFormValues) => Promise<void>;
@@ -90,15 +91,7 @@ const HolidayForm = ({
     setValue('resourceState', ResourceState.UNDEFINED);
     setValue('openingHours', [
       {
-        timeSpanGroups: [
-          {
-            timeSpans: [
-              {
-                resource_state: ResourceState.OPEN,
-              },
-            ],
-          },
-        ],
+        timeSpanGroups: [defaultTimeSpanGroup],
         weekdays: [getNumberOfTheWeekday(holidayDate)],
       },
     ]);

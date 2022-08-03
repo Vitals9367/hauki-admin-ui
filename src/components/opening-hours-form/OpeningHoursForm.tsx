@@ -21,7 +21,7 @@ import {
 } from '../../common/helpers/opening-hours-helpers';
 import toast from '../notification/Toast';
 import OpeningHoursWeekdays from '../opening-hours-weekdays/OpeningHoursWeekdays';
-import { defaultTimeSpan } from '../../constants';
+import { defaultTimeSpan, defaultTimeSpanGroup } from '../../constants';
 import OpeningHoursValidity from './OpeningHoursValidity';
 import useMobile from '../../hooks/useMobile';
 import { formatDate } from '../../common/utils/date-time/format';
@@ -49,18 +49,13 @@ const getDefaultsValues = (
         openingHours: [
           {
             weekdays: [1, 2, 3, 4, 5],
-            timeSpanGroups: [
-              {
-                rule: 'week_every' as const,
-                timeSpans: [defaultTimeSpan],
-              },
-            ],
+            timeSpanGroups: [defaultTimeSpanGroup],
           },
           {
             weekdays: [6, 7],
             timeSpanGroups: [
               {
-                rule: 'week_every' as const,
+                ...defaultTimeSpanGroup,
                 timeSpans: [
                   {
                     ...defaultTimeSpan,
@@ -157,12 +152,7 @@ const OpeningHoursForm = ({
     const newIdx = currIndex + 1;
     const values = {
       weekdays: [day],
-      timeSpanGroups: [
-        {
-          rule: 'week_every' as const,
-          timeSpans: [defaultTimeSpan],
-        },
-      ],
+      timeSpanGroups: [defaultTimeSpanGroup],
     };
     insert(newIdx, values, false);
     // FIXME: For some reason the normal array won't get added in the insert
