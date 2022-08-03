@@ -79,34 +79,29 @@ const HolidayForm = ({
     shouldUnregister: false,
   });
 
-  const { reset } = form;
+  const { setValue } = form;
 
   const onClosedSelect = (): void => {
-    reset({
-      ...valueToUse,
-      resourceState: ResourceState.CLOSED,
-    });
+    setValue('resourceState', ResourceState.CLOSED);
+    setValue('openingHours', []);
   };
 
   const onOpenSelect = (): void => {
-    reset({
-      ...valueToUse,
-      resourceState: ResourceState.UNDEFINED,
-      openingHours: [
-        {
-          timeSpanGroups: [
-            {
-              timeSpans: [
-                {
-                  resource_state: ResourceState.OPEN,
-                },
-              ],
-            },
-          ],
-          weekdays: [getNumberOfTheWeekday(holidayDate)],
-        },
-      ],
-    });
+    setValue('resourceState', ResourceState.UNDEFINED);
+    setValue('openingHours', [
+      {
+        timeSpanGroups: [
+          {
+            timeSpans: [
+              {
+                resource_state: ResourceState.OPEN,
+              },
+            ],
+          },
+        ],
+        weekdays: [getNumberOfTheWeekday(holidayDate)],
+      },
+    ]);
   };
 
   const {

@@ -10,7 +10,6 @@ import {
 } from '../../common/lib/types';
 import api from '../../common/utils/api/api';
 import { SecondaryButton } from '../button/Button';
-
 import OpeningPeriod from './opening-period/OpeningPeriod';
 import './ResourceOpeningHours.scss';
 import {
@@ -20,22 +19,30 @@ import {
 import { getDatePeriodFormConfig } from '../../services/datePeriodFormConfig';
 import HolidaysTable from '../holidays-table/HolidaysTable';
 import { getHolidays } from '../../services/holidays';
+import OpeningPeriodAccordion from '../opening-period-accordion/OpeningPeriodAccordion';
+import { formatDate } from '../../common/utils/date-time/format';
+import ExceptionOpeningHours from '../exception-opening-hours/ExceptionOpeningHours';
 
 const ExceptionPeriodsList = ({
   datePeriodConfig,
   datePeriods,
+  deletePeriod,
+  language,
   parentId,
   resourceId,
 }: {
   datePeriodConfig?: UiDatePeriodConfig;
   datePeriods: DatePeriod[];
+  deletePeriod: (id: number) => Promise<void>;
+  language: Language;
   parentId?: number;
   resourceId: number;
 }): JSX.Element => {
   const history = useHistory();
   const holidays = getHolidays();
-  const [holidayDatePeriods] = partition(datePeriods, (datePeriod) =>
-    isHoliday(datePeriod, holidays)
+  const [holidayDatePeriods, exceptions] = partition(
+    datePeriods,
+    (datePeriod) => isHoliday(datePeriod, holidays)
   );
 
   return (
@@ -65,6 +72,27 @@ const ExceptionPeriodsList = ({
             resourceId={resourceId}
           />
         </li>
+        {exceptions.map((exception, i) => (
+          <li>
+            <OpeningPeriodAccordion
+              editUrl={
+                parentId
+                  ? `/resource/${parentId}/child/${resourceId}/exception/${exception.id}`
+                  : `/resource/${resourceId}/exception/${exception.id}`
+              }
+              initiallyOpen={i <= 10}
+              onDelete={() => deletePeriod(exception.id!)}
+              periodName={exception.name[language]}
+              dateRange={`${
+                exception.start_date ? formatDate(exception.start_date) : ''
+              } — poikkeavat aukiolot`}>
+              <ExceptionOpeningHours
+                datePeriod={exception}
+                datePeriodConfig={datePeriodConfig}
+              />
+            </OpeningPeriodAccordion>
+          </li>
+        ))}
       </ul>
     </section>
   );
@@ -239,6 +267,8 @@ export default function ResourceOpeningHours({
       <ExceptionPeriodsList
         datePeriodConfig={datePeriodConfig}
         datePeriods={exceptions}
+        deletePeriod={deletePeriod}
+        language={language}
         parentId={parentId}
         resourceId={resourceId}
       />

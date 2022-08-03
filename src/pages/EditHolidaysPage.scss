@@ -6,16 +6,6 @@
   font-size: $fontsize-body-m;
   flex-wrap: wrap;
   gap: $spacing-s $spacing-l;
-
-  .upcoming-holidays-divider {
-    display: none;
-  }
-
-  @media screen and (min-width: $breakpoint-l) {
-    .upcoming-holidays-divider {
-      display: revert;
-    }
-  }
 }
 
 .holidays-list {

@@ -78,3 +78,20 @@
     grid-column: auto;
   }
 }
+
+.upcoming-holidays {
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: $spacing-3-xs;
+}
+
+.upcoming-holidays-divider {
+  display: none;
+}
+
+@media screen and (min-width: $breakpoint-s) {
+  .upcoming-holidays-divider {
+    display: revert;
+  }
+}

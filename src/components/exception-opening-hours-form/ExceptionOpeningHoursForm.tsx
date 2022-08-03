@@ -63,7 +63,7 @@ const ExceptionOpeningHoursForm = ({
     defaultValues: getDefaultFormValues({}),
     shouldUnregister: false,
   });
-  const { register, reset, watch } = form;
+  const { register, setValue, watch } = form;
   const startDate = watch('startDate');
   const returnToResourcePage = useReturnToResourcePage();
   const [isSaving, setSaving] = useState<boolean>(false);
@@ -85,7 +85,7 @@ const ExceptionOpeningHoursForm = ({
         toast.error({
           dataTestId: 'exception-opening-hours-form-error',
           label: 'Aukiolon lisääminen epäonnistui',
-          text: `Poikkeavan päivän lisääminen epäonnistui`,
+          text: `Poikkeavan päivän aukiolon lisääminen epäonnistui`,
         });
       });
   };
@@ -113,24 +113,22 @@ const ExceptionOpeningHoursForm = ({
               />
               <ExceptionOpeningHours
                 id="exception-opening-hours-form"
-                onClose={(): void =>
-                  reset({
-                    openingHours: [],
-                  })
-                }
-                onOpen={(): void =>
-                  reset({
-                    openingHours: [
-                      {
-                        timeSpanGroups: [
-                          {
-                            timeSpans: [defaultTimeSpan],
-                          },
-                        ],
-                      },
-                    ],
-                  })
-                }
+                onClose={(): void => {
+                  setValue('resourceState', ResourceState.CLOSED);
+                  setValue('openingHours', []);
+                }}
+                onOpen={(): void => {
+                  setValue('resourceState', ResourceState.UNDEFINED);
+                  setValue('openingHours', [
+                    {
+                      timeSpanGroups: [
+                        {
+                          timeSpans: [defaultTimeSpan],
+                        },
+                      ],
+                    },
+                  ]);
+                }}
                 resourceStates={datePeriodConfig.resourceState.options}
                 isOpen={false}
               />
