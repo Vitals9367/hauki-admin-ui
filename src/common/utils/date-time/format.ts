@@ -112,30 +112,30 @@ export function createWeekdaysStringFromIndices(
     return '';
   }
 
-  weekdayIndexArray.sort();
-
   const weekdaySpans: WeekdaySpan[] = [];
   let first = true;
-  weekdayIndexArray.forEach((weekdayIndex) => {
-    if (first) {
-      weekdaySpans.push({
-        startIndex: weekdayIndex,
-        lastInsertedIndex: weekdayIndex,
-      });
-      first = false;
-    } else {
-      const currentObject = weekdaySpans[weekdaySpans.length - 1];
-      if (weekdayIndex - 1 === currentObject.lastInsertedIndex) {
-        currentObject.endIndex = weekdayIndex;
-        currentObject.lastInsertedIndex = weekdayIndex;
-      } else {
+  [...weekdayIndexArray]
+    .sort((a, b) => a - b)
+    .forEach((weekdayIndex) => {
+      if (first) {
         weekdaySpans.push({
           startIndex: weekdayIndex,
           lastInsertedIndex: weekdayIndex,
         });
+        first = false;
+      } else {
+        const currentObject = weekdaySpans[weekdaySpans.length - 1];
+        if (weekdayIndex - 1 === currentObject.lastInsertedIndex) {
+          currentObject.endIndex = weekdayIndex;
+          currentObject.lastInsertedIndex = weekdayIndex;
+        } else {
+          weekdaySpans.push({
+            startIndex: weekdayIndex,
+            lastInsertedIndex: weekdayIndex,
+          });
+        }
       }
-    }
-  });
+    });
 
   let weekdaysString = '';
   weekdaySpans.forEach((weekdaySpanObject: WeekdaySpan, index: number) => {

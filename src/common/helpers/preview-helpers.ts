@@ -33,15 +33,15 @@ const areConsecutiveDays = (
   openingHour1: PreviewOpeningHours,
   openingHour2: PreviewOpeningHours
 ): boolean =>
-  openingHour2.weekdays.sort((a, b) => a - b)[0] -
-    openingHour1.weekdays.sort((a, b) => a - b)[0] ===
+  [...openingHour2.weekdays].sort((a, b) => a - b)[0] -
+    [...openingHour1.weekdays].sort((a, b) => a - b)[0] ===
   1;
 
 const groupByConsecutiveDays = (
   openingHours: PreviewOpeningHours[]
 ): PreviewOpeningHours[] => {
   const individualDays: PreviewOpeningHours[] = [];
-  openingHours.sort(byWeekdays).forEach((openingHour) => {
+  [...openingHours].sort(byWeekdays).forEach((openingHour) => {
     openingHour.weekdays.forEach((day) => {
       individualDays.push({ ...openingHour, weekdays: [day] });
     });
@@ -85,7 +85,7 @@ const groupByConsecutiveDays = (
         )
         .map((openingHour: PreviewOpeningHours) => ({
           ...openingHour,
-          timeSpans: openingHour.timeSpans.sort(byStartTime),
+          timeSpans: [...openingHour.timeSpans].sort(byStartTime),
         }))
         .sort(byWeekdays)
     : [];

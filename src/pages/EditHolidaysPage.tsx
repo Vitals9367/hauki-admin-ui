@@ -77,7 +77,6 @@ const HolidayForm = ({
 
   const form = useForm<OpeningHoursFormValues>({
     defaultValues: valueToUse,
-    shouldUnregister: false,
   });
 
   const { setValue } = form;

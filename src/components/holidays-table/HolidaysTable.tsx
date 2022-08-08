@@ -10,28 +10,6 @@ import ExceptionOpeningHours from '../exception-opening-hours/ExceptionOpeningHo
 import OpeningPeriodAccordion from '../opening-period-accordion/OpeningPeriodAccordion';
 import './HolidaysTable.scss';
 
-export const UpcomingHolidayNotification = ({
-  datePeriodConfig,
-  datePeriods,
-  holiday,
-}: {
-  datePeriodConfig?: UiDatePeriodConfig;
-  datePeriods: DatePeriod[];
-  holiday: Holiday;
-}): JSX.Element => (
-  <div className="upcoming-holidays">
-    <span>
-      Seuraava juhlapyhä: <strong>{holiday.name}</strong>
-    </span>
-    <span className="upcoming-holidays-divider">—</span>
-    <HolidayOpeningHours
-      datePeriodConfig={datePeriodConfig}
-      datePeriods={datePeriods}
-      holiday={holiday}
-    />
-  </div>
-);
-
 const HolidayOpeningHours = ({
   datePeriods,
   holiday,
@@ -54,6 +32,28 @@ const HolidayOpeningHours = ({
 
   return <>Ei poikkeavia aukioloja</>;
 };
+
+export const UpcomingHolidayNotification = ({
+  datePeriodConfig,
+  datePeriods,
+  holiday,
+}: {
+  datePeriodConfig?: UiDatePeriodConfig;
+  datePeriods: DatePeriod[];
+  holiday: Holiday;
+}): JSX.Element => (
+  <div className="upcoming-holidays">
+    <span>
+      Seuraava juhlapyhä: <strong>{holiday.name}</strong>
+    </span>
+    <span className="upcoming-holidays-divider">—</span>
+    <HolidayOpeningHours
+      datePeriodConfig={datePeriodConfig}
+      datePeriods={datePeriods}
+      holiday={holiday}
+    />
+  </div>
+);
 
 const HolidaysTable = ({
   datePeriodConfig,

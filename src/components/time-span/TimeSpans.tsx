@@ -3,7 +3,6 @@ import React, { useEffect, useRef } from 'react';
 import { useFieldArray, useFormContext } from 'react-hook-form';
 import {
   OpeningHoursFormValues,
-  OpeningHoursTimeSpan,
   ResourceState,
   TranslatedApiChoice,
 } from '../../common/lib/types';
@@ -14,19 +13,24 @@ import TimeSpan from './TimeSpan';
 import './TimeSpans.scss';
 
 const TimeSpans = ({
+  openingHoursIdx,
   resourceStates,
-  namePrefix,
+  timeSpanGroupIdx,
 }: {
+  openingHoursIdx: number;
   resourceStates: TranslatedApiChoice[];
-  namePrefix: string;
+  timeSpanGroupIdx: number;
 }): JSX.Element => {
+  const namePrefix = `openingHours.${openingHoursIdx}.timeSpanGroups.${timeSpanGroupIdx}.timeSpans` as const;
   const { control, watch } = useFormContext<OpeningHoursFormValues>();
   const { fields, append, remove } = useFieldArray({
     control,
-    name: `${namePrefix}`,
+    name: namePrefix,
   });
   const ref = useRef<HTMLButtonElement>(null);
-  const firstTimeSpanResourceState = watch(`${namePrefix}.[0].resource_state`);
+  const firstTimeSpanResourceState = watch(
+    'openingHours.0.timeSpanGroups.0.timeSpans.0.resource_state'
+  );
 
   useEffect(() => {
     if (
@@ -39,19 +43,21 @@ const TimeSpans = ({
         }
       });
     }
-  }, [fields, firstTimeSpanResourceState, namePrefix, remove]);
+  }, [fields, firstTimeSpanResourceState, remove]);
 
   return (
     <div className="time-spans">
       {fields.map((field, i) => (
         <TimeSpan
           key={field.id}
+          openingHoursIdx={openingHoursIdx}
+          timeSpanGroupIdx={timeSpanGroupIdx}
+          i={i}
           groupLabel={`Aukioloaika ${i + 1}`}
-          item={field as OpeningHoursTimeSpan}
+          item={field}
           resourceStates={resourceStates.filter((resourceState) =>
             i === 0 ? true : resourceState.value !== ResourceState.CLOSED
           )}
-          namePrefix={`${namePrefix}[${i}]`}
           onDelete={
             i === 0
               ? undefined

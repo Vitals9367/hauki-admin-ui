@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/ban-ts-ignore */
+/* eslint-disable */
 import { Accordion, IconSort } from 'hds-react';
 import React, { useRef, useState } from 'react';
 import { FormProvider, useFieldArray, useForm } from 'react-hook-form';
@@ -86,10 +86,9 @@ const OpeningHoursForm = ({
   const offsetTop = useRef<number>();
   const form = useForm<OpeningHoursFormValues>({
     defaultValues,
-    shouldUnregister: false,
   });
   const { control, getValues, reset, setValue, watch } = form;
-  const { insert, fields, remove } = useFieldArray<TOpeningHours>({
+  const { insert, fields, remove } = useFieldArray({
     control,
     name: 'openingHours',
   });
@@ -124,18 +123,18 @@ const OpeningHoursForm = ({
   };
 
   const allDayAreUncheckedForRow = (idx: number): boolean => {
-    const weekdays = getValues(`openingHours[${idx}].weekdays`) as number[];
+    const weekdays = getValues(`openingHours.${idx}.weekdays`) as number[];
 
     return weekdays.length === 0;
   };
 
   const setDay = (i: number, day: number, checked: boolean): void => {
-    const weekdays = getValues(`openingHours[${i}].weekdays`) as number[];
+    const weekdays = getValues(`openingHours.${i}.weekdays`) as number[];
     if (checked) {
-      setValue(`openingHours[${i}].weekdays`, [...weekdays, day]);
+      setValue(`openingHours.${i}.weekdays`, [...weekdays, day]);
     } else {
       setValue(
-        `openingHours[${i}].weekdays`,
+        `openingHours.${i}.weekdays`,
         weekdays.filter((d) => d !== day)
       );
     }
@@ -143,9 +142,9 @@ const OpeningHoursForm = ({
 
   const findPreviousChecked = (i: number, day: number): number =>
     fields.findIndex(
-      (item, idx) =>
+      (item, idx: number) =>
         idx !== i &&
-        (getValues(`openingHours[${idx}].weekdays`) as number[]).includes(day)
+        (getValues(`openingHours.${idx}.weekdays`) as number[]).includes(day)
     );
 
   const addNewRow = (currIndex: number, day: number): void => {
@@ -154,9 +153,9 @@ const OpeningHoursForm = ({
       weekdays: [day],
       timeSpanGroups: [defaultTimeSpanGroup],
     };
-    insert(newIdx, values, false);
+    insert(newIdx, values, { shouldFocus: false });
     // FIXME: For some reason the normal array won't get added in the insert
-    setValue(`openingHours[${newIdx}]`, values);
+    setValue(`openingHours.${newIdx}`, values);
     setDropInRow(newIdx);
   };
 
@@ -192,10 +191,9 @@ const OpeningHoursForm = ({
                       key={field.id}
                       dropIn={dropInRow === i}
                       offsetTop={offsetTop.current}
-                      i={i + 1}
+                      i={i}
                       item={field as TOpeningHours}
                       resourceStates={resourceStates}
-                      namePrefix={`openingHours[${i}]`}
                       onDayChange={(
                         day: number,
                         checked: boolean,
@@ -214,10 +212,10 @@ const OpeningHoursForm = ({
                           }
                         } else {
                           const weekdays = (getValues(
-                            `openingHours[${i}].weekdays`
+                            `openingHours.${i}.weekdays`
                           ) as number[]).filter((d) => d !== day);
                           if (weekdays.length) {
-                            setValue(`openingHours[${i}].weekdays`, weekdays);
+                            setValue(`openingHours.${i}.weekdays`, weekdays);
                             addNewRow(i, day);
                           }
                         }
@@ -236,7 +234,9 @@ const OpeningHoursForm = ({
                       iconLeft={<IconSort />}
                       onClick={(): void => {
                         setDropInRow(undefined);
-                        reset({ openingHours: openingHours.sort(byWeekdays) });
+                        reset({
+                          openingHours: [...openingHours].sort(byWeekdays),
+                        });
                       }}>
                       Järjestä päiväryhmät viikonpäivien mukaan
                     </SupplementaryButton>

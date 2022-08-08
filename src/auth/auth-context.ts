@@ -37,7 +37,7 @@ const authKeys = [
   TokenKeys.hasOrganizationRights,
 ];
 
-const tokenStorageKey: 'tokens' = 'tokens';
+const tokenStorageKey: 'tokens' = 'tokens' as const;
 
 export const storeTokens = (
   authTokens: AuthTokens | undefined

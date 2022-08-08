@@ -67,7 +67,7 @@ export default function ({
 
   return (
     <div className="collapse">
-      <h2 className="collapse-header">
+      <h3 className="collapse-header">
         <CollapseButton
           id={buttonId}
           collapseContentId={collapseContentId}
@@ -75,7 +75,7 @@ export default function ({
           toggleOpen={toggleOpen}>
           {title}
         </CollapseButton>
-      </h2>
+      </h3>
       <div
         id={collapseContentId}
         role="region"

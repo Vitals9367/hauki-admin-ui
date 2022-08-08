@@ -15,7 +15,7 @@ describe('apiRequest', () => {
   });
 
   describe('request', () => {
-    it('adds auth-tokens into every request', async (done) => {
+    it('adds auth-tokens into every request', async () => {
       const resourceId = 'tprek:8100';
       const queryTokens = {
         hsa_username: 'admin@hel.fi',
@@ -53,13 +53,11 @@ describe('apiRequest', () => {
           data: {},
         })
       );
-
-      done();
     });
   });
 
   describe('getResource', () => {
-    it('fetches resource by id', async (done) => {
+    it('fetches resource by id', async () => {
       const mockResource: Resource = {
         id: 1186,
         name: {
@@ -100,13 +98,11 @@ describe('apiRequest', () => {
       });
 
       expect(response).toBe(mockResource);
-
-      done();
     });
   });
 
   describe('postDatePeriod', () => {
-    it('creates a new opening period', async (done) => {
+    it('creates a new opening period', async () => {
       const periodTobeCreated = {
         resource: 1186,
         name: {
@@ -138,13 +134,11 @@ describe('apiRequest', () => {
         data: periodTobeCreated,
         validateStatus: expect.any(Function),
       });
-
-      done();
     });
   });
 
   describe('getDatePeriodFormOptions', () => {
-    it('should convert options to ui config', async (done) => {
+    it('should convert options to ui config', async () => {
       const datePeriodOptions = {
         actions: {
           POST: {
@@ -288,7 +282,6 @@ describe('apiRequest', () => {
           },
         },
       });
-      done();
     });
   });
 });

@@ -27,7 +27,7 @@ export default function ResourceStateSelect({
         control={control}
         name={name}
         defaultValue={value || ResourceState.UNDEFINED}
-        render={({ onChange, value: innerValue }): JSX.Element => (
+        render={({ field: { onChange, value: innerValue } }): JSX.Element => (
           <Select
             id={id}
             onChange={(selected: InputOption): void => {

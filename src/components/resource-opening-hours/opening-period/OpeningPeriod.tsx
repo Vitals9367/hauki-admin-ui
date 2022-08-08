@@ -40,7 +40,12 @@ export default function OpeningPeriod({
       id={datePeriod.id}
       periodName={datePeriodName}
       dateRange={formattedDateRange}
-      onDelete={(): Promise<void> => deletePeriod(datePeriod.id!)}
+      onDelete={(): Promise<void> => {
+        if (datePeriod.id) {
+          return deletePeriod(datePeriod.id);
+        }
+        return Promise.resolve();
+      }}
       editUrl={
         parentId
           ? `/resource/${parentId}/child/${resourceId}/period/${datePeriod.id}`

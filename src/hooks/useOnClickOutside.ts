@@ -5,6 +5,7 @@ function useOnClickOutside<T extends HTMLElement>(
   fn: () => void
 ): void {
   useEffect(() => {
+    // eslint-disable-next-line
     function handleClickOutside(event: any): void {
       if (ref.current && !ref.current.contains(event.target)) {
         fn();

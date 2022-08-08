@@ -13,7 +13,7 @@ describe(`<Collapse />`, () => {
       </Collapse>
     );
 
-    expect(collapse.find('h2').text()).toEqual('Test Title');
+    expect(collapse.find('h3').text()).toEqual('Test Title');
 
     expect(collapse.find('p').getDOMNode()).not.toBeVisible();
   });

@@ -6,13 +6,11 @@ import {
 import React, { ReactNode } from 'react';
 import './Button.scss';
 
-type ButtonVariant = 'primary' | 'secondary';
 type ButtonTypeVariant = 'button' | 'submit' | 'reset' | undefined;
 
 interface ButtonProps {
   children: ReactNode;
   onClick?: () => void;
-  variant?: ButtonVariant;
   dataTest?: string;
   className?: string;
   type?: ButtonTypeVariant;
@@ -27,11 +25,14 @@ interface ButtonProps {
 export function SecondaryButton({
   children,
   dataTest,
+  disabled,
   onClick,
   className = '',
   type = 'button',
   iconLeft,
   iconRight,
+  isLoading,
+  loadingText,
   light = false,
   size = 'default',
 }: ButtonProps & { light?: boolean; size?: HDSButtonSize }): JSX.Element {
@@ -43,11 +44,14 @@ export function SecondaryButton({
       theme={light ? 'default' : 'coat'}
       size={size}
       data-test={dataTest}
+      disabled={disabled}
       variant="secondary"
       onClick={onClick}
       type={type}
       iconLeft={iconLeft}
-      iconRight={iconRight}>
+      iconRight={iconRight}
+      isLoading={isLoading}
+      loadingText={loadingText}>
       {children}
     </HDSButton>
   );
@@ -60,10 +64,11 @@ export function PrimaryButton({
   className = '',
   type = 'button',
   iconLeft,
+  iconRight,
   disabled,
   isLoading,
   loadingText,
-  size,
+  size = 'default',
 }: ButtonProps): JSX.Element {
   return (
     <HDSButton
@@ -75,6 +80,7 @@ export function PrimaryButton({
       onClick={onClick}
       type={type}
       iconLeft={iconLeft}
+      iconRight={iconRight}
       disabled={disabled}
       isLoading={isLoading}
       loadingText={loadingText}
@@ -92,11 +98,15 @@ export const SupplementaryButton = React.forwardRef<
     {
       children,
       dataTest,
+      disabled,
       onClick,
       className = '',
       type = 'button',
       iconLeft,
       iconRight,
+      isLoading,
+      loadingText,
+      size = 'default',
     },
     ref
   ): JSX.Element => {
@@ -109,7 +119,11 @@ export const SupplementaryButton = React.forwardRef<
         variant="supplementary"
         onClick={onClick}
         iconLeft={iconLeft}
-        iconRight={iconRight}>
+        iconRight={iconRight}
+        isLoading={isLoading}
+        loadingText={loadingText}
+        disabled={disabled}
+        size={size}>
         {children}
       </HDSButton>
     );

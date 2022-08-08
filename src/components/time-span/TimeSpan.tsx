@@ -7,6 +7,7 @@ import {
   ResourceState,
   TranslatedApiChoice,
   OpeningHoursTimeSpan,
+  OpeningHoursFormValues,
 } from '../../common/lib/types';
 import { SupplementaryButton } from '../button/Button';
 import './TimeSpan.scss';
@@ -16,20 +17,25 @@ import { choiceToOption, getUiId } from '../../common/utils/form/form';
 const TimeSpan = ({
   disabled = false,
   groupLabel,
+  i,
   item,
-  resourceStates,
-  namePrefix,
   onDelete,
+  openingHoursIdx,
+  resourceStates,
+  timeSpanGroupIdx,
 }: {
   disabled?: boolean;
   groupLabel: string;
+  i: number;
   item?: OpeningHoursTimeSpan;
-  namePrefix: string;
-  resourceStates: TranslatedApiChoice[];
   onDelete?: () => void;
+  openingHoursIdx: number;
+  resourceStates: TranslatedApiChoice[];
+  timeSpanGroupIdx: number;
 }): JSX.Element => {
+  const namePrefix = `openingHours.${openingHoursIdx}.timeSpanGroups.${timeSpanGroupIdx}.timeSpans.${i}` as const;
   const { language = Language.FI } = useAppContext();
-  const { control, register, watch } = useFormContext();
+  const { control, register, watch } = useFormContext<OpeningHoursFormValues>();
   const fullDay = watch(`${namePrefix}.full_day`);
   const resourceState = watch(`${namePrefix}.resource_state`);
   const resourceStateOptions = resourceStates.map(choiceToOption(language));
@@ -50,7 +56,7 @@ const TimeSpan = ({
         defaultValue={item?.resource_state ?? ResourceState.OPEN}
         name={`${namePrefix}.resource_state`}
         control={control}
-        render={({ name, onChange, value }): JSX.Element => (
+        render={({ field: { name, onChange, value } }): JSX.Element => (
           <Select<InputOption>
             disabled={disabled}
             id={getUiId([name])}
@@ -68,7 +74,7 @@ const TimeSpan = ({
       />
       <Controller
         defaultValue={item?.full_day ?? false}
-        render={(field): JSX.Element => (
+        render={({ field }): JSX.Element => (
           <div
             className={`time-span__full-day-checkbox-container ${
               resourceState === ResourceState.CLOSED
@@ -98,25 +104,23 @@ const TimeSpan = ({
             : ''
         }`}>
         <TimeInput
-          ref={register()}
+          {...register(`${namePrefix}.start_time`)}
           disabled={disabled || fullDay}
           id={getUiId([namePrefix, 'start-time'])}
           hoursLabel="tunnit"
           minutesLabel="minuutit"
           label="Alkaen klo"
-          name={`${namePrefix}.start_time`}
           required
           value={item?.start_time || ''}
         />
         <div className="time-span__range-divider">-</div>
         <TimeInput
-          ref={register()}
+          {...register(`${namePrefix}.end_time`)}
           disabled={disabled || fullDay}
           id={getUiId([namePrefix, 'end-time'])}
           hoursLabel="tunnit"
           minutesLabel="minuutit"
           label="Päättyen klo"
-          name={`${namePrefix}.end_time`}
           required
           value={item?.end_time || ''}
         />
@@ -126,7 +130,7 @@ const TimeSpan = ({
           <Controller
             defaultValue={item?.description.fi ?? ''}
             name={`${namePrefix}.description.fi`}
-            render={({ name, onChange, value }): JSX.Element => (
+            render={({ field: { name, onChange, value } }): JSX.Element => (
               <TextInput
                 id={getUiId([name])}
                 label="Kuvaus suomeksi"
@@ -138,7 +142,7 @@ const TimeSpan = ({
           <Controller
             defaultValue={item?.description.sv ?? ''}
             name={`${namePrefix}.description.sv`}
-            render={({ name, onChange, value }): JSX.Element => (
+            render={({ field: { name, onChange, value } }): JSX.Element => (
               <TextInput
                 id={getUiId([name])}
                 label="Kuvaus ruotsiksi"
@@ -150,7 +154,7 @@ const TimeSpan = ({
           <Controller
             defaultValue={item?.description.en ?? ''}
             name={`${namePrefix}.description.en`}
-            render={({ name, onChange, value }): JSX.Element => (
+            render={({ field: { name, onChange, value } }): JSX.Element => (
               <TextInput
                 id={getUiId([name])}
                 label="Kuvaus englanniksi"

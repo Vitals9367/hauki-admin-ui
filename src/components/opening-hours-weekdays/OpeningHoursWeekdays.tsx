@@ -8,7 +8,6 @@ import {
   TranslatedApiChoice,
   OpeningHours as TOpeningHours,
   OpeningHoursFormValues,
-  OpeningHoursTimeSpanGroup,
   Rule,
 } from '../../common/lib/types';
 import { getWeekdayLongNameByIndexAndLang } from '../../common/utils/date-time/format';
@@ -38,24 +37,23 @@ const isOnlySelectedDay = (day: number, weekdays: number[]): boolean =>
 
 const OpeningHoursWeekdays = ({
   dropIn,
-  i: idx,
+  i: openingHoursIdx,
   item,
   offsetTop = 0,
   resourceStates,
-  namePrefix,
   onDayChange,
 }: {
   dropIn: boolean;
   i: number;
   item: TOpeningHours;
-  namePrefix: string;
   offsetTop?: number;
   resourceStates: TranslatedApiChoice[];
   onDayChange: (day: number, checked: boolean, offsetTop: number) => void;
 }): JSX.Element => {
+  const namePrefix = `openingHours.${openingHoursIdx}` as const;
   const { language = Language.FI } = useAppContext();
   const { control, setValue, watch } = useFormContext<OpeningHoursFormValues>();
-  const { append, fields, remove } = useFieldArray<OpeningHoursTimeSpanGroup>({
+  const { append, fields, remove } = useFieldArray({
     control,
     name: `${namePrefix}.timeSpanGroups`,
   });
@@ -86,7 +84,11 @@ const OpeningHoursWeekdays = ({
     }
   }, [dropIn, offsetTop, ref, setIsMoving]);
 
-  const weekdays = watch(`${namePrefix}.weekdays`, []) as number[];
+  const weekdays = watch(
+    `openingHours.${openingHoursIdx}.weekdays`,
+    []
+  ) as number[];
+
   const removedDayLabel = removedDay
     ? getWeekdayLongNameByIndexAndLang({
         weekdayIndex: removedDay,
@@ -95,7 +97,7 @@ const OpeningHoursWeekdays = ({
     : '';
 
   const groupWeekdays = (weekdaysToIterate: number[]): number[][] =>
-    weekdaysToIterate
+    [...weekdaysToIterate]
       .sort((a, b) => a - b)
       .reduce((acc: number[][], day): number[][] => {
         const lastSet = acc.length > 0 ? acc[acc.length - 1] : [];
@@ -141,7 +143,7 @@ const OpeningHoursWeekdays = ({
       ref={containerRef}
       style={{ zIndex: isMoving ? 1 : undefined }}
       role="group"
-      aria-label={`Aukiolomääritys ${idx}`}>
+      aria-label={`Aukiolomääritys ${openingHoursIdx + 1}`}>
       <div ref={ref} className="card opening-hours-container">
         <div>
           <div
@@ -172,7 +174,7 @@ const OpeningHoursWeekdays = ({
             <Controller
               control={control}
               defaultValue={item.weekdays ?? []}
-              name={`${namePrefix}.weekdays`}
+              name={`openingHours.${openingHoursIdx}.weekdays`}
               render={(): JSX.Element => (
                 <>
                   {[1, 2, 3, 4, 5, 6, 7].map((day) => (
@@ -206,9 +208,9 @@ const OpeningHoursWeekdays = ({
             <Fragment key={field.id}>
               <Controller
                 defaultValue={field.rule || 'week_every'}
-                name={`${namePrefix}.timeSpanGroups[${i}].rule`}
+                name={`${namePrefix}.timeSpanGroups.${i}.rule`}
                 control={control}
-                render={({ onChange, value }): JSX.Element => (
+                render={({ field: { onChange, value } }): JSX.Element => (
                   <>
                     <Select<InputOption<Rule>>
                       className="rule-select"
@@ -237,7 +239,7 @@ const OpeningHoursWeekdays = ({
                           remove(pair.idx);
                         } else {
                           setValue(
-                            `${namePrefix}.timeSpanGroups[${pair.idx}].rule`,
+                            `${namePrefix}.timeSpanGroups.${pair.idx}.rule`,
                             pair.newValue
                           );
                         }
@@ -258,8 +260,9 @@ const OpeningHoursWeekdays = ({
                               ?.label.toLowerCase()}`)
                       }>
                       <TimeSpans
+                        openingHoursIdx={openingHoursIdx}
                         resourceStates={resourceStates}
-                        namePrefix={`${namePrefix}.timeSpanGroups[${i}].timeSpans`}
+                        timeSpanGroupIdx={i}
                       />
                     </div>
                   </>

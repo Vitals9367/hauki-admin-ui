@@ -61,14 +61,14 @@ const OpeningPeriodAccordion = ({
       <div className="opening-period-header">
         <div className="opening-period-title opening-period-header-column">
           {periodName ? (
-            <h4>{periodName}</h4>
+            <h3>{periodName}</h3>
           ) : (
-            <h4 className="text-danger">
+            <h3 className="text-danger">
               {displayLangVersionNotFound({
                 language,
                 label: 'aukiolojakson nimi',
               })}
-            </h4>
+            </h3>
           )}
         </div>
         <div className="opening-period-dates opening-period-header-column">

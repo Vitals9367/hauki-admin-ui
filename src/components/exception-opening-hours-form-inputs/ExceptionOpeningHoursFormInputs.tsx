@@ -48,8 +48,9 @@ const ExceptionOpeningHours = ({
       {isOpen && (
         <div className="exception-opening-hours-time-spans">
           <TimeSpans
+            openingHoursIdx={0}
             resourceStates={resourceStates}
-            namePrefix="openingHours[0].timeSpanGroups[0].timeSpans"
+            timeSpanGroupIdx={0}
           />
         </div>
       )}

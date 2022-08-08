@@ -7,7 +7,7 @@ import './OpeningHoursValidity.scss';
 
 const OpeningHoursValidity = (): JSX.Element => {
   const { language = Language.FI } = useAppContext();
-  const { control, register, watch } = useFormContext<OpeningHoursFormValues>();
+  const { control, watch } = useFormContext<OpeningHoursFormValues>();
   const fixed = watch('fixed');
   const startDate = watch('startDate');
   const endDate = watch('endDate');
@@ -21,7 +21,7 @@ const OpeningHoursValidity = (): JSX.Element => {
         <Controller
           control={control}
           name="fixed"
-          render={({ name, onChange, value }): JSX.Element => (
+          render={({ field: { name, onChange, value } }): JSX.Element => (
             <>
               <SelectionGroup label="">
                 <RadioButton
@@ -29,7 +29,7 @@ const OpeningHoursValidity = (): JSX.Element => {
                   checked={!value}
                   name={name}
                   label="Toistaiseksi voimassa"
-                  value={value}
+                  value="recurring"
                   onChange={(): void => onChange(false)}
                 />
                 <RadioButton
@@ -38,41 +38,55 @@ const OpeningHoursValidity = (): JSX.Element => {
                   checked={value}
                   name={name}
                   label="Voimassa tietyn ajan"
-                  value={value}
+                  value="fixed"
                   onChange={(): void => onChange(true)}
                 />
               </SelectionGroup>
               <div className="opening-hours-validity__dates">
-                <DateInput
-                  data-test="opening-period-begin-date"
-                  ref={register()}
-                  id="opening-hours-start-date"
-                  className="opening-hours-validity__date"
-                  disableConfirmation
-                  initialMonth={new Date()}
-                  label="Astuu voimaan"
-                  language={language}
+                <Controller
+                  defaultValue={startDate ?? ''}
                   name="startDate"
-                  openButtonAriaLabel="Valitse alkupäivämäärä"
-                  value={startDate ?? ''}
+                  render={({ field: startDateField }): JSX.Element => (
+                    <DateInput
+                      className="opening-hours-validity__date"
+                      data-test="opening-period-begin-date"
+                      disableConfirmation
+                      id="opening-hours-start-date"
+                      initialMonth={new Date()}
+                      label="Astuu voimaan"
+                      language={language}
+                      name={startDateField.name}
+                      onBlur={startDateField.onBlur}
+                      onChange={startDateField.onChange}
+                      openButtonAriaLabel="Valitse alkupäivämäärä"
+                      value={startDateField.value}
+                    />
+                  )}
                 />
                 {fixed && (
                   <>
                     <span className="opening-hours-validity__range-divider">
                       -
                     </span>
-                    <DateInput
-                      data-test="opening-period-end-date"
-                      ref={register()}
-                      id="opening-hours-end-date"
-                      className="opening-hours-validity__date"
-                      disableConfirmation
-                      initialMonth={new Date()}
-                      label="Päättyy"
-                      language={language}
+                    <Controller
+                      defaultValue={endDate ?? ''}
                       name="endDate"
-                      openButtonAriaLabel="Valitse loppupäivämäärä"
-                      value={endDate ?? ''}
+                      render={({ field: endDateField }): JSX.Element => (
+                        <DateInput
+                          className="opening-hours-validity__date"
+                          data-test="opening-period-end-date"
+                          disableConfirmation
+                          id="opening-hours-end-date"
+                          initialMonth={new Date()}
+                          label="Päättyy"
+                          language={language}
+                          name={endDateField.name}
+                          onBlur={endDateField.onBlur}
+                          onChange={endDateField.onChange}
+                          openButtonAriaLabel="Valitse loppupäivämäärä"
+                          value={endDateField.value}
+                        />
+                      )}
                     />
                   </>
                 )}

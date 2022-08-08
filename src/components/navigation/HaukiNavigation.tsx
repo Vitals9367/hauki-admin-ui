@@ -94,7 +94,6 @@ export default function HaukiNavigation(): JSX.Element {
             className="navigation-button"
             iconRight={<IconCrossCircleFill aria-hidden />}
             onClick={(): Promise<void> => onCloseButtonClick()}
-            variant="secondary"
             light>
             Sulje
           </SecondaryButton>

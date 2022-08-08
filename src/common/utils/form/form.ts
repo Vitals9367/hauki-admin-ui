@@ -8,14 +8,8 @@ export const choiceToOption = (language: Language) => <T = string>(
   label: choice.label[language] ?? '',
 });
 
-/**
- * Replaces brackets and dots with dashes
- */
-const stringifyBrackets = (id: string): string =>
-  id.replace(/\]/g, '').replace(/\[|\./g, '-');
-
 export const getUiId = (parts: Array<string | number>): string =>
   parts
     .map((s) => `${s}`)
-    .map(stringifyBrackets)
+    .map((s) => s.replace(/\./g, '-'))
     .join('-');

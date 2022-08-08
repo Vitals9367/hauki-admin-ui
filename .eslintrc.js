@@ -21,8 +21,16 @@ module.exports = {
   rules: {
     'react/no-array-index-key': 0,
     'react/prop-types': 0,
+    'react/require-default-props': 0,
     'react/destructuring-assignment': 0,
     'react/static-property-placement': 0,
+    'react/function-component-definition': [
+      2,
+      {
+        namedComponents: ['arrow-function', 'function-declaration'],
+        unnamedComponents: 'arrow-function',
+      },
+    ],
     'jsx-a11y/alt-text': 0,
     'react/jsx-props-no-spreading': 0,
     '@typescript-eslint/camelcase': ['off'], // There seems to be no other way to override this than disabling it and rewriting the rules in the naming-convention
@@ -54,21 +62,26 @@ module.exports = {
         selector: 'enumMember',
         format: ['camelCase', 'snake_case', 'UPPER_CASE'],
       },
-      {
-        selector: 'parameter',
-        format: ['camelCase', 'snake_case'],
-      }
     ],
-    "jsx-a11y/label-has-associated-control": [
-      "error",
+    '@typescript-eslint/ban-ts-comment': 1,
+    'jsx-a11y/label-has-associated-control': [
+      'error',
       {
-        "labelComponents": [],
-        "labelAttributes": [],
-        "controlComponents": [],
-        "assert": "htmlFor",
-        "depth": 25
-      }
+        labelComponents: [],
+        labelAttributes: [],
+        controlComponents: [],
+        assert: 'htmlFor',
+        depth: 25,
+      },
     ],
+    camelcase: 0,
+    // TODO: These were disabled during migration to new React
+    '@typescript-eslint/ban-types': 0,
+    'react/jsx-no-constructed-context-values': 0,
+    'no-console': 0,
+    'func-names': 0,
+    'react/no-unstable-nested-components': 0,
+    'react/jsx-no-useless-fragment': 0,
   },
   globals: {
     cy: true,

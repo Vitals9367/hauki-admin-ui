@@ -1,6 +1,6 @@
 import { DateInput } from 'hds-react';
 import React, { useState } from 'react';
-import { FormProvider, useForm } from 'react-hook-form';
+import { Controller, FormProvider, useForm } from 'react-hook-form';
 import { useAppContext } from '../../App-context';
 import {
   apiDatePeriodToFormValues,
@@ -17,6 +17,7 @@ import {
 import {
   formatDate,
   getNumberOfTheWeekday,
+  transformDateToApiFormat,
 } from '../../common/utils/date-time/format';
 import { defaultTimeSpanGroup } from '../../constants';
 import useReturnToResourcePage from '../../hooks/useReturnToResourcePage';
@@ -43,7 +44,10 @@ function resolveWeekday(
     openingHours: [
       {
         ...values.openingHours[0],
-        weekdays: [getNumberOfTheWeekday(values.startDate)],
+
+        weekdays: [
+          getNumberOfTheWeekday(transformDateToApiFormat(values.startDate)),
+        ],
       },
     ],
   };
@@ -100,9 +104,8 @@ const ExceptionOpeningHoursForm = ({
   const defaultValues = getDefaultFormValues(datePeriod);
   const form = useForm<OpeningHoursFormValues>({
     defaultValues,
-    shouldUnregister: false,
   });
-  const { register, setValue, watch } = form;
+  const { setValue, watch } = form;
   const startDate = watch('startDate');
   const returnToResourcePage = useReturnToResourcePage();
   const [isSaving, setSaving] = useState<boolean>(false);
@@ -137,18 +140,27 @@ const ExceptionOpeningHoursForm = ({
           <div className="exception-opening-hours-form">
             <OpeningHoursTitles />
             <div className="card">
-              <DateInput
-                id="exception-date"
-                className="exception-date"
-                data-test="exception-date"
-                ref={register()}
-                disableConfirmation
-                initialMonth={new Date()}
-                label="Poikkeavan päivän päivämäärä"
-                language={language}
+              <Controller
+                defaultValue={startDate ?? ''}
                 name="startDate"
-                openButtonAriaLabel="Valitse päivämäärä"
-                value={startDate ?? ''}
+                render={({
+                  field: { name, onBlur, onChange, value },
+                }): JSX.Element => (
+                  <DateInput
+                    id="exception-date"
+                    className="exception-date"
+                    data-test="exception-date"
+                    disableConfirmation
+                    initialMonth={new Date()}
+                    label="Poikkeavan päivän päivämäärä"
+                    language={language}
+                    name={name}
+                    onChange={onChange}
+                    onBlur={onBlur}
+                    openButtonAriaLabel="Valitse päivämäärä"
+                    value={value}
+                  />
+                )}
               />
               <ExceptionOpeningHours
                 id="exception-opening-hours-form"
@@ -161,6 +173,7 @@ const ExceptionOpeningHoursForm = ({
                   setValue('openingHours', [
                     {
                       timeSpanGroups: [defaultTimeSpanGroup],
+                      weekdays: [],
                     },
                   ]);
                 }}
