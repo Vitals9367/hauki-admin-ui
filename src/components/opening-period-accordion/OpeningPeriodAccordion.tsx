@@ -139,7 +139,7 @@ const OpeningPeriodAccordion = ({
           title={deleteModalTitle}
           text={<DeleteModalText />}
           isOpen={isModalOpen}
-          close={closeModal}
+          onClose={closeModal}
           confirmText="Poista"
         />
       </div>

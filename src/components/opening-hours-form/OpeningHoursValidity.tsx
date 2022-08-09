@@ -15,7 +15,7 @@ const OpeningHoursValidity = (): JSX.Element => {
   return (
     <div className="card opening-hours-validity">
       <h3 className="opening-hours-validity__title">
-        Aukiolon voimassaoloaika
+        Aukiolon voimassaoloaika*
       </h3>
       <div className="opening-hours-validity__selections">
         <Controller

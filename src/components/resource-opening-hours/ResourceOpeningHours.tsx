@@ -58,7 +58,8 @@ const ExceptionPeriodsList = ({
             } else {
               history.push(`/resource/${resourceId}/exception/new`);
             }
-          }}>
+          }}
+          size="small">
           + Lisää poikkeava päivä
         </PrimaryButton>
       </header>

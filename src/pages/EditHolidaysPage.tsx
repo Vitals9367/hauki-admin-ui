@@ -195,7 +195,7 @@ const HolidayListItem = ({
               </>
             }
             isOpen={isModalOpen}
-            close={closeModal}
+            onClose={closeModal}
             confirmText="Poista"
           />
         </>

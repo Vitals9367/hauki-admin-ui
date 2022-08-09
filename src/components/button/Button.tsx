@@ -20,6 +20,7 @@ interface ButtonProps {
   isLoading?: boolean;
   loadingText?: string;
   size?: ButtonSize;
+  'aria-expanded'?: boolean;
 }
 
 export function SecondaryButton({
@@ -35,9 +36,11 @@ export function SecondaryButton({
   loadingText,
   light = false,
   size = 'default',
+  'aria-expanded': ariaExpanded,
 }: ButtonProps & { light?: boolean; size?: HDSButtonSize }): JSX.Element {
   return (
     <HDSButton
+      aria-expanded={ariaExpanded}
       className={`button-common ${
         light ? 'secondary-button-light' : 'secondary-button'
       } ${className}`}
@@ -69,9 +72,11 @@ export function PrimaryButton({
   isLoading,
   loadingText,
   size = 'default',
+  'aria-expanded': ariaExpanded,
 }: ButtonProps): JSX.Element {
   return (
     <HDSButton
+      aria-expanded={ariaExpanded}
       data-test={dataTest}
       className={`button-common primary-button ${
         disabled && 'primary-button--is-disabled'
@@ -107,11 +112,13 @@ export const SupplementaryButton = React.forwardRef<
       isLoading,
       loadingText,
       size = 'default',
+      'aria-expanded': ariaExpanded,
     },
     ref
   ): JSX.Element => {
     return (
       <HDSButton
+        aria-expanded={ariaExpanded}
         ref={ref}
         type={type}
         data-test={dataTest}

@@ -40,6 +40,7 @@ const OpeningHoursFormPreviewMobile = ({
         Esikatselu
       </SupplementaryButton>
       <div
+        aria-hidden={!isOpen}
         className={`opening-hours-preview-mobile ${
           isOpen
             ? 'opening-hours-preview-mobile--open'
