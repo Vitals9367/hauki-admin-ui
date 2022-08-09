@@ -11,12 +11,12 @@
 
 @media screen and (min-width: $breakpoint-s) {
   .time-span {
-    grid-template-columns: 1fr 70px auto 1fr;
+    grid-template-columns: auto 70px 1fr 1fr;
   }
 }
 
 .remove-time-span-button {
-  grid-column: 1;
+  grid-column: 1/3;
   margin-left: -25px;
 }
 

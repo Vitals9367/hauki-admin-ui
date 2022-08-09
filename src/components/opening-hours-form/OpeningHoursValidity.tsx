@@ -14,16 +14,16 @@ const OpeningHoursValidity = (): JSX.Element => {
 
   return (
     <div className="card opening-hours-validity">
-      <h3 className="opening-hours-validity__title">
-        Aukiolon voimassaoloaika*
-      </h3>
       <div className="opening-hours-validity__selections">
         <Controller
           control={control}
           name="fixed"
           render={({ field: { name, onChange, value } }): JSX.Element => (
             <>
-              <SelectionGroup label="">
+              <SelectionGroup
+                className="opening-hours-validity__title"
+                label="Aukiolon voimassaoloaika"
+                required>
                 <RadioButton
                   id="opening-hours-validity-recurring"
                   checked={!value}
@@ -59,6 +59,7 @@ const OpeningHoursValidity = (): JSX.Element => {
                       onBlur={startDateField.onBlur}
                       onChange={startDateField.onChange}
                       openButtonAriaLabel="Valitse alkupäivämäärä"
+                      required
                       value={startDateField.value}
                     />
                   )}
@@ -84,6 +85,7 @@ const OpeningHoursValidity = (): JSX.Element => {
                           onBlur={endDateField.onBlur}
                           onChange={endDateField.onChange}
                           openButtonAriaLabel="Valitse loppupäivämäärä"
+                          required
                           value={endDateField.value}
                         />
                       )}

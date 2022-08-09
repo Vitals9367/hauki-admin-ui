@@ -158,6 +158,7 @@ const ExceptionOpeningHoursForm = ({
                     onChange={onChange}
                     onBlur={onBlur}
                     openButtonAriaLabel="Valitse päivämäärä"
+                    required
                     value={value}
                   />
                 )}

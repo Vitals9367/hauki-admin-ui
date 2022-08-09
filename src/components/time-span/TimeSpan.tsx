@@ -52,52 +52,8 @@ const TimeSpan = ({
       }
       role="group"
       aria-label={groupLabel}>
-      <Controller
-        defaultValue={item?.resource_state ?? ResourceState.OPEN}
-        name={`${namePrefix}.resource_state`}
-        control={control}
-        render={({ field: { name, onChange, value } }): JSX.Element => (
-          <Select<InputOption>
-            disabled={disabled}
-            id={getUiId([name])}
-            label="Aukiolon tyyppi"
-            options={sanitizedResourceStateOptions}
-            className="time-span__resource-state-select"
-            onChange={(option: InputOption): void => onChange(option.value)}
-            placeholder="Valitse"
-            required
-            value={sanitizedResourceStateOptions.find(
-              (option) => option.value === value
-            )}
-          />
-        )}
-      />
-      <Controller
-        defaultValue={item?.full_day ?? false}
-        render={({ field }): JSX.Element => (
-          <div
-            className={`time-span__full-day-checkbox-container ${
-              resourceState === ResourceState.CLOSED
-                ? 'time-span__full-day-checkbox-container--hidden'
-                : ''
-            }`}>
-            <Checkbox
-              className="time-span__full-day-checkbox"
-              disabled={disabled}
-              id={getUiId([namePrefix, 'full-day'])}
-              name={`${namePrefix}.full_day`}
-              label="24 h"
-              onChange={(e): void => {
-                field.onChange(e.target.checked);
-              }}
-              checked={field.value}
-            />
-          </div>
-        )}
-        control={control}
-        name={`${namePrefix}.full_day`}
-      />
       <div
+        aria-hidden={resourceState === ResourceState.CLOSED}
         className={`time-span__range ${
           resourceState === ResourceState.CLOSED
             ? 'time-span__range--hidden'
@@ -125,6 +81,31 @@ const TimeSpan = ({
           value={item?.end_time || ''}
         />
       </div>
+      <Controller
+        defaultValue={item?.full_day ?? false}
+        render={({ field }): JSX.Element => (
+          <div
+            className={`time-span__full-day-checkbox-container ${
+              resourceState === ResourceState.CLOSED
+                ? 'time-span__full-day-checkbox-container--hidden'
+                : ''
+            }`}>
+            <Checkbox
+              className="time-span__full-day-checkbox"
+              disabled={disabled}
+              id={getUiId([namePrefix, 'full-day'])}
+              name={`${namePrefix}.full_day`}
+              label="24 h"
+              onChange={(e): void => {
+                field.onChange(e.target.checked);
+              }}
+              checked={field.value}
+            />
+          </div>
+        )}
+        control={control}
+        name={`${namePrefix}.full_day`}
+      />
       {resourceState === ResourceState.OTHER && (
         <div className="time-span__descriptions">
           <Controller
@@ -166,6 +147,26 @@ const TimeSpan = ({
           />
         </div>
       )}
+      <Controller
+        defaultValue={item?.resource_state ?? ResourceState.OPEN}
+        name={`${namePrefix}.resource_state`}
+        control={control}
+        render={({ field: { name, onChange, value } }): JSX.Element => (
+          <Select<InputOption>
+            disabled={disabled}
+            id={getUiId([name])}
+            label="Aukiolon tyyppi"
+            options={sanitizedResourceStateOptions}
+            className="time-span__resource-state-select"
+            onChange={(option: InputOption): void => onChange(option.value)}
+            placeholder="Valitse"
+            required
+            value={sanitizedResourceStateOptions.find(
+              (option) => option.value === value
+            )}
+          />
+        )}
+      />
       <div className="remove-time-span-button">
         {onDelete && (
           <SupplementaryButton iconLeft={<IconTrash />} onClick={onDelete}>

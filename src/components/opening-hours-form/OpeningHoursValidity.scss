@@ -31,6 +31,7 @@
 @media screen and (min-width: $breakpoint-m) {
   .opening-hours-validity__dates {
     flex-direction: row;
+    align-items: flex-end;
   }
 }
 
@@ -53,6 +54,11 @@
 
 .opening-hours-validity__title {
   margin: 0;
+}
+
+.opening-hours-validity__title legend {
+  font-size: $fontsize-heading-xs;
+  font-weight: bold;
 }
 
 .opening-hours-validity__content {
