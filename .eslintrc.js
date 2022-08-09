@@ -82,6 +82,8 @@ module.exports = {
     'func-names': 0,
     'react/no-unstable-nested-components': 0,
     'react/jsx-no-useless-fragment': 0,
+    'import/no-anonymous-default-export': 0,
+    'testing-library/no-await-sync-query': 0,
   },
   globals: {
     cy: true,

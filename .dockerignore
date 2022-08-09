@@ -19,3 +19,6 @@
 !yarn.lock
 !tsconfig.json
 !LICENSE
+!.eslintrc.js
+!tsconfig.eslint.json
+!.prettierrc.json
