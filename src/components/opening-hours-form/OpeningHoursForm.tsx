@@ -8,7 +8,6 @@ import {
   Resource,
   ResourceState,
   UiDatePeriodConfig,
-  OpeningHours as TOpeningHours,
   OpeningHoursFormValues,
 } from '../../common/lib/types';
 import { SupplementaryButton } from '../button/Button';
@@ -140,10 +139,10 @@ const OpeningHoursForm = ({
     }
   };
 
-  const findPreviousChecked = (i: number, day: number): number =>
+  const findPreviousChecked = (currentIdx: number, day: number): number =>
     fields.findIndex(
       (item, idx: number) =>
-        idx !== i &&
+        idx !== currentIdx &&
         (getValues(`openingHours.${idx}.weekdays`) as number[]).includes(day)
     );
 
@@ -154,9 +153,42 @@ const OpeningHoursForm = ({
       timeSpanGroups: [defaultTimeSpanGroup],
     };
     insert(newIdx, values, { shouldFocus: false });
-    // FIXME: For some reason the normal array won't get added in the insert
-    setValue(`openingHours.${newIdx}`, values);
     setDropInRow(newIdx);
+  };
+
+  const toggleWeekday = (openingHoursIdx: number) => (
+    day: number,
+    checked: boolean,
+    newOffsetTop: number
+  ) => {
+    offsetTop.current = newOffsetTop;
+    setDropInRow(undefined);
+    if (checked) {
+      setDay(openingHoursIdx, day, true);
+      const prevId = findPreviousChecked(openingHoursIdx, day);
+      if (prevId >= 0) {
+        setDay(prevId, day, false);
+        if (allDayAreUncheckedForRow(prevId)) {
+          remove(prevId);
+        }
+      }
+    } else {
+      const weekdays = getValues(
+        `openingHours.${openingHoursIdx}.weekdays`
+      ).filter((d) => d !== day);
+      if (weekdays.length) {
+        setValue(`openingHours.${openingHoursIdx}.weekdays`, weekdays);
+        addNewRow(openingHoursIdx, day);
+      }
+    }
+  };
+
+  const sortOpeningHours = () => {
+    setDropInRow(undefined);
+    reset({
+      ...getValues(),
+      openingHours: [...openingHours].sort(byWeekdays),
+    });
   };
 
   const { openingHours, name } = watch();
@@ -192,34 +224,9 @@ const OpeningHoursForm = ({
                       dropIn={dropInRow === i}
                       offsetTop={offsetTop.current}
                       i={i}
-                      item={field as TOpeningHours}
+                      item={field}
                       resourceStates={resourceStates}
-                      onDayChange={(
-                        day: number,
-                        checked: boolean,
-                        newOffsetTop: number
-                      ): void => {
-                        offsetTop.current = newOffsetTop;
-                        setDropInRow(undefined);
-                        if (checked) {
-                          setDay(i, day, true);
-                          const prevId = findPreviousChecked(i, day);
-                          if (prevId >= 0) {
-                            setDay(prevId, day, false);
-                            if (allDayAreUncheckedForRow(prevId)) {
-                              remove(prevId);
-                            }
-                          }
-                        } else {
-                          const weekdays = (getValues(
-                            `openingHours.${i}.weekdays`
-                          ) as number[]).filter((d) => d !== day);
-                          if (weekdays.length) {
-                            setValue(`openingHours.${i}.weekdays`, weekdays);
-                            addNewRow(i, day);
-                          }
-                        }
-                      }}
+                      onDayChange={toggleWeekday(i)}
                     />
                   ))}
                 </section>
@@ -232,12 +239,7 @@ const OpeningHoursForm = ({
                   <div className="sort-weekdays-container">
                     <SupplementaryButton
                       iconLeft={<IconSort />}
-                      onClick={(): void => {
-                        setDropInRow(undefined);
-                        reset({
-                          openingHours: [...openingHours].sort(byWeekdays),
-                        });
-                      }}>
+                      onClick={sortOpeningHours}>
                       Järjestä päiväryhmät viikonpäivien mukaan
                     </SupplementaryButton>
                   </div>
