@@ -1,5 +1,5 @@
-import React, { useCallback, useEffect, useState } from 'react';
-import { Checkbox, LoadingSpinner } from 'hds-react';
+import React, { CSSProperties, useCallback, useEffect, useState } from 'react';
+import { Checkbox, IconPenLine, LoadingSpinner } from 'hds-react';
 import { FormProvider, useForm } from 'react-hook-form';
 import {
   DatePeriod,
@@ -35,7 +35,8 @@ import { useAppContext } from '../App-context';
 import './EditHolidaysPage.scss';
 import useReturnToResourcePage from '../hooks/useReturnToResourcePage';
 import useMobile from '../hooks/useMobile';
-import ExceptionOpeningHours from '../components/exception-opening-hours-form-inputs/ExceptionOpeningHoursFormInputs';
+import ExceptionOpeningHoursFormInputs from '../components/exception-opening-hours-form-inputs/ExceptionOpeningHoursFormInputs';
+import ExceptionOpeningHours from '../components/exception-opening-hours/ExceptionOpeningHours';
 import { defaultTimeSpanGroup } from '../constants';
 
 type FormActions = {
@@ -65,14 +66,16 @@ const HolidayForm = ({
   value,
   datePeriodConfig,
   actions,
+  onClose,
 }: {
   holiday: Holiday;
   value?: OpeningHoursFormValues;
   datePeriodConfig: UiDatePeriodConfig;
   actions: FormActions;
+  onClose: () => void;
 }): JSX.Element => {
   const { name, date: holidayDate } = holiday;
-  const [isSaving, setIsSaving] = useState<boolean>(false);
+  const [isSaving, setIsSaving] = useState(false);
   const valueToUse = value || getDefaultFormValues({ name, holidayDate });
 
   const form = useForm<OpeningHoursFormValues>({
@@ -107,7 +110,10 @@ const HolidayForm = ({
 
   const saveExisting = (values: OpeningHoursFormValues): void => {
     setIsSaving(true);
-    actions.update(values).then(() => setIsSaving(false));
+    actions.update(values).then(() => {
+      setIsSaving(false);
+      onClose();
+    });
   };
 
   return (
@@ -118,7 +124,7 @@ const HolidayForm = ({
             ? form.handleSubmit(saveExisting)
             : form.handleSubmit(createNew)
         }>
-        <ExceptionOpeningHours
+        <ExceptionOpeningHoursFormInputs
           id={holidayDate}
           isOpen={
             valueToUse && valueToUse.resourceState
@@ -137,6 +143,12 @@ const HolidayForm = ({
             type="submit">
             Tallenna
           </PrimaryButton>
+          <SecondaryButton
+            dataTest="cancel-opening-hours-button"
+            onClick={onClose}
+            type="button">
+            Peruuta
+          </SecondaryButton>
         </div>
       </form>
     </FormProvider>
@@ -144,11 +156,13 @@ const HolidayForm = ({
 };
 
 const HolidayListItem = ({
+  datePeriod,
   holiday,
   value,
   datePeriodConfig,
   actions,
 }: {
+  datePeriod?: DatePeriod;
   holiday: Holiday;
   value?: OpeningHoursFormValues;
   datePeriodConfig: UiDatePeriodConfig;
@@ -159,70 +173,108 @@ const HolidayListItem = ({
   const { name, date } = holiday;
   const commonCheckBoxProps = {
     id: date,
-    className: 'holiday-list-checkbox',
     label: `${name}   ${formatDate(date)}`,
     checked,
+    style: {
+      '--background-selected': 'var(--color-coat-of-arms)',
+      '--background-hover': 'var(--color-coat-of-arms-dark)',
+      '--border-color-selected': 'var(--color-coat-of-arms)',
+      '--border-color-selected-hover': 'var(--color-coat-of-arms-dark)',
+      '--border-color-selected-focus': 'var(--color-coat-of-arms)',
+    } as CSSProperties,
   };
   const { isModalOpen, openModal, closeModal } = useModal();
+  const [isEditing, setIsEditing] = useState(!value);
 
   return (
     <li className="holidays-list-item" key={date}>
-      {value && value.id ? (
-        <>
+      <div className="holiday-column">
+        {value && value.id ? (
+          <>
+            <Checkbox
+              {...commonCheckBoxProps}
+              disabled={willBeRemoved}
+              onChange={(): void => {
+                openModal();
+              }}
+            />
+            <ConfirmationModal
+              onConfirm={async (): Promise<void> => {
+                setWillBeRemoved(true);
+                await actions.delete(value);
+              }}
+              title="Oletko varma että haluat poistaa aukiolojakson?"
+              text={
+                <>
+                  <p>Olet poistamassa aukiolojakson</p>
+                  <p>
+                    <b>
+                      {value.name.fi}
+                      <br />
+                      {value.startDate}
+                    </b>
+                  </p>
+                </>
+              }
+              isOpen={isModalOpen}
+              onClose={closeModal}
+              confirmText="Poista"
+            />
+          </>
+        ) : (
           <Checkbox
             {...commonCheckBoxProps}
-            disabled={willBeRemoved}
             onChange={(): void => {
-              openModal();
+              setChecked(!checked);
+              setIsEditing(!checked);
             }}
           />
-          <ConfirmationModal
-            onConfirm={async (): Promise<void> => {
-              setWillBeRemoved(true);
-              await actions.delete(value);
-            }}
-            title="Oletko varma että haluat poistaa aukiolojakson?"
-            text={
-              <>
-                <p>Olet poistamassa aukiolojakson</p>
-                <p>
-                  <b>
-                    {value.name.fi}
-                    <br />
-                    {value.startDate}
-                  </b>
-                </p>
-              </>
-            }
-            isOpen={isModalOpen}
-            onClose={closeModal}
-            confirmText="Poista"
-          />
-        </>
-      ) : (
-        <Checkbox
-          {...commonCheckBoxProps}
-          onChange={(): void => {
-            setChecked(!checked);
-          }}
-        />
-      )}
+        )}
+      </div>
       {willBeRemoved ? (
         <>
           <LoadingSpinner small />
           Poistetaan aukiolojaksoa..
         </>
       ) : (
-        <div className="holiday-form-container" key={holiday.date}>
-          {checked && (
-            <HolidayForm
-              holiday={holiday}
-              value={value}
-              datePeriodConfig={datePeriodConfig}
-              actions={actions}
-            />
-          )}
-        </div>
+        <React.Fragment key={holiday.date}>
+          {checked &&
+            (isEditing ? (
+              <div className="holiday-form-container">
+                <HolidayForm
+                  holiday={holiday}
+                  value={value}
+                  datePeriodConfig={datePeriodConfig}
+                  actions={actions}
+                  onClose={() => {
+                    setIsEditing(false);
+                    if (!datePeriod) {
+                      setChecked(false);
+                    }
+                  }}
+                />
+              </div>
+            ) : (
+              <>
+                <div className="holiday-exception-opening-hours-column">
+                  <ExceptionOpeningHours
+                    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+                    datePeriod={datePeriod!}
+                    datePeriodConfig={datePeriodConfig}
+                  />
+                </div>
+                {value && (
+                  <button
+                    className="edit-holiday-button button-icon"
+                    onClick={() => setIsEditing(true)}
+                    type="button">
+                    <IconPenLine aria-hidden="true" />
+                    <span className="hiddenFromScreen">{`Muokkaa ${holiday} aukiolojakson tietoja`}</span>
+                  </button>
+                )}
+              </>
+            ))}
+        </React.Fragment>
       )}
     </li>
   );
@@ -419,6 +471,9 @@ export default function EditHolidaysPage({
           on voimassa toistaiseksi. Muista tarkistaa vuosittain, että tieto
           pitää yhä paikkansa.
         </p>
+        <div className="holiday-list-header">
+          <h3 className="holiday-column">Juhlapyhä</h3>
+        </div>
         <ul className="holidays-list">
           {holidays.map((holiday) => {
             const value: OpeningHoursFormValues | undefined = holidayValues
@@ -431,9 +486,16 @@ export default function EditHolidaysPage({
               <HolidayListItem
                 key={`${holiday.date}-${value ? value.id : 'new'}`}
                 holiday={holiday}
+                datePeriod={holidayPeriods.find((dp) =>
+                  isHoliday(dp, [holiday])
+                )}
                 datePeriodConfig={datePeriodConfig}
                 value={value}
-                actions={{ create, update, delete: deletePeriod }}
+                actions={{
+                  create,
+                  update,
+                  delete: deletePeriod,
+                }}
               />
             );
           })}

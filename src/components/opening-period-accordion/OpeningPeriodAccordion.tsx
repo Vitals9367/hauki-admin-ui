@@ -95,7 +95,7 @@ const OpeningPeriodAccordion = ({
             )}
             {onDelete && (
               <button
-                className="opening-period-delete-link button-icon"
+                className="button-icon"
                 data-test={`openingPeriodDeleteLink-${id}`}
                 type="button"
                 onClick={openModal}>

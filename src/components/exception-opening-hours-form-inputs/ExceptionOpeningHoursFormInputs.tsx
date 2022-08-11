@@ -4,7 +4,7 @@ import { TranslatedApiChoice } from '../../common/lib/types';
 import TimeSpans from '../time-span/TimeSpans';
 import './ExceptionOpeningHoursFormInputs.scss';
 
-const ExceptionOpeningHours = ({
+const ExceptionOpeningHoursFormInputs = ({
   id,
   isOpen: isOpenInitially,
   onClose,
@@ -58,4 +58,4 @@ const ExceptionOpeningHours = ({
   );
 };
 
-export default ExceptionOpeningHours;
+export default ExceptionOpeningHoursFormInputs;

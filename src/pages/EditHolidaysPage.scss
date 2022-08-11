@@ -8,21 +8,20 @@
   gap: $spacing-s $spacing-l;
 }
 
-.holidays-list {
-  padding: 0;
-}
-
 .holidays-list-item {
   align-items: flex-start;
   display: flex;
-  gap: $spacing-l $spacing-m;
-  margin-top: $spacing-m !important;
+  gap: 0 $spacing-xs;
   flex-wrap: wrap;
 }
 
-.holiday-list-checkbox {
-  flex: 0 0 25ch;
-  white-space: nowrap;
+.holidays-list {
+  margin: 0;
+  padding: 0;
+
+  .holidays-list-item:nth-child(even) {
+    background-color: $color-silver;
+  }
 }
 
 .holiday-form-container {
@@ -30,13 +29,39 @@
   gap: $spacing-l $spacing-2-xl;
   flex: 1;
   flex-wrap: wrap;
-  margin-top: -1rem;
+  padding: 0 $spacing-s;
 }
 
 .holiday-form-actions {
+  display: flex;
+  gap: $spacing-s;
   margin: $spacing-s 0 $spacing-3-xl;
 }
 
 .exception-opening-hours-time-spans + .holiday-form-actions {
   margin-top: $spacing-l;
+}
+
+.edit-holiday-button {
+  color: $color-coat-of-arms;
+}
+
+.holiday-column {
+  flex: 0 0 25ch;
+  white-space: nowrap;
+}
+
+.holiday-column,
+.holiday-exception-opening-hours-column {
+  padding: $spacing-s $spacing-s;
+}
+
+.holiday-list-header {
+  background-color: $color-coat-of-arms;
+  color: $color-white;
+  display: flex;
+
+  h3 {
+    margin: 0;
+  }
 }

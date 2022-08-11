@@ -21,7 +21,7 @@ import {
 } from '../../common/utils/date-time/format';
 import { defaultTimeSpanGroup } from '../../constants';
 import useReturnToResourcePage from '../../hooks/useReturnToResourcePage';
-import ExceptionOpeningHours from '../exception-opening-hours-form-inputs/ExceptionOpeningHoursFormInputs';
+import ExceptionOpeningHoursFormInputs from '../exception-opening-hours-form-inputs/ExceptionOpeningHoursFormInputs';
 import toast from '../notification/Toast';
 import OpeningHoursFormActions from '../opening-hours-form/OpeningHoursFormActions';
 import OpeningHoursTitles from '../opening-hours-form/OpeningHoursTitles';
@@ -163,7 +163,7 @@ const ExceptionOpeningHoursForm = ({
                   />
                 )}
               />
-              <ExceptionOpeningHours
+              <ExceptionOpeningHoursFormInputs
                 id="exception-opening-hours-form"
                 onClose={(): void => {
                   setValue('resourceState', ResourceState.CLOSED);
