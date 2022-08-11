@@ -10,9 +10,19 @@ import React, { ReactNode } from 'react';
 import { Link } from 'react-router-dom';
 import { useAppContext } from '../../App-context';
 import { Language } from '../../common/lib/types';
-import { displayLangVersionNotFound } from '../language-select/LanguageSelect';
 import { ConfirmationModal, useModal } from '../modal/ConfirmationModal';
 import toast from '../notification/Toast';
+
+const getDefaultOpeningHoursTitle = (language: Language): string => {
+  switch (language) {
+    case Language.FI:
+      return 'Normaali aukiolo';
+    case Language.SV:
+      return 'Normala öppettider';
+    default:
+      return 'Normal opening hours';
+  }
+};
 
 type Props = {
   children: ReactNode;
@@ -60,16 +70,7 @@ const OpeningPeriodAccordion = ({
     <div className="opening-period" data-test={`openingPeriod-${id}`}>
       <div className="opening-period-header">
         <div className="opening-period-title opening-period-header-column">
-          {periodName ? (
-            <h3>{periodName}</h3>
-          ) : (
-            <h3 className="text-danger">
-              {displayLangVersionNotFound({
-                language,
-                label: 'aukiolojakson nimi',
-              })}
-            </h3>
-          )}
+          <h3>{periodName || getDefaultOpeningHoursTitle(language)}</h3>
         </div>
         <div className="opening-period-dates opening-period-header-column">
           {dateRange}

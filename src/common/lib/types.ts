@@ -257,6 +257,7 @@ export interface Resource {
 }
 
 export type OpeningHoursTimeSpan = {
+  id?: number;
   description: LanguageStrings;
   end_time: string | null;
   full_day?: boolean;

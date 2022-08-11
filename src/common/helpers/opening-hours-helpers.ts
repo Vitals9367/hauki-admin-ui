@@ -146,7 +146,10 @@ const resourceStateIsOther = (timeSpan: TimeSpan): boolean =>
   !!timeSpan.description.sv ||
   !!timeSpan.description.en;
 
-const apiTimeSpanToTimeSpan = (timeSpan: TimeSpan): OpeningHoursTimeSpan => ({
+export const apiTimeSpanToTimeSpan = (
+  timeSpan: TimeSpan
+): OpeningHoursTimeSpan => ({
+  id: timeSpan.id,
   description: timeSpan.description,
   end_time: timeSpan.end_time ? timeSpan.end_time.substring(0, 5) : null,
   full_day:

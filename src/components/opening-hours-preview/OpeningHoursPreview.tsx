@@ -50,8 +50,16 @@ export const TimeSpan = ({
   timeSpan?: OpeningHoursTimeSpan;
 }): JSX.Element | null => {
   const { language = Language.FI } = useAppContext();
-  if (!timeSpan || timeSpan?.resource_state === ResourceState.CLOSED) {
+  if (!timeSpan) {
     return null;
+  }
+
+  if (
+    !timeSpan.start_time &&
+    !timeSpan.end_time &&
+    timeSpan.resource_state === ResourceState.CLOSED
+  ) {
+    return <>Suljettu</>;
   }
 
   return (
