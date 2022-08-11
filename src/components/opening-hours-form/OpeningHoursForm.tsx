@@ -153,6 +153,8 @@ const OpeningHoursForm = ({
       timeSpanGroups: [defaultTimeSpanGroup],
     };
     insert(newIdx, values, { shouldFocus: false });
+    // FIXME: For some reason the normal array won't get added in the insert
+    setValue(`openingHours.${newIdx}`, values);
     setDropInRow(newIdx);
   };
 
