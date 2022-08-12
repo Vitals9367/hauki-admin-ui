@@ -32,6 +32,7 @@ export const byWeekdays = (
 const toTimeSpan = (days: number[]) => (
   timeSpan: OpeningHoursTimeSpan
 ): TimeSpan => ({
+  id: timeSpan.id,
   description:
     timeSpan.resource_state === ResourceState.OTHER
       ? timeSpan.description
