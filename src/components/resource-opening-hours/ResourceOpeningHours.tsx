@@ -50,6 +50,7 @@ const ExceptionPeriodsList = ({
       <header className="exception-periods-header">
         <h3 className="exception-periods-title">Poikkeavat päivät</h3>
         <PrimaryButton
+          dataTest="add-new-exception-period-button"
           onClick={() => {
             if (parentId) {
               history.push(
