@@ -62,12 +62,14 @@ const getDefaultFormValues = ({
 });
 
 const HolidayForm = ({
+  id,
   holiday,
   value,
   datePeriodConfig,
   actions,
   onClose,
 }: {
+  id: string;
   holiday: Holiday;
   value?: OpeningHoursFormValues;
   datePeriodConfig: UiDatePeriodConfig;
@@ -125,7 +127,7 @@ const HolidayForm = ({
             : form.handleSubmit(createNew)
         }>
         <ExceptionOpeningHoursFormInputs
-          id={holidayDate}
+          id={id}
           isOpen={
             valueToUse && valueToUse.resourceState
               ? valueToUse.resourceState !== ResourceState.CLOSED
@@ -156,12 +158,14 @@ const HolidayForm = ({
 };
 
 const HolidayListItem = ({
+  id,
   datePeriod,
   holiday,
   value,
   datePeriodConfig,
   actions,
 }: {
+  id: string;
   datePeriod?: DatePeriod;
   holiday: Holiday;
   value?: OpeningHoursFormValues;
@@ -171,8 +175,10 @@ const HolidayListItem = ({
   const [checked, setChecked] = useState<boolean>(!!value);
   const [willBeRemoved, setWillBeRemoved] = useState<boolean>(false);
   const { name, date } = holiday;
+  const checkboxId = `${id}-checkbox`;
   const commonCheckBoxProps = {
-    id: date,
+    id: checkboxId,
+    'data-test': checkboxId,
     label: `${name}   ${formatDate(date)}`,
     checked,
     style: {
@@ -242,6 +248,7 @@ const HolidayListItem = ({
             (isEditing ? (
               <div className="holiday-form-container">
                 <HolidayForm
+                  id={id}
                   holiday={holiday}
                   value={value}
                   datePeriodConfig={datePeriodConfig}
@@ -475,7 +482,7 @@ export default function EditHolidaysPage({
           <h3 className="holiday-column">Juhlapyhä</h3>
         </div>
         <ul className="holidays-list">
-          {holidays.map((holiday) => {
+          {holidays.map((holiday, idx) => {
             const value: OpeningHoursFormValues | undefined = holidayValues
               ? holidayValues.find(
                   (holidayValue) => holidayValue.name.fi === holiday.name
@@ -485,6 +492,7 @@ export default function EditHolidaysPage({
             return (
               <HolidayListItem
                 key={`${holiday.date}-${value ? value.id : 'new'}`}
+                id={`holiday-${idx}`}
                 holiday={holiday}
                 datePeriod={holidayPeriods.find((dp) =>
                   isHoliday(dp, [holiday])

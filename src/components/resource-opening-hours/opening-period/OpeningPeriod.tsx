@@ -37,7 +37,7 @@ export default function OpeningPeriod({
 
   return (
     <OpeningPeriodAccordion
-      id={datePeriod.id}
+      id={`${datePeriod.id}`}
       periodName={datePeriodName}
       dateRange={formattedDateRange}
       onDelete={(): Promise<void> => {

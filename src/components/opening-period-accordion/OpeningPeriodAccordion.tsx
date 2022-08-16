@@ -28,7 +28,7 @@ type Props = {
   children: ReactNode;
   dateRange: ReactNode;
   editUrl?: string;
-  id?: number;
+  id?: string;
   initiallyOpen?: boolean;
   isActive?: boolean;
   onDelete?: () => void | Promise<void>;
@@ -67,7 +67,9 @@ const OpeningPeriodAccordion = ({
     isOpen ? <IconAngleUp aria-hidden /> : <IconAngleDown aria-hidden />;
 
   return (
-    <div className="opening-period" data-test={`openingPeriod-${id}`}>
+    <div
+      className="opening-period"
+      data-test={`openingPeriod${id ? `-${id}` : ''}`}>
       <div className="opening-period-header">
         <div className="opening-period-title opening-period-header-column">
           <h3>{periodName || getDefaultOpeningHoursTitle(language)}</h3>
@@ -85,7 +87,7 @@ const OpeningPeriodAccordion = ({
             {editUrl && (
               <Link
                 className="opening-period-edit-link button-icon"
-                data-test={`openingPeriodEditLink-${id}`}
+                data-test={`openingPeriodEditLink${id ? `-${id}` : ''}`}
                 to={editUrl}
                 type="button">
                 <IconPenLine aria-hidden="true" />
@@ -97,7 +99,7 @@ const OpeningPeriodAccordion = ({
             {onDelete && (
               <button
                 className="button-icon"
-                data-test={`openingPeriodDeleteLink-${id}`}
+                data-test={`openingPeriodDeleteLink${id ? `-${id}` : ''}`}
                 type="button"
                 onClick={openModal}>
                 <IconTrash aria-hidden="true" />
@@ -109,7 +111,7 @@ const OpeningPeriodAccordion = ({
           </div>
           <button
             className="button-icon"
-            data-test={`openingPeriodAccordionButton-${id}`}
+            data-test={`openingPeriodAccordionButton${id ? `-${id}` : ''}`}
             type="button"
             {...buttonProps}>
             <AccordionIcon />

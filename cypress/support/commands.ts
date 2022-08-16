@@ -174,6 +174,22 @@ Cypress.Commands.add(
   }
 );
 
+Cypress.Commands.add('deleteDatePeriod', (id: number) => {
+  cy.window().then((win: Window) => {
+    const apiUrl = win.ENV?.API_URL;
+
+    return cy.exec('node ./scripts/generate-auth-params.js').then((params) => {
+      return cy.request({
+        method: 'DELETE',
+        headers: {
+          authorization: `haukisigned ${params.stdout}`,
+        },
+        url: `${apiUrl}/v1/date_period/${id}/`,
+      });
+    });
+  });
+});
+
 Cypress.Commands.add(
   'selectHdsDropdown',
   { prevSubject: 'optional' },
