@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Notification } from 'hds-react';
+import { LoadingSpinner, Notification } from 'hds-react';
 import { useHistory } from 'react-router-dom';
 import { partition } from 'lodash';
 import {
@@ -30,6 +30,7 @@ const ExceptionPeriodsList = ({
   language,
   parentId,
   resourceId,
+  isLoading,
 }: {
   datePeriodConfig?: UiDatePeriodConfig;
   datePeriods: DatePeriod[];
@@ -37,6 +38,7 @@ const ExceptionPeriodsList = ({
   language: Language;
   parentId?: number;
   resourceId: number;
+  isLoading: boolean;
 }): JSX.Element => {
   const history = useHistory();
   const holidays = getHolidays();
@@ -65,15 +67,21 @@ const ExceptionPeriodsList = ({
         </PrimaryButton>
       </header>
       <ul className="opening-periods-list">
-        <li>
-          <HolidaysTable
-            datePeriodConfig={datePeriodConfig}
-            datePeriods={holidayDatePeriods}
-            holidays={holidays}
-            parentId={parentId}
-            resourceId={resourceId}
-          />
-        </li>
+        {isLoading && exceptions.length === 0 ? (
+          <div className="loading-spinner-container">
+            <LoadingSpinner loadingText="Haetaan aukiolojoja" small />
+          </div>
+        ) : (
+          <li>
+            <HolidaysTable
+              datePeriodConfig={datePeriodConfig}
+              datePeriods={holidayDatePeriods}
+              holidays={holidays}
+              parentId={parentId}
+              resourceId={resourceId}
+            />
+          </li>
+        )}
         {exceptions.map((exception, i) => (
           <li key={exception.id}>
             <OpeningPeriodAccordion
@@ -125,6 +133,7 @@ const OpeningPeriodsList = ({
   notFoundLabel,
   deletePeriod,
   language,
+  isLoading,
 }: {
   id: string;
   parentId?: number;
@@ -137,6 +146,7 @@ const OpeningPeriodsList = ({
   notFoundLabel: string;
   deletePeriod: (id: number) => Promise<void>;
   language: Language;
+  isLoading: boolean;
 }): JSX.Element => {
   const openingPeriodsHeaderClassName =
     theme === PeriodsListTheme.LIGHT
@@ -171,6 +181,11 @@ const OpeningPeriodsList = ({
           Lisää aukioloaika +
         </SecondaryButton>
       </header>
+      {isLoading && datePeriods.length === 0 && (
+        <div className="loading-spinner-container">
+          <LoadingSpinner loadingText="Haetaan aukiolojoja" small />
+        </div>
+      )}
       {datePeriodConfig && (
         <ul className="opening-periods-list" data-test={id}>
           {datePeriods.length > 0 ? (
@@ -216,7 +231,9 @@ export default function ResourceOpeningHours({
   const [[defaultPeriods, exceptions], setDividedDatePeriods] = useState<
     [DatePeriod[], DatePeriod[]]
   >([[], []]);
+  const [isLoading, setLoading] = useState(false);
   const fetchDatePeriods = async (id: number): Promise<void> => {
+    setLoading(true);
     try {
       const [apiDatePeriods, uiDatePeriodOptions] = await Promise.all([
         api.getDatePeriods(id),
@@ -231,6 +248,7 @@ export default function ResourceOpeningHours({
     } catch (e) {
       setError(e as Error);
     }
+    setLoading(false);
   };
 
   useEffect(() => {
@@ -266,9 +284,10 @@ export default function ResourceOpeningHours({
         datePeriods={defaultPeriods}
         datePeriodConfig={datePeriodConfig}
         theme={PeriodsListTheme.DEFAULT}
-        notFoundLabel="Ei aukiolojaksoja."
+        notFoundLabel="Ei määriteltyjä aukioloaikoja. Aloita painamalla “Lisää aukioloaika” -painiketta."
         deletePeriod={deletePeriod}
         language={language}
+        isLoading={isLoading}
       />
       <ExceptionPeriodsList
         datePeriodConfig={datePeriodConfig}
@@ -277,6 +296,7 @@ export default function ResourceOpeningHours({
         language={language}
         parentId={parentId}
         resourceId={resourceId}
+        isLoading={isLoading}
       />
     </>
   );

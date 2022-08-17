@@ -54,3 +54,9 @@
 .opacity-0 {
   opacity: 0;
 }
+
+.loading-spinner-container {
+  display: flex;
+  justify-content: center;
+  padding: $spacing-l;
+}
