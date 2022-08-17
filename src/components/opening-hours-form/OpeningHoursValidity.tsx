@@ -2,12 +2,12 @@ import { DateInput, RadioButton, SelectionGroup } from 'hds-react';
 import React from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 import { useAppContext } from '../../App-context';
-import { Language, OpeningHoursFormValues } from '../../common/lib/types';
+import { Language, DatePeriod } from '../../common/lib/types';
 import './OpeningHoursValidity.scss';
 
 const OpeningHoursValidity = (): JSX.Element => {
   const { language = Language.FI } = useAppContext();
-  const { control, watch } = useFormContext<OpeningHoursFormValues>();
+  const { control, watch } = useFormContext<DatePeriod>();
   const fixed = watch('fixed');
   const startDate = watch('startDate');
   const endDate = watch('endDate');

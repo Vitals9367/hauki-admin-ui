@@ -3,7 +3,7 @@ import { updateByWithDefault } from '../utils/fp/list';
 import { byWeekdays } from './opening-hours-helpers';
 import {
   OpeningHours,
-  OpeningHoursTimeSpan,
+  TimeSpan,
   PreviewOpeningHours,
   PreviewRow,
   Rule,
@@ -14,10 +14,7 @@ const ruleOrder: Rule[] = ['week_every', 'week_even', 'week_odd'];
 const byRule = (a: PreviewRow, b: PreviewRow): number =>
   ruleOrder.indexOf(a.rule) - ruleOrder.indexOf(b.rule);
 
-const byStartTime = (
-  a: OpeningHoursTimeSpan,
-  b: OpeningHoursTimeSpan
-): number =>
+const byStartTime = (a: TimeSpan, b: TimeSpan): number =>
   a.start_time ? a.start_time.localeCompare(b.start_time ?? '') : 1;
 
 const openingHoursRangeEqual = (

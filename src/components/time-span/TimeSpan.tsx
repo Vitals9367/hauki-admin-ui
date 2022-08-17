@@ -6,8 +6,8 @@ import {
   Language,
   ResourceState,
   TranslatedApiChoice,
-  OpeningHoursTimeSpan,
-  OpeningHoursFormValues,
+  TimeSpan as TTimespan,
+  DatePeriod,
 } from '../../common/lib/types';
 import { SupplementaryButton } from '../button/Button';
 import './TimeSpan.scss';
@@ -27,7 +27,7 @@ const TimeSpan = ({
   disabled?: boolean;
   groupLabel: string;
   i: number;
-  item?: OpeningHoursTimeSpan;
+  item?: TTimespan;
   onDelete?: () => void;
   openingHoursIdx: number;
   resourceStates: TranslatedApiChoice[];
@@ -35,7 +35,7 @@ const TimeSpan = ({
 }): JSX.Element => {
   const namePrefix = `openingHours.${openingHoursIdx}.timeSpanGroups.${timeSpanGroupIdx}.timeSpans.${i}` as const;
   const { language = Language.FI } = useAppContext();
-  const { control, register, watch } = useFormContext<OpeningHoursFormValues>();
+  const { control, register, watch } = useFormContext<DatePeriod>();
   const fullDay = watch(`${namePrefix}.full_day`);
   const resourceState = watch(`${namePrefix}.resource_state`);
   const resourceStateOptions = resourceStates.map(choiceToOption(language));

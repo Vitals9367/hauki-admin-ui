@@ -1,6 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import api from '../common/utils/api/api';
-import { DatePeriod, UiDatePeriodConfig, Resource } from '../common/lib/types';
+import {
+  ApiDatePeriod,
+  UiDatePeriodConfig,
+  Resource,
+} from '../common/lib/types';
 import OpeningHoursForm from '../components/opening-hours-form/OpeningHoursForm';
 import { getDatePeriodFormConfig } from '../services/datePeriodFormConfig';
 
@@ -16,9 +20,9 @@ export default function EditOpeningPeriodPage({
   const [datePeriodConfig, setDatePeriodConfig] = useState<
     UiDatePeriodConfig
   >();
-  const [datePeriod, setDatePeriod] = useState<DatePeriod>();
+  const [datePeriod, setDatePeriod] = useState<ApiDatePeriod>();
 
-  const submitFn = (updatedDatePeriod: DatePeriod): Promise<DatePeriod> =>
+  const submitFn = (updatedDatePeriod: ApiDatePeriod): Promise<ApiDatePeriod> =>
     api.patchDatePeriod(updatedDatePeriod);
 
   useEffect((): void => {

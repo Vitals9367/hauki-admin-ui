@@ -1,8 +1,8 @@
 import React from 'react';
 import { isHoliday } from '../../common/helpers/opening-hours-helpers';
 import {
-  DatePeriod,
   Holiday,
+  DatePeriod,
   UiDatePeriodConfig,
 } from '../../common/lib/types';
 import { formatDate } from '../../common/utils/date-time/format';

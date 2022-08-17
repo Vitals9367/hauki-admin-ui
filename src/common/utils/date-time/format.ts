@@ -27,14 +27,14 @@ export const formatDateRange = ({
   }
 
   if (!endDate) {
-    return `Voimassa ${formatDate(startDate as string)} alkaen`;
+    return `Voimassa ${startDate} alkaen`;
   }
 
   if (!startDate) {
-    return `Voimassa ${formatDate(endDate)} asti`;
+    return `Voimassa ${endDate} asti`;
   }
 
-  return `Voimassa ${formatDate(startDate)} - ${formatDate(endDate)}`;
+  return `Voimassa ${startDate} - ${endDate}`;
 };
 
 export const transformDateToApiFormat = (formDate: string): string =>

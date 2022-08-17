@@ -3,20 +3,20 @@ import { Accordion, IconSort } from 'hds-react';
 import React, { useRef, useState } from 'react';
 import { FormProvider, useFieldArray, useForm } from 'react-hook-form';
 import {
-  DatePeriod,
+  ApiDatePeriod,
   Language,
   Resource,
   ResourceState,
   UiDatePeriodConfig,
-  OpeningHoursFormValues,
+  DatePeriod,
 } from '../../common/lib/types';
 import { SupplementaryButton } from '../button/Button';
 import OpeningHoursFormPreview from '../opening-hours-form-preview/OpeningHoursFormPreview';
 import './OpeningHoursForm.scss';
 import {
-  apiDatePeriodToFormValues,
+  apiDatePeriodToDatePeriod,
   byWeekdays,
-  formValuesToApiDatePeriod,
+  datePeriodToApiDatePeriod,
 } from '../../common/helpers/opening-hours-helpers';
 import toast from '../notification/Toast';
 import OpeningHoursWeekdays from '../opening-hours-weekdays/OpeningHoursWeekdays';
@@ -31,11 +31,9 @@ import { useAppContext } from '../../App-context';
 import useReturnToResourcePage from '../../hooks/useReturnToResourcePage';
 import OpeningHoursFormActions from './OpeningHoursFormActions';
 
-const getDefaultsValues = (
-  datePeriod: DatePeriod | undefined
-): OpeningHoursFormValues =>
+const getDefaultsValues = (datePeriod: ApiDatePeriod | undefined): DatePeriod =>
   datePeriod
-    ? apiDatePeriodToFormValues(datePeriod)
+    ? apiDatePeriodToDatePeriod(datePeriod)
     : {
         fixed: false,
         endDate: null,
@@ -73,17 +71,17 @@ const OpeningHoursForm = ({
   submitFn,
   resource,
 }: {
-  datePeriod?: DatePeriod;
+  datePeriod?: ApiDatePeriod;
   datePeriodConfig: UiDatePeriodConfig;
-  submitFn: (values: DatePeriod) => Promise<DatePeriod>;
+  submitFn: (values: ApiDatePeriod) => Promise<ApiDatePeriod>;
   resource: Resource;
 }): JSX.Element => {
   const { language = Language.FI } = useAppContext();
-  const defaultValues: OpeningHoursFormValues = getDefaultsValues(datePeriod);
+  const defaultValues: DatePeriod = getDefaultsValues(datePeriod);
   const [isSaving, setSaving] = useState(false);
   const [dropInRow, setDropInRow] = useState<number>();
   const offsetTop = useRef<number>();
-  const form = useForm<OpeningHoursFormValues>({
+  const form = useForm<DatePeriod>({
     defaultValues,
   });
   const { control, getValues, reset, setValue, watch } = form;
@@ -97,12 +95,12 @@ const OpeningHoursForm = ({
   } = datePeriodConfig;
 
   const returnToResourcePage = useReturnToResourcePage();
-  const onSubmit = (values: OpeningHoursFormValues): void => {
+  const onSubmit = (values: DatePeriod): void => {
     if (!resource) {
       throw new Error('Resource not found');
     }
     setSaving(true);
-    submitFn(formValuesToApiDatePeriod(resource?.id, values, datePeriod?.id))
+    submitFn(datePeriodToApiDatePeriod(resource?.id, values, datePeriod?.id))
       .then(() => {
         toast.success({
           dataTestId: 'opening-period-form-success',

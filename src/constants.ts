@@ -1,6 +1,6 @@
 import {
   LanguageStrings,
-  OpeningHoursTimeSpan,
+  TimeSpan,
   ResourceState,
   Rule,
 } from './common/lib/types';
@@ -28,7 +28,7 @@ export const uiFrequencyRules: { label: LanguageStrings; value: Rule }[] = [
   },
 ];
 
-export const defaultTimeSpan: OpeningHoursTimeSpan = {
+export const defaultTimeSpan: TimeSpan = {
   description: { fi: null, sv: null, en: null },
   start_time: null,
   end_time: null,

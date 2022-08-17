@@ -4,7 +4,7 @@ import { render, screen } from '@testing-library/react';
 import { BrowserRouter as Router } from 'react-router-dom';
 import { datePeriodOptions } from '../../test/fixtures/api-options';
 import {
-  DatePeriod,
+  ApiDatePeriod,
   Resource,
   ResourceState,
   ResourceType,
@@ -93,7 +93,7 @@ const testChildResource: Resource = {
   resource_type: ResourceType.CONTACT,
 };
 
-const testDatePeriod: DatePeriod = {
+const testDatePeriod: ApiDatePeriod = {
   id: 1,
   created: '2020-11-20',
   modified: '2020-11-20',

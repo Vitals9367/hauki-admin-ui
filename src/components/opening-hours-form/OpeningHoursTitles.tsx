@@ -2,10 +2,10 @@ import React from 'react';
 import { TextInput } from 'hds-react';
 import { useFormContext } from 'react-hook-form';
 import './OpeningHoursTitles.scss';
-import { OpeningHoursFormValues } from '../../common/lib/types';
+import { DatePeriod } from '../../common/lib/types';
 
 const OpeningHoursTitles = (): JSX.Element => {
-  const { register } = useFormContext<OpeningHoursFormValues>();
+  const { register } = useFormContext<DatePeriod>();
 
   return (
     <div className="card opening-hours-titles">

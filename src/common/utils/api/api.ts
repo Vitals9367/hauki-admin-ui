@@ -3,13 +3,13 @@ import * as querystring from 'querystring';
 import { ParsedUrlQueryInput } from 'querystring';
 import {
   ApiChoice,
-  DatePeriod,
+  ApiDatePeriod,
   UiDatePeriodConfig,
   DatePeriodOptions,
   LanguageStrings,
   Resource,
   ResourceState,
-  TimeSpanGroup,
+  ApiTimeSpanGroup,
   TranslatedApiChoice,
 } from '../../lib/types';
 import { AuthTokens, getTokens } from '../../../auth/auth-context';
@@ -31,7 +31,7 @@ interface RequestParameters {
     | ReadonlyArray<boolean>
     | undefined
     | LanguageStrings
-    | TimeSpanGroup[]
+    | ApiTimeSpanGroup[]
     | ResourceState
     | null;
 }
@@ -248,14 +248,14 @@ export default {
       },
     }).then((response) => response.results),
 
-  getDatePeriods: (resourceId: number): Promise<DatePeriod[]> =>
-    apiGet<DatePeriod[]>({
+  getDatePeriods: (resourceId: number): Promise<ApiDatePeriod[]> =>
+    apiGet<ApiDatePeriod[]>({
       path: `${datePeriodBasePath}`,
       parameters: { resource: resourceId, end_date_gte: '-1d' },
     }),
 
-  getDatePeriod: (datePeriodId: number): Promise<DatePeriod> =>
-    apiGet<DatePeriod>({
+  getDatePeriod: (datePeriodId: number): Promise<ApiDatePeriod> =>
+    apiGet<ApiDatePeriod>({
       path: `${datePeriodBasePath}/${datePeriodId}`,
     }),
 
@@ -314,20 +314,20 @@ export default {
     };
   },
 
-  postDatePeriod: (datePeriod: DatePeriod): Promise<DatePeriod> =>
-    apiPost<DatePeriod>({
+  postDatePeriod: (datePeriod: ApiDatePeriod): Promise<ApiDatePeriod> =>
+    apiPost<ApiDatePeriod>({
       path: `${datePeriodBasePath}`,
       data: datePeriod,
     }),
 
-  putDatePeriod: (datePeriod: DatePeriod): Promise<DatePeriod> =>
-    apiPut<DatePeriod>({
+  putDatePeriod: (datePeriod: ApiDatePeriod): Promise<ApiDatePeriod> =>
+    apiPut<ApiDatePeriod>({
       path: `${datePeriodBasePath}/${datePeriod.id}`,
       data: datePeriod,
     }),
 
-  patchDatePeriod: (datePeriod: DatePeriod): Promise<DatePeriod> =>
-    apiPatch<DatePeriod>({
+  patchDatePeriod: (datePeriod: ApiDatePeriod): Promise<ApiDatePeriod> =>
+    apiPatch<ApiDatePeriod>({
       path: `${datePeriodBasePath}/${datePeriod.id}`,
       data: datePeriod,
     }),

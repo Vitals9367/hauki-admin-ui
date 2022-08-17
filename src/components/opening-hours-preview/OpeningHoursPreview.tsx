@@ -6,7 +6,7 @@ import {
   ResourceState,
   TranslatedApiChoice,
   OpeningHours,
-  OpeningHoursTimeSpan,
+  TimeSpan as TTimespan,
 } from '../../common/lib/types';
 import { createWeekdaysStringFromIndices } from '../../common/utils/date-time/format';
 import { uiFrequencyRules } from '../../constants';
@@ -19,7 +19,7 @@ const TimeSpanDescription = ({
 }: {
   language: Language;
   resourceStates: TranslatedApiChoice[];
-  timeSpan?: OpeningHoursTimeSpan;
+  timeSpan?: TTimespan;
 }): JSX.Element | null => {
   if (!timeSpan) {
     return <>Tuntematon</>;
@@ -47,7 +47,7 @@ export const TimeSpan = ({
   timeSpan,
 }: {
   resourceStates: TranslatedApiChoice[];
-  timeSpan?: OpeningHoursTimeSpan;
+  timeSpan?: TTimespan;
 }): JSX.Element | null => {
   const { language = Language.FI } = useAppContext();
   if (!timeSpan) {
@@ -97,7 +97,7 @@ const TimeSpanRow = ({
   className: string;
   label?: string;
   resourceStates: TranslatedApiChoice[];
-  timeSpan?: OpeningHoursTimeSpan;
+  timeSpan?: TTimespan;
 }): JSX.Element => (
   <tr className={className}>
     <td className="opening-hours-preview-table__day-column">{label}</td>

@@ -3,8 +3,9 @@ import { LoadingSpinner, Notification } from 'hds-react';
 import { useHistory } from 'react-router-dom';
 import { partition } from 'lodash';
 import {
-  DatePeriod,
+  ApiDatePeriod,
   Language,
+  DatePeriod,
   Resource,
   UiDatePeriodConfig,
 } from '../../common/lib/types';
@@ -13,6 +14,7 @@ import { PrimaryButton, SecondaryButton } from '../button/Button';
 import OpeningPeriod from './opening-period/OpeningPeriod';
 import './ResourceOpeningHours.scss';
 import {
+  apiDatePeriodToDatePeriod,
   getActiveDatePeriod,
   isHoliday,
 } from '../../common/helpers/opening-hours-helpers';
@@ -20,7 +22,6 @@ import { getDatePeriodFormConfig } from '../../services/datePeriodFormConfig';
 import HolidaysTable from '../holidays-table/HolidaysTable';
 import { getHolidays } from '../../services/holidays';
 import OpeningPeriodAccordion from '../opening-period-accordion/OpeningPeriodAccordion';
-import { formatDate } from '../../common/utils/date-time/format';
 import ExceptionOpeningHours from '../exception-opening-hours/ExceptionOpeningHours';
 
 const ExceptionPeriodsList = ({
@@ -97,9 +98,7 @@ const ExceptionPeriodsList = ({
                 }
               }}
               periodName={exception.name[language]}
-              dateRange={`${
-                exception.start_date ? formatDate(exception.start_date) : ''
-              } — poikkeavat aukiolot`}>
+              dateRange={`${exception.startDate ?? ''} — poikkeavat aukiolot`}>
               <ExceptionOpeningHours
                 datePeriod={exception}
                 datePeriodConfig={datePeriodConfig}
@@ -229,7 +228,7 @@ export default function ResourceOpeningHours({
     UiDatePeriodConfig
   >();
   const [[defaultPeriods, exceptions], setDividedDatePeriods] = useState<
-    [DatePeriod[], DatePeriod[]]
+    [ApiDatePeriod[], ApiDatePeriod[]]
   >([[], []]);
   const [isLoading, setLoading] = useState(false);
   const fetchDatePeriods = async (id: number): Promise<void> => {
@@ -281,7 +280,7 @@ export default function ResourceOpeningHours({
         addNewOpeningPeriodButtonDataTest="add-new-opening-period-button"
         resourceId={resourceId}
         title="Aukioloajat"
-        datePeriods={defaultPeriods}
+        datePeriods={defaultPeriods.map(apiDatePeriodToDatePeriod)}
         datePeriodConfig={datePeriodConfig}
         theme={PeriodsListTheme.DEFAULT}
         notFoundLabel="Ei määriteltyjä aukioloaikoja. Aloita painamalla “Lisää aukioloaika” -painiketta."
@@ -291,7 +290,7 @@ export default function ResourceOpeningHours({
       />
       <ExceptionPeriodsList
         datePeriodConfig={datePeriodConfig}
-        datePeriods={exceptions}
+        datePeriods={exceptions.map(apiDatePeriodToDatePeriod)}
         deletePeriod={deletePeriod}
         language={language}
         parentId={parentId}

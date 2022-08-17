@@ -1,5 +1,4 @@
 import React from 'react';
-import { apiTimeSpanToTimeSpan } from '../../common/helpers/opening-hours-helpers';
 import {
   DatePeriod,
   ResourceState,
@@ -17,18 +16,18 @@ const ExceptionOpeningHours = ({
   datePeriodConfig,
 }: Props): JSX.Element => (
   <div>
-    {datePeriod.resource_state === ResourceState.CLOSED
+    {datePeriod.resourceState === ResourceState.CLOSED
       ? 'Suljettu'
-      : datePeriod.time_span_groups.map((timeSpanGroup) =>
-          timeSpanGroup.time_spans
-            .map(apiTimeSpanToTimeSpan)
-            .map((timeSpan) => (
+      : datePeriod.openingHours.map((openingHours) =>
+          openingHours.timeSpanGroups.map((timeSpanGroup) =>
+            timeSpanGroup.timeSpans.map((timeSpan) => (
               <TimeSpan
                 key={timeSpan.id}
                 resourceStates={datePeriodConfig?.resourceState.options || []}
                 timeSpan={timeSpan}
               />
             ))
+          )
         )}
   </div>
 );

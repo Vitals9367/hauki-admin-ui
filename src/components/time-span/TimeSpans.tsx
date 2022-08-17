@@ -2,7 +2,7 @@ import { IconPlusCircle } from 'hds-react';
 import React, { useEffect, useRef } from 'react';
 import { useFieldArray, useFormContext } from 'react-hook-form';
 import {
-  OpeningHoursFormValues,
+  DatePeriod,
   ResourceState,
   TranslatedApiChoice,
 } from '../../common/lib/types';
@@ -22,7 +22,7 @@ const TimeSpans = ({
   timeSpanGroupIdx: number;
 }): JSX.Element => {
   const namePrefix = `openingHours.${openingHoursIdx}.timeSpanGroups.${timeSpanGroupIdx}.timeSpans` as const;
-  const { control, watch } = useFormContext<OpeningHoursFormValues>();
+  const { control, watch } = useFormContext<DatePeriod>();
   const { fields, append, remove } = useFieldArray({
     control,
     name: namePrefix,

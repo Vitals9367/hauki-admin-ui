@@ -2,7 +2,7 @@ import React from 'react';
 import { render } from '@testing-library/react';
 import { BrowserRouter as Router } from 'react-router-dom';
 import { datePeriodOptions } from '../../../../test/fixtures/api-options';
-import { datePeriod } from '../../../../test/fixtures/api-date-period';
+import { datePeriod } from '../../../../test/fixtures/date-period';
 import {
   DatePeriod,
   Language,

@@ -1,9 +1,9 @@
 /// <reference types="jest" />
 
-import { ResourceState } from '../lib/types';
+import { DatePeriod, ResourceState } from '../lib/types';
 import {
-  apiDatePeriodToFormValues,
-  formValuesToApiDatePeriod,
+  apiDatePeriodToDatePeriod,
+  datePeriodToApiDatePeriod,
   getActiveDatePeriod,
   isHoliday,
 } from './opening-hours-helpers';
@@ -16,6 +16,7 @@ const openingHours = [
         rule: 'week_every' as const,
         timeSpans: [
           {
+            id: undefined,
             description: { en: null, fi: null, sv: null },
             end_time: '16:00',
             full_day: false,
@@ -23,6 +24,7 @@ const openingHours = [
             start_time: '08:00',
           },
           {
+            id: undefined,
             description: { en: null, fi: null, sv: null },
             end_time: '17:00',
             full_day: false,
@@ -40,6 +42,7 @@ const openingHours = [
         rule: 'week_even' as const,
         timeSpans: [
           {
+            id: undefined,
             description: { en: null, fi: null, sv: null },
             end_time: '16:00',
             full_day: false,
@@ -47,6 +50,7 @@ const openingHours = [
             start_time: '10:00',
           },
           {
+            id: undefined,
             description: { en: null, fi: null, sv: null },
             end_time: null,
             full_day: false,
@@ -59,6 +63,7 @@ const openingHours = [
         rule: 'week_odd' as const,
         timeSpans: [
           {
+            id: undefined,
             description: { en: null, fi: null, sv: null },
             end_time: '16:00',
             full_day: false,
@@ -76,6 +81,7 @@ const openingHours = [
         rule: 'week_every' as const,
         timeSpans: [
           {
+            id: undefined,
             description: { en: null, fi: null, sv: null },
             end_time: null,
             full_day: false,
@@ -88,7 +94,94 @@ const openingHours = [
   },
 ];
 
-const datePeriod = {
+const datePeriod: DatePeriod = {
+  name: { en: null, fi: 'Normaali aukiolo', sv: null },
+  endDate: '31.12.2022',
+  fixed: true,
+  startDate: '06.06.2022',
+  openingHours: [
+    {
+      weekdays: [1, 2, 3, 4, 5],
+      timeSpanGroups: [
+        {
+          rule: 'week_every',
+          timeSpans: [
+            {
+              description: { en: null, fi: null, sv: null },
+              end_time: '16:00',
+              full_day: false,
+              resource_state: ResourceState.OPEN,
+              start_time: '08:00',
+            },
+            {
+              description: { en: null, fi: null, sv: null },
+              end_time: '17:00',
+              full_day: false,
+              resource_state: ResourceState.SELF_SERVICE,
+              start_time: '16:00',
+            },
+          ],
+        },
+      ],
+    },
+    {
+      weekdays: [6],
+      timeSpanGroups: [
+        {
+          rule: 'week_even',
+          timeSpans: [
+            {
+              description: { en: null, fi: null, sv: null },
+              end_time: '16:00',
+              full_day: false,
+              resource_state: ResourceState.OPEN,
+              start_time: '10:00',
+            },
+            {
+              description: { en: null, fi: null, sv: null },
+              end_time: null,
+              full_day: false,
+              resource_state: ResourceState.CLOSED,
+              start_time: null,
+            },
+          ],
+        },
+        {
+          rule: 'week_odd',
+          timeSpans: [
+            {
+              description: { en: null, fi: null, sv: null },
+              end_time: '16:00',
+              full_day: false,
+              resource_state: ResourceState.OPEN,
+              start_time: '10:00',
+            },
+          ],
+        },
+      ],
+    },
+    {
+      weekdays: [7],
+      timeSpanGroups: [
+        {
+          rule: 'week_every',
+          timeSpans: [
+            {
+              description: { en: null, fi: null, sv: null },
+              end_time: null,
+              full_day: false,
+              resource_state: ResourceState.OPEN,
+              start_time: null,
+            },
+          ],
+        },
+      ],
+    },
+  ],
+  override: false,
+};
+
+const apiDatePeriod = {
   id: undefined,
   end_date: '2022-12-31',
   name: { en: null, fi: 'Normaali aukiolo', sv: null },
@@ -187,25 +280,28 @@ describe('opening-hours-helpers', () => {
   describe('openingHoursToApiDatePeriod', () => {
     it('should map to correct data', () => {
       expect(
-        formValuesToApiDatePeriod(8414, {
+        datePeriodToApiDatePeriod(8414, {
           endDate: '31.12.2022',
           fixed: true,
           name: { fi: 'Normaali aukiolo', sv: null, en: null },
           openingHours,
           startDate: '06.06.2022',
         })
-      ).toEqual(datePeriod);
+      ).toEqual(apiDatePeriod);
     });
   });
 
   describe('apiDatePeriodToOpeningHours', () => {
     it('should map to correct data', () => {
-      expect(apiDatePeriodToFormValues(datePeriod)).toEqual({
+      expect(apiDatePeriodToDatePeriod(apiDatePeriod)).toEqual({
         endDate: '31.12.2022',
         fixed: true,
         name: { fi: 'Normaali aukiolo', sv: null, en: null },
         openingHours,
         startDate: '06.06.2022',
+        id: undefined,
+        override: false,
+        resourceState: undefined,
       });
     });
   });
@@ -214,200 +310,192 @@ describe('opening-hours-helpers', () => {
     expect(
       getActiveDatePeriod('2022-06-23', [
         {
-          id: 1041529,
-          resource: 8414,
           name: { fi: 'Normaaliaukiolo', sv: '', en: '' },
-          description: { fi: null, sv: null, en: null },
-          start_date: '2022-01-01',
-          end_date: '2022-12-31',
-          resource_state: ResourceState.UNDEFINED,
-          override: false,
-          created: '2022-06-21T14:56:59.033814+03:00',
-          modified: '2022-06-21T14:56:59.033814+03:00',
-          time_span_groups: [
+          endDate: '31.12.2022',
+          fixed: true,
+          startDate: '01.01.2022',
+          openingHours: [
             {
-              id: 567524,
-              period: 1041529,
-              time_spans: [
+              weekdays: [1, 2, 3, 4, 5],
+              timeSpanGroups: [
                 {
-                  id: 890209,
-                  group: 567524,
-                  name: { fi: null, sv: null, en: null },
-                  description: { fi: null, sv: null, en: null },
-                  start_time: null,
-                  end_time: null,
-                  end_time_on_next_day: false,
-                  full_day: false,
-                  weekdays: [1, 2, 3, 4, 5],
-                  resource_state: ResourceState.OPEN,
-                  created: '2022-06-21T14:56:59.197663+03:00',
-                  modified: '2022-06-21T14:56:59.197663+03:00',
-                },
-                {
-                  id: 890210,
-                  group: 567524,
-                  name: { fi: null, sv: null, en: null },
-                  description: { fi: null, sv: null, en: null },
-                  start_time: null,
-                  end_time: null,
-                  end_time_on_next_day: false,
-                  full_day: true,
-                  weekdays: [6, 7],
-                  resource_state: ResourceState.CLOSED,
-                  created: '2022-06-21T14:56:59.280643+03:00',
-                  modified: '2022-06-21T14:56:59.280643+03:00',
+                  rule: 'week_every',
+                  timeSpans: [
+                    {
+                      id: 890209,
+                      description: { fi: null, sv: null, en: null },
+                      end_time: null,
+                      full_day: false,
+                      resource_state: ResourceState.OPEN,
+                      start_time: null,
+                    },
+                  ],
                 },
               ],
-              rules: [],
+            },
+            {
+              weekdays: [6, 7],
+              timeSpanGroups: [
+                {
+                  rule: 'week_every',
+                  timeSpans: [
+                    {
+                      id: 890210,
+                      description: { fi: null, sv: null, en: null },
+                      end_time: null,
+                      full_day: false,
+                      resource_state: ResourceState.CLOSED,
+                      start_time: null,
+                    },
+                  ],
+                },
+              ],
             },
           ],
+          id: 1041529,
+          resourceState: ResourceState.UNDEFINED,
+          override: false,
         },
         {
-          id: 1039083,
-          resource: 8414,
           name: { fi: 'Kesäkuun aukiolot', sv: '', en: '' },
-          description: { fi: null, sv: null, en: null },
-          start_date: '2022-06-01',
-          end_date: '2022-06-30',
-          resource_state: ResourceState.UNDEFINED,
-          override: false,
-          created: '2022-06-20T13:05:25.148379+03:00',
-          modified: '2022-06-21T14:55:51.688527+03:00',
-          time_span_groups: [
+          endDate: '30.06.2022',
+          fixed: true,
+          startDate: '01.06.2022',
+          openingHours: [
             {
-              id: 567523,
-              period: 1039083,
-              time_spans: [
+              weekdays: [1, 2, 3, 4, 5],
+              timeSpanGroups: [
                 {
-                  id: 890207,
-                  group: 567523,
-                  name: { fi: null, sv: null, en: null },
-                  description: { fi: null, sv: null, en: null },
-                  start_time: '10:00:00',
-                  end_time: '15:00:00',
-                  end_time_on_next_day: false,
-                  full_day: false,
-                  weekdays: [1, 2, 3, 4, 5],
-                  resource_state: ResourceState.OPEN,
-                  created: '2022-06-21T14:56:54.188062+03:00',
-                  modified: '2022-06-21T14:56:54.188062+03:00',
-                },
-                {
-                  id: 890208,
-                  group: 567523,
-                  name: { fi: null, sv: null, en: null },
-                  description: { fi: null, sv: null, en: null },
-                  start_time: null,
-                  end_time: null,
-                  end_time_on_next_day: false,
-                  full_day: true,
-                  weekdays: [6, 7],
-                  resource_state: ResourceState.CLOSED,
-                  created: '2022-06-21T14:56:54.315006+03:00',
-                  modified: '2022-06-21T14:56:54.315006+03:00',
+                  rule: 'week_every',
+                  timeSpans: [
+                    {
+                      id: 890207,
+                      description: { fi: null, sv: null, en: null },
+                      end_time: '15:00',
+                      full_day: false,
+                      resource_state: ResourceState.OPEN,
+                      start_time: '10:00',
+                    },
+                  ],
                 },
               ],
-              rules: [],
+            },
+            {
+              weekdays: [6, 7],
+              timeSpanGroups: [
+                {
+                  rule: 'week_every',
+                  timeSpans: [
+                    {
+                      id: 890208,
+                      description: { fi: null, sv: null, en: null },
+                      end_time: null,
+                      full_day: false,
+                      resource_state: ResourceState.CLOSED,
+                      start_time: null,
+                    },
+                  ],
+                },
+              ],
             },
           ],
+          id: 1039083,
+          resourceState: ResourceState.UNDEFINED,
+          override: false,
         },
         {
-          id: 1039084,
-          resource: 8414,
           name: { fi: 'Juhannus', sv: '', en: '' },
-          description: { fi: null, sv: null, en: null },
-          start_date: '2022-06-24',
-          end_date: '2022-06-26',
-          resource_state: ResourceState.UNDEFINED,
-          override: false,
-          created: '2022-06-20T13:08:05.928020+03:00',
-          modified: '2022-06-21T13:32:20.734883+03:00',
-          time_span_groups: [
+          endDate: '26.06.2022',
+          fixed: true,
+          startDate: '24.06.2022',
+          openingHours: [
             {
-              id: 567431,
-              period: 1039084,
-              time_spans: [
+              weekdays: [1, 2, 3, 4, 5],
+              timeSpanGroups: [
                 {
-                  id: 889998,
-                  group: 567431,
-                  name: { fi: null, sv: null, en: null },
-                  description: { fi: null, sv: null, en: null },
-                  start_time: null,
-                  end_time: null,
-                  end_time_on_next_day: false,
-                  full_day: true,
-                  weekdays: [1, 2, 3, 4, 5],
-                  resource_state: ResourceState.OPEN,
-                  created: '2022-06-21T13:32:20.937190+03:00',
-                  modified: '2022-06-21T13:32:20.937190+03:00',
-                },
-                {
-                  id: 889999,
-                  group: 567431,
-                  name: { fi: null, sv: null, en: null },
-                  description: { fi: null, sv: null, en: null },
-                  start_time: null,
-                  end_time: null,
-                  end_time_on_next_day: false,
-                  full_day: true,
-                  weekdays: [6, 7],
-                  resource_state: ResourceState.CLOSED,
-                  created: '2022-06-21T13:32:21.029582+03:00',
-                  modified: '2022-06-21T13:32:21.029582+03:00',
+                  rule: 'week_every',
+                  timeSpans: [
+                    {
+                      id: 889998,
+                      description: { fi: null, sv: null, en: null },
+                      end_time: null,
+                      full_day: true,
+                      resource_state: ResourceState.OPEN,
+                      start_time: null,
+                    },
+                  ],
                 },
               ],
-              rules: [],
+            },
+            {
+              weekdays: [6, 7],
+              timeSpanGroups: [
+                {
+                  rule: 'week_every',
+                  timeSpans: [
+                    {
+                      id: 889999,
+                      description: { fi: null, sv: null, en: null },
+                      end_time: null,
+                      full_day: false,
+                      resource_state: ResourceState.CLOSED,
+                      start_time: null,
+                    },
+                  ],
+                },
+              ],
             },
           ],
+          id: 1039084,
+          resourceState: ResourceState.UNDEFINED,
+          override: false,
         },
         {
-          id: 1041197,
-          resource: 8414,
           name: { fi: 'Heinäkuun aukiolot', sv: '', en: '' },
-          description: { fi: null, sv: null, en: null },
-          start_date: '2022-07-01',
-          end_date: '2022-07-31',
-          resource_state: ResourceState.UNDEFINED,
-          override: false,
-          created: '2022-06-21T11:09:42.531658+03:00',
-          modified: '2022-06-21T11:09:51.534521+03:00',
-          time_span_groups: [
+          endDate: '31.07.2022',
+          fixed: true,
+          startDate: '01.07.2022',
+          openingHours: [
             {
-              id: 567284,
-              period: 1041197,
-              time_spans: [
+              weekdays: [1, 2, 3, 4, 5],
+              timeSpanGroups: [
                 {
-                  id: 889630,
-                  group: 567284,
-                  name: { fi: null, sv: null, en: null },
-                  description: { fi: null, sv: null, en: null },
-                  start_time: null,
-                  end_time: null,
-                  end_time_on_next_day: false,
-                  full_day: false,
-                  weekdays: [1, 2, 3, 4, 5],
-                  resource_state: ResourceState.OPEN,
-                  created: '2022-06-21T11:09:51.706396+03:00',
-                  modified: '2022-06-21T11:09:51.706396+03:00',
-                },
-                {
-                  id: 889631,
-                  group: 567284,
-                  name: { fi: null, sv: null, en: null },
-                  description: { fi: null, sv: null, en: null },
-                  start_time: null,
-                  end_time: null,
-                  end_time_on_next_day: false,
-                  full_day: true,
-                  weekdays: [6, 7],
-                  resource_state: ResourceState.CLOSED,
-                  created: '2022-06-21T11:09:51.798962+03:00',
-                  modified: '2022-06-21T11:09:51.798962+03:00',
+                  rule: 'week_every',
+                  timeSpans: [
+                    {
+                      id: 889630,
+                      description: { fi: null, sv: null, en: null },
+                      end_time: null,
+                      full_day: false,
+                      resource_state: ResourceState.OPEN,
+                      start_time: null,
+                    },
+                  ],
                 },
               ],
-              rules: [],
+            },
+            {
+              weekdays: [6, 7],
+              timeSpanGroups: [
+                {
+                  rule: 'week_every',
+                  timeSpans: [
+                    {
+                      id: 889631,
+                      description: { fi: null, sv: null, en: null },
+                      end_time: null,
+                      full_day: false,
+                      resource_state: ResourceState.CLOSED,
+                      start_time: null,
+                    },
+                  ],
+                },
+              ],
             },
           ],
+          id: 1041197,
+          resourceState: ResourceState.UNDEFINED,
+          override: false,
         },
       ])?.id
     ).toEqual(1039083);
@@ -434,8 +522,8 @@ describe('opening-hours-helpers', () => {
         isHoliday(
           {
             ...datePeriod,
-            start_date: '2022-12-31',
-            end_date: '2022-12-31',
+            startDate: '31.12.2022',
+            endDate: '31.12.2022',
             name: { fi: 'Uudenvuodenaatto', sv: '', en: '' },
             override: true,
           },
@@ -449,8 +537,8 @@ describe('opening-hours-helpers', () => {
         isHoliday(
           {
             ...datePeriod,
-            start_date: '2022-12-25',
-            end_date: '2022-12-31',
+            startDate: '25.12.2022',
+            endDate: '31.12.2022',
             name: { fi: 'Uudenvuodenaatto', sv: '', en: '' },
             override: true,
           },
@@ -464,8 +552,8 @@ describe('opening-hours-helpers', () => {
         isHoliday(
           {
             ...datePeriod,
-            start_date: '2022-12-31',
-            end_date: '2022-12-31',
+            startDate: '31.12.2022',
+            endDate: '31.12.2022',
             name: { fi: 'Talvi', sv: '', en: '' },
             override: true,
           },

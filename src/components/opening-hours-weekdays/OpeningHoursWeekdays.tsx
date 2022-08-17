@@ -7,7 +7,7 @@ import {
   Language,
   TranslatedApiChoice,
   OpeningHours as TOpeningHours,
-  OpeningHoursFormValues,
+  DatePeriod,
   Rule,
 } from '../../common/lib/types';
 import { getWeekdayLongNameByIndexAndLang } from '../../common/utils/date-time/format';
@@ -52,7 +52,7 @@ const OpeningHoursWeekdays = ({
 }): JSX.Element => {
   const namePrefix = `openingHours.${openingHoursIdx}` as const;
   const { language = Language.FI } = useAppContext();
-  const { control, setValue, watch } = useFormContext<OpeningHoursFormValues>();
+  const { control, setValue, watch } = useFormContext<DatePeriod>();
   const { append, fields, remove } = useFieldArray({
     control,
     name: `${namePrefix}.timeSpanGroups`,

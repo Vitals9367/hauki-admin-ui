@@ -2,17 +2,17 @@ import React, { CSSProperties, useCallback, useEffect, useState } from 'react';
 import { Checkbox, IconPenLine, LoadingSpinner } from 'hds-react';
 import { FormProvider, useForm } from 'react-hook-form';
 import {
-  DatePeriod,
+  ApiDatePeriod,
   Holiday,
   Language,
-  OpeningHoursFormValues,
+  DatePeriod,
   Resource,
   ResourceState,
   UiDatePeriodConfig,
 } from '../common/lib/types';
 import {
-  apiDatePeriodToFormValues,
-  formValuesToApiDatePeriod,
+  apiDatePeriodToDatePeriod,
+  datePeriodToApiDatePeriod,
   isHoliday,
 } from '../common/helpers/opening-hours-helpers';
 import api from '../common/utils/api/api';
@@ -40,9 +40,9 @@ import ExceptionOpeningHours from '../components/exception-opening-hours/Excepti
 import { defaultTimeSpanGroup } from '../constants';
 
 type FormActions = {
-  create: (values: OpeningHoursFormValues) => Promise<void>;
-  update: (values: OpeningHoursFormValues) => Promise<void>;
-  delete: (values: OpeningHoursFormValues) => Promise<void>;
+  create: (values: DatePeriod) => Promise<void>;
+  update: (values: DatePeriod) => Promise<void>;
+  delete: (values: DatePeriod) => Promise<void>;
 };
 
 const getDefaultFormValues = ({
@@ -51,7 +51,7 @@ const getDefaultFormValues = ({
 }: {
   name: string;
   holidayDate: string;
-}): OpeningHoursFormValues => ({
+}): DatePeriod => ({
   startDate: formatDate(holidayDate),
   endDate: formatDate(holidayDate),
   fixed: true,
@@ -71,7 +71,7 @@ const HolidayForm = ({
 }: {
   id: string;
   holiday: Holiday;
-  value?: OpeningHoursFormValues;
+  value?: DatePeriod;
   datePeriodConfig: UiDatePeriodConfig;
   actions: FormActions;
   onClose: () => void;
@@ -80,7 +80,7 @@ const HolidayForm = ({
   const [isSaving, setIsSaving] = useState(false);
   const valueToUse = value || getDefaultFormValues({ name, holidayDate });
 
-  const form = useForm<OpeningHoursFormValues>({
+  const form = useForm<DatePeriod>({
     defaultValues: valueToUse,
   });
 
@@ -105,12 +105,12 @@ const HolidayForm = ({
     resourceState: { options: resourceStates = [] },
   } = datePeriodConfig;
 
-  const createNew = (values: OpeningHoursFormValues): void => {
+  const createNew = (values: DatePeriod): void => {
     setIsSaving(true);
     actions.create(values);
   };
 
-  const saveExisting = (values: OpeningHoursFormValues): void => {
+  const saveExisting = (values: DatePeriod): void => {
     setIsSaving(true);
     actions.update(values).then(() => {
       setIsSaving(false);
@@ -159,16 +159,14 @@ const HolidayForm = ({
 
 const HolidayListItem = ({
   id,
-  datePeriod,
   holiday,
   value,
   datePeriodConfig,
   actions,
 }: {
   id: string;
-  datePeriod?: DatePeriod;
   holiday: Holiday;
-  value?: OpeningHoursFormValues;
+  value?: DatePeriod;
   datePeriodConfig: UiDatePeriodConfig;
   actions: FormActions;
 }): JSX.Element => {
@@ -255,7 +253,7 @@ const HolidayListItem = ({
                   actions={actions}
                   onClose={() => {
                     setIsEditing(false);
-                    if (!datePeriod) {
+                    if (!value) {
                       setChecked(false);
                     }
                   }}
@@ -266,7 +264,7 @@ const HolidayListItem = ({
                 <div className="holiday-exception-opening-hours-column">
                   <ExceptionOpeningHours
                     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-                    datePeriod={datePeriod!}
+                    datePeriod={value!}
                     datePeriodConfig={datePeriodConfig}
                   />
                 </div>
@@ -294,14 +292,13 @@ export default function EditHolidaysPage({
 }): JSX.Element {
   const [resource, setResource] = useState<Resource>();
   const [holidayValues, setHolidayValues] = useState<
-    OpeningHoursFormValues[] | undefined
+    DatePeriod[] | undefined
   >();
   const [datePeriodConfig, setDatePeriodConfig] = useState<
     UiDatePeriodConfig
   >();
   const { language = Language.FI } = useAppContext();
   const [holidays, setHolidays] = useState<Holiday[]>([]);
-  const [holidayPeriods, setHolidayPeriods] = useState<DatePeriod[]>([]);
 
   useEffect((): void => {
     const fetchData = async (): Promise<void> => {
@@ -324,30 +321,27 @@ export default function EditHolidaysPage({
 
   const fetchValues = useCallback(
     async (resourceIdentifier: number): Promise<void> => {
-      const apiDatePeriods: DatePeriod[] = await api.getDatePeriods(
+      const apiDatePeriods: ApiDatePeriod[] = await api.getDatePeriods(
         resourceIdentifier
       );
-      const holidayPeriodsResult: DatePeriod[] = apiDatePeriods.filter(
-        (apiDatePeriod) => isHoliday(apiDatePeriod, holidays)
-      );
-      setHolidayPeriods(holidayPeriodsResult);
-      const holidayValuesList: OpeningHoursFormValues[] = holidayPeriodsResult.map(
-        apiDatePeriodToFormValues
-      );
-      setHolidayValues(holidayValuesList);
+      const holidayPeriodsResult: DatePeriod[] = apiDatePeriods
+        .map(apiDatePeriodToDatePeriod)
+        .filter((apiDatePeriod) => isHoliday(apiDatePeriod, holidays));
+
+      setHolidayValues(holidayPeriodsResult);
     },
     [holidays]
   );
 
   const formValuesToHolidayPeriod = (
     resourceIdToSave: number,
-    values: OpeningHoursFormValues
-  ): DatePeriod => ({
-    ...formValuesToApiDatePeriod(resourceIdToSave, values, values.id),
+    values: DatePeriod
+  ): ApiDatePeriod => ({
+    ...datePeriodToApiDatePeriod(resourceIdToSave, values, values.id),
     override: true,
   });
 
-  const create = async (values: OpeningHoursFormValues): Promise<void> => {
+  const create = async (values: DatePeriod): Promise<void> => {
     if (!resource) {
       throw new Error('Resource not found');
     }
@@ -372,7 +366,7 @@ export default function EditHolidaysPage({
       });
   };
 
-  const update = async (values: OpeningHoursFormValues): Promise<void> => {
+  const update = async (values: DatePeriod): Promise<void> => {
     if (!resource || !values || !values.id) {
       throw new Error('Resource or period not found');
     }
@@ -397,9 +391,7 @@ export default function EditHolidaysPage({
       });
   };
 
-  const deletePeriod = async (
-    values: OpeningHoursFormValues
-  ): Promise<void> => {
+  const deletePeriod = async (values: DatePeriod): Promise<void> => {
     if (!resource) {
       throw new Error('Resource not found');
     }
@@ -468,7 +460,7 @@ export default function EditHolidaysPage({
           {holidays.length > 0 && (
             <UpcomingHolidayNotification
               datePeriodConfig={datePeriodConfig}
-              datePeriods={holidayPeriods}
+              datePeriods={holidayValues}
               holiday={holidays[0]}
             />
           )}
@@ -483,7 +475,7 @@ export default function EditHolidaysPage({
         </div>
         <ul className="holidays-list">
           {holidays.map((holiday, idx) => {
-            const value: OpeningHoursFormValues | undefined = holidayValues
+            const value: DatePeriod | undefined = holidayValues
               ? holidayValues.find(
                   (holidayValue) => holidayValue.name.fi === holiday.name
                 )
@@ -494,9 +486,6 @@ export default function EditHolidaysPage({
                 key={`${holiday.date}-${value ? value.id : 'new'}`}
                 id={`holiday-${idx}`}
                 holiday={holiday}
-                datePeriod={holidayPeriods.find((dp) =>
-                  isHoliday(dp, [holiday])
-                )}
                 datePeriodConfig={datePeriodConfig}
                 value={value}
                 actions={{

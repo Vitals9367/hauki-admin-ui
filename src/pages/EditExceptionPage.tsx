@@ -1,6 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import api from '../common/utils/api/api';
-import { DatePeriod, UiDatePeriodConfig, Resource } from '../common/lib/types';
+import {
+  ApiDatePeriod,
+  UiDatePeriodConfig,
+  Resource,
+} from '../common/lib/types';
 import { getDatePeriodFormConfig } from '../services/datePeriodFormConfig';
 import ExceptionOpeningHoursForm from '../components/exception-opening-hours-form/ExceptionOpeningHoursForm';
 
@@ -16,9 +20,9 @@ export default function EditExceptionPage({
   const [datePeriodConfig, setDatePeriodConfig] = useState<
     UiDatePeriodConfig
   >();
-  const [datePeriod, setDatePeriod] = useState<DatePeriod>();
+  const [datePeriod, setDatePeriod] = useState<ApiDatePeriod>();
 
-  const submitFn = (updatedDatePeriod: DatePeriod): Promise<DatePeriod> =>
+  const submitFn = (updatedDatePeriod: ApiDatePeriod): Promise<ApiDatePeriod> =>
     api.patchDatePeriod(updatedDatePeriod);
 
   useEffect((): void => {

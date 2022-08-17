@@ -1,13 +1,12 @@
 import React from 'react';
 import {
-  DatePeriod,
   Language,
+  DatePeriod,
   UiDatePeriodConfig,
 } from '../../../common/lib/types';
 import { formatDateRange } from '../../../common/utils/date-time/format';
 import './OpeningPeriod.scss';
 import OpeningHoursPreview from '../../opening-hours-preview/OpeningHoursPreview';
-import { apiDatePeriodToOpeningHours } from '../../../common/helpers/opening-hours-helpers';
 import OpeningPeriodAccordion from '../../opening-period-accordion/OpeningPeriodAccordion';
 
 export default function OpeningPeriod({
@@ -31,8 +30,8 @@ export default function OpeningPeriod({
 }): JSX.Element {
   const datePeriodName = datePeriod.name[language];
   const formattedDateRange = formatDateRange({
-    startDate: datePeriod.start_date ?? null,
-    endDate: datePeriod.end_date ?? null,
+    startDate: datePeriod.startDate,
+    endDate: datePeriod.endDate,
   });
 
   return (
@@ -55,7 +54,7 @@ export default function OpeningPeriod({
       isActive={current}>
       <div className="date-period-details-container">
         <OpeningHoursPreview
-          openingHours={apiDatePeriodToOpeningHours(datePeriod)}
+          openingHours={datePeriod.openingHours}
           resourceStates={datePeriodConfig.resourceState.options}
         />
       </div>

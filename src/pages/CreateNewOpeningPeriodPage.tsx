@@ -1,5 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { Resource, UiDatePeriodConfig, DatePeriod } from '../common/lib/types';
+import {
+  Resource,
+  UiDatePeriodConfig,
+  ApiDatePeriod,
+} from '../common/lib/types';
 import api from '../common/utils/api/api';
 import OpeningHoursForm from '../components/opening-hours-form/OpeningHoursForm';
 import { getDatePeriodFormConfig } from '../services/datePeriodFormConfig';
@@ -36,7 +40,7 @@ export default function CreateNewOpeningPeriodPage({
     return <h1>Ladataan...</h1>;
   }
 
-  const submitFn = (data: DatePeriod): Promise<DatePeriod> =>
+  const submitFn = (data: ApiDatePeriod): Promise<ApiDatePeriod> =>
     api.postDatePeriod(data);
 
   return (
