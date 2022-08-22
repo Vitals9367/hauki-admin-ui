@@ -32,4 +32,4 @@ yarn-error.log*
 env-config.js
 
 # load tests
-load-tests/result.html
+load-tests/summary.html
