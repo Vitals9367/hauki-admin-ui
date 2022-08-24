@@ -11,7 +11,7 @@
 .holidays-list-item {
   align-items: flex-start;
   display: flex;
-  gap: 0 $spacing-xs;
+  gap: 0 $spacing-2-xs;
   flex-wrap: wrap;
 }
 
@@ -28,8 +28,14 @@
   display: flex;
   gap: $spacing-l $spacing-2-xl;
   flex: 1;
+  flex-basis: 100%;
   flex-wrap: wrap;
-  padding: 0 $spacing-s;
+}
+
+@media screen and (min-width: $breakpoint-l) {
+  .holiday-form-container {
+    flex-basis: auto;
+  }
 }
 
 .holiday-form-actions {
@@ -51,8 +57,9 @@
   white-space: nowrap;
 }
 
-.holiday-column,
-.holiday-exception-opening-hours-column {
+.holidays-list-item-column {
+  display: flex;
+  gap: $spacing-s;
   padding: $spacing-s $spacing-s;
 }
 

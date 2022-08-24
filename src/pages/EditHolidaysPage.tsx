@@ -192,7 +192,7 @@ const HolidayListItem = ({
 
   return (
     <li className="holidays-list-item" key={date}>
-      <div className="holiday-column">
+      <div className="holiday-column holidays-list-item-column">
         {value && value.id ? (
           <>
             <Checkbox
@@ -236,15 +236,15 @@ const HolidayListItem = ({
         )}
       </div>
       {willBeRemoved ? (
-        <>
+        <div className="holidays-list-item-column">
           <LoadingSpinner small />
           Poistetaan aukiolojaksoa..
-        </>
+        </div>
       ) : (
         <React.Fragment key={holiday.date}>
           {checked &&
             (isEditing ? (
-              <div className="holiday-form-container">
+              <div className="holidays-list-item-column holiday-form-container">
                 <HolidayForm
                   id={id}
                   holiday={holiday}
@@ -261,7 +261,7 @@ const HolidayListItem = ({
               </div>
             ) : (
               <>
-                <div className="holiday-exception-opening-hours-column">
+                <div className="holidays-list-item-column">
                   <ExceptionOpeningHours
                     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
                     datePeriod={value!}
