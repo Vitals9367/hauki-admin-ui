@@ -19,7 +19,7 @@ const session = new Httpx();
 session.setBaseUrl(`${apiUrl}`);
 session.addHeader('Authorization', `haukisigned ${authParams}`);
 
-const { addNewDatePeriod, viewDatePeriod, viewOffice } = commands(session);
+const { addNewDatePeriod, viewOffice } = commands(session);
 
 export const options = {
   thresholds: {
@@ -29,16 +29,17 @@ export const options = {
     addOpeningHours: {
       executor: 'constant-vus',
       exec: 'addOpeningHours',
-      vus: 5,
+      vus: 10,
       duration: '1m',
     },
     requestOpeningHours: {
       executor: 'constant-vus',
       exec: 'requestOpeningHours',
-      vus: 30,
+      vus: 50,
       duration: '1m',
     },
   },
+  teardownTimeout: '5m',
 };
 
 export function setup() {
