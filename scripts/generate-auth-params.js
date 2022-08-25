@@ -7,6 +7,7 @@ const crypto = require('crypto');
 const env = global['__ENV'] || process.env;
 
 const key = env.HAUKI_KEY;
+
 const username = env.HAUKI_USER || 'admin@hel.fi';
 const resource = env.HAUKI_RESOURCE || 'tprek:8215';
 const organization =
