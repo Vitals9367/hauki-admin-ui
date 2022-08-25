@@ -17,7 +17,7 @@ import {
   formatDate,
   transformDateToApiFormat,
 } from '../utils/date-time/format';
-import { updateByWithDefault } from '../utils/fp/list';
+import { updateOrAdd } from '../utils/fp/list';
 
 export const byWeekdays = (
   openingHours1: { weekdays: number[] },
@@ -82,7 +82,7 @@ const toApiTimeSpanGroups = (
           apiTimeSpanGroups: ApiTimeSpanGroup[],
           uiTimeSpanGroup: TimeSpanGroup
         ) =>
-          updateByWithDefault(
+          updateOrAdd(
             (apiTimeSpanGroup) =>
               (apiTimeSpanGroup.rules.length === 0 &&
                 uiTimeSpanGroup.rule === 'week_every') ||
@@ -98,6 +98,7 @@ const toApiTimeSpanGroups = (
               ],
             }),
             {
+              id: uiTimeSpanGroup.id,
               rules:
                 uiTimeSpanGroup.rule === 'week_every'
                   ? []
@@ -189,23 +190,29 @@ const apiRulesToRule = (apiRules: GroupRule[]): Rule => {
 const apiTimeSpanGroupsToOpeningHours = (
   timeSpanGroups: ApiTimeSpanGroup[]
 ): OpeningHours[] =>
+  // Go through time span groups to start mapping them to opening hours. We have to go deep to the time span level.
   timeSpanGroups
     .reduce(
       (
         allOpeningHours: OpeningHours[],
-        { rules, time_spans: timeSpans }: ApiTimeSpanGroup
+        { id, rules, time_spans: timeSpans }: ApiTimeSpanGroup
       ) =>
+        // Go thru time spans in time span group to find matching weekdays
         timeSpans.reduce(
-          (timeSpanOpeningHours, timeSpan) =>
-            updateByWithDefault(
+          (openingHours, timeSpan) =>
+            updateOrAdd(
+              // Match  openings hours with same weekdays
               (openingHour) =>
                 weekDaysMatch(openingHour.weekdays, timeSpan.weekdays ?? []),
+              // If opening hours are found go thru opening hour's time span groups
               (openingHour) => ({
                 ...openingHour,
-                timeSpanGroups: updateByWithDefault(
+                timeSpanGroups: updateOrAdd(
+                  // Match time span groups with same rule
                   (timeSpanGroup) => {
                     return apiRulesToRule(rules) === timeSpanGroup.rule;
                   },
+                  // Add time span to matching time span group
                   (timeSpanGroup) => ({
                     ...timeSpanGroup,
                     timeSpans: [
@@ -213,23 +220,27 @@ const apiTimeSpanGroupsToOpeningHours = (
                       apiTimeSpanToTimeSpan(timeSpan),
                     ],
                   }),
+                  // If no matching time span group found add new item to arr.
                   {
+                    id,
                     rule: apiRulesToRule(rules),
                     timeSpans: [apiTimeSpanToTimeSpan(timeSpan)],
                   },
                   openingHour.timeSpanGroups
                 ),
               }),
+              // If no matching opening hours is found add new item to arr.
               {
                 weekdays: timeSpan.weekdays ?? [],
                 timeSpanGroups: [
                   {
+                    id,
                     rule: apiRulesToRule(rules),
                     timeSpans: [apiTimeSpanToTimeSpan(timeSpan)],
                   },
                 ],
               },
-              timeSpanOpeningHours
+              openingHours
             ),
           allOpeningHours
         ),

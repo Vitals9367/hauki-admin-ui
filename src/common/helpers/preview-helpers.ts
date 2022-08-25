@@ -1,5 +1,5 @@
 import { isEqual } from 'lodash';
-import { updateByWithDefault } from '../utils/fp/list';
+import { updateOrAdd } from '../utils/fp/list';
 import { byWeekdays } from './opening-hours-helpers';
 import {
   OpeningHours,
@@ -97,7 +97,7 @@ export const openingHoursToPreviewRows = (
       (allPreviewRows: PreviewRow[], openingHour) =>
         openingHour.timeSpanGroups.reduce(
           (timeSpanGroupPreviewRows: PreviewRow[], timeSpanGroup) =>
-            updateByWithDefault(
+            updateOrAdd(
               (previewRow) => previewRow.rule === timeSpanGroup.rule,
               (previewRow) => ({
                 ...previewRow,

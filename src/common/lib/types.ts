@@ -232,6 +232,7 @@ export type TimeSpan = {
 };
 
 export type TimeSpanGroup = {
+  id?: number;
   rule: Rule;
   timeSpans: TimeSpan[];
 };

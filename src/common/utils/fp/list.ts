@@ -14,10 +14,10 @@ export function updateBy<T>(
   });
 }
 
-export function updateByWithDefault<T>(
+export function updateOrAdd<T>(
   predicate: (data: T) => boolean,
   fn: (data: T) => T,
-  defaultValue: T,
+  valueToBeAdded: T,
   arr: T[]
 ): T[] {
   const hasMatch: boolean = arr.some(predicate);
@@ -26,5 +26,5 @@ export function updateByWithDefault<T>(
     return updateBy<T>(predicate, fn, arr);
   }
 
-  return [...arr, defaultValue];
+  return [...arr, valueToBeAdded];
 }

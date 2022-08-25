@@ -13,10 +13,11 @@ const openingHours = [
     weekdays: [1, 2, 3, 4, 5],
     timeSpanGroups: [
       {
+        id: 1,
         rule: 'week_every' as const,
         timeSpans: [
           {
-            id: undefined,
+            id: 1,
             description: { en: null, fi: null, sv: null },
             end_time: '16:00',
             full_day: false,
@@ -24,7 +25,7 @@ const openingHours = [
             start_time: '08:00',
           },
           {
-            id: undefined,
+            id: 2,
             description: { en: null, fi: null, sv: null },
             end_time: '17:00',
             full_day: false,
@@ -39,10 +40,11 @@ const openingHours = [
     weekdays: [6],
     timeSpanGroups: [
       {
+        id: 2,
         rule: 'week_even' as const,
         timeSpans: [
           {
-            id: undefined,
+            id: 3,
             description: { en: null, fi: null, sv: null },
             end_time: '16:00',
             full_day: false,
@@ -50,7 +52,7 @@ const openingHours = [
             start_time: '10:00',
           },
           {
-            id: undefined,
+            id: 4,
             description: { en: null, fi: null, sv: null },
             end_time: null,
             full_day: false,
@@ -60,10 +62,11 @@ const openingHours = [
         ],
       },
       {
+        id: 3,
         rule: 'week_odd' as const,
         timeSpans: [
           {
-            id: undefined,
+            id: 5,
             description: { en: null, fi: null, sv: null },
             end_time: '16:00',
             full_day: false,
@@ -78,10 +81,11 @@ const openingHours = [
     weekdays: [7],
     timeSpanGroups: [
       {
+        id: 1,
         rule: 'week_every' as const,
         timeSpans: [
           {
-            id: undefined,
+            id: 6,
             description: { en: null, fi: null, sv: null },
             end_time: null,
             full_day: false,
@@ -93,6 +97,110 @@ const openingHours = [
     ],
   },
 ];
+
+const apiDatePeriod = {
+  id: undefined,
+  end_date: '2022-12-31',
+  name: { en: null, fi: 'Normaali aukiolo', sv: null },
+  description: { en: null, fi: null, sv: null },
+  override: false,
+  resource: 8414,
+  start_date: '2022-06-06',
+  time_span_groups: [
+    {
+      id: 1,
+      rules: [],
+      time_spans: [
+        {
+          id: 1,
+          end_time: '16:00',
+          full_day: false,
+          resource_state: ResourceState.OPEN,
+          start_time: '08:00',
+          weekdays: [1, 2, 3, 4, 5],
+          end_time_on_next_day: false,
+          description: { en: null, fi: null, sv: null },
+        },
+        {
+          id: 2,
+          end_time: '17:00',
+          full_day: false,
+          resource_state: ResourceState.SELF_SERVICE,
+          start_time: '16:00',
+          weekdays: [1, 2, 3, 4, 5],
+          end_time_on_next_day: false,
+          description: { en: null, fi: null, sv: null },
+        },
+        {
+          id: 6,
+          end_time: null,
+          full_day: false,
+          resource_state: ResourceState.OPEN,
+          start_time: null,
+          weekdays: [7],
+          end_time_on_next_day: false,
+          description: { en: null, fi: null, sv: null },
+        },
+      ],
+    },
+    {
+      id: 2,
+      rules: [
+        {
+          context: 'year',
+          subject: 'week',
+          frequency_modifier: 'even',
+          frequency_ordinal: null,
+        },
+      ],
+      time_spans: [
+        {
+          id: 3,
+          end_time: '16:00',
+          full_day: false,
+          resource_state: ResourceState.OPEN,
+          start_time: '10:00',
+          weekdays: [6],
+          end_time_on_next_day: false,
+          description: { en: null, fi: null, sv: null },
+        },
+        {
+          id: 4,
+          end_time_on_next_day: false,
+          end_time: null,
+          full_day: true,
+          resource_state: ResourceState.CLOSED,
+          start_time: null,
+          weekdays: [6],
+          description: { en: null, fi: null, sv: null },
+        },
+      ],
+    },
+    {
+      id: 3,
+      rules: [
+        {
+          context: 'year',
+          subject: 'week',
+          frequency_modifier: 'odd',
+          frequency_ordinal: null,
+        },
+      ],
+      time_spans: [
+        {
+          id: 5,
+          end_time: '16:00',
+          full_day: false,
+          resource_state: ResourceState.OPEN,
+          start_time: '10:00',
+          weekdays: [6],
+          end_time_on_next_day: false,
+          description: { en: null, fi: null, sv: null },
+        },
+      ],
+    },
+  ],
+};
 
 const datePeriod: DatePeriod = {
   name: { en: null, fi: 'Normaali aukiolo', sv: null },
@@ -179,101 +287,6 @@ const datePeriod: DatePeriod = {
     },
   ],
   override: false,
-};
-
-const apiDatePeriod = {
-  id: undefined,
-  end_date: '2022-12-31',
-  name: { en: null, fi: 'Normaali aukiolo', sv: null },
-  description: { en: null, fi: null, sv: null },
-  override: false,
-  resource: 8414,
-  start_date: '2022-06-06',
-  time_span_groups: [
-    {
-      rules: [],
-      time_spans: [
-        {
-          end_time: '16:00',
-          full_day: false,
-          resource_state: ResourceState.OPEN,
-          start_time: '08:00',
-          weekdays: [1, 2, 3, 4, 5],
-          end_time_on_next_day: false,
-          description: { en: null, fi: null, sv: null },
-        },
-        {
-          end_time: '17:00',
-          full_day: false,
-          resource_state: ResourceState.SELF_SERVICE,
-          start_time: '16:00',
-          weekdays: [1, 2, 3, 4, 5],
-          end_time_on_next_day: false,
-          description: { en: null, fi: null, sv: null },
-        },
-        {
-          end_time: null,
-          full_day: false,
-          resource_state: ResourceState.OPEN,
-          start_time: null,
-          weekdays: [7],
-          end_time_on_next_day: false,
-          description: { en: null, fi: null, sv: null },
-        },
-      ],
-    },
-    {
-      rules: [
-        {
-          context: 'year',
-          subject: 'week',
-          frequency_modifier: 'even',
-          frequency_ordinal: null,
-        },
-      ],
-      time_spans: [
-        {
-          end_time: '16:00',
-          full_day: false,
-          resource_state: ResourceState.OPEN,
-          start_time: '10:00',
-          weekdays: [6],
-          end_time_on_next_day: false,
-          description: { en: null, fi: null, sv: null },
-        },
-        {
-          end_time_on_next_day: false,
-          end_time: null,
-          full_day: true,
-          resource_state: ResourceState.CLOSED,
-          start_time: null,
-          weekdays: [6],
-          description: { en: null, fi: null, sv: null },
-        },
-      ],
-    },
-    {
-      rules: [
-        {
-          context: 'year',
-          subject: 'week',
-          frequency_modifier: 'odd',
-          frequency_ordinal: null,
-        },
-      ],
-      time_spans: [
-        {
-          end_time: '16:00',
-          full_day: false,
-          resource_state: ResourceState.OPEN,
-          start_time: '10:00',
-          weekdays: [6],
-          end_time_on_next_day: false,
-          description: { en: null, fi: null, sv: null },
-        },
-      ],
-    },
-  ],
 };
 
 describe('opening-hours-helpers', () => {
