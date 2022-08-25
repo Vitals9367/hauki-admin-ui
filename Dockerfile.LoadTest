@@ -9,4 +9,4 @@ RUN gpg --no-default-keyring --keyring /usr/share/keyrings/k6-archive-keyring.gp
     apt-get update && \
     apt-get install k6
 
-CMD ["/bin/bash", "-c", "/app/k6/run.sh hauki-scenarios.js"]
+CMD ["/bin/bash", "-c", "/app/load-tests/run.sh hauki-scenarios.js"]
