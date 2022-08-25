@@ -337,7 +337,7 @@ export default function EditHolidaysPage({
     resourceIdToSave: number,
     values: DatePeriod
   ): ApiDatePeriod => ({
-    ...datePeriodToApiDatePeriod(resourceIdToSave, values, values.id),
+    ...datePeriodToApiDatePeriod(resourceIdToSave, values),
     override: true,
   });
 

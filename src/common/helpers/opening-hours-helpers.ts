@@ -37,20 +37,13 @@ const toApiTimeSpan = (days: number[]) => (
     timeSpan.resource_state === ResourceState.OTHER
       ? timeSpan.description
       : { fi: null, sv: null, en: null },
-  end_time:
-    (timeSpan.resource_state !== ResourceState.CLOSED &&
-      timeSpan.start_time &&
-      timeSpan.end_time) ||
-    null,
-  full_day:
-    timeSpan.resource_state === ResourceState.CLOSED ? true : timeSpan.full_day,
+  end_time: timeSpan.end_time,
+  full_day: timeSpan.full_day,
   resource_state:
     timeSpan.resource_state === ResourceState.OTHER
       ? ResourceState.OPEN
       : timeSpan.resource_state,
-  start_time:
-    (timeSpan.resource_state !== ResourceState.CLOSED && timeSpan.start_time) ||
-    null,
+  start_time: timeSpan.start_time,
   weekdays: days,
   end_time_on_next_day:
     (timeSpan.start_time &&
@@ -116,15 +109,14 @@ const toApiTimeSpanGroups = (
 
 export const datePeriodToApiDatePeriod = (
   resource: number,
-  datePeriod: DatePeriod,
-  id?: number
+  datePeriod: DatePeriod
 ): ApiDatePeriod => ({
   name: datePeriod.name,
   end_date:
     datePeriod.fixed && datePeriod.endDate
       ? transformDateToApiFormat(datePeriod.endDate)
       : null,
-  id,
+  id: datePeriod.id,
   description: {
     en: null,
     fi: null,

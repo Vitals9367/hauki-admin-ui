@@ -88,8 +88,7 @@ const OpeningPeriodAccordion = ({
               <Link
                 className="opening-period-edit-link button-icon"
                 data-test={`openingPeriodEditLink${id ? `-${id}` : ''}`}
-                to={editUrl}
-                type="button">
+                to={editUrl}>
                 <IconPenLine aria-hidden="true" />
                 <span className="hiddenFromScreen">{`Muokkaa ${
                   periodName || 'nimettömän'

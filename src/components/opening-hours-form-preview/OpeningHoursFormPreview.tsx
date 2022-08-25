@@ -1,15 +1,17 @@
 import React from 'react';
-import { OpeningHours, TranslatedApiChoice } from '../../common/lib/types';
+import { DatePeriod, TranslatedApiChoice } from '../../common/lib/types';
+import { formatDateRange } from '../../common/utils/date-time/format';
 import OpeningHoursPreview from '../opening-hours-preview/OpeningHoursPreview';
 import './OpeningHoursFormPreview.scss';
 
 const OpeningHoursFormPreview = ({
-  openingHours,
+  datePeriod,
   resourceStates,
   className,
   tabIndex,
 }: {
-  openingHours: OpeningHours[];
+  datePeriod: DatePeriod;
+
   resourceStates: TranslatedApiChoice[];
   tabIndex?: number;
   className?: string;
@@ -24,8 +26,9 @@ const OpeningHoursFormPreview = ({
       className="opening-hours-form-preview__title">
       Esikatselu
     </h2>
+    <p>{formatDateRange(datePeriod)}</p>
     <OpeningHoursPreview
-      openingHours={openingHours}
+      openingHours={datePeriod.openingHours}
       resourceStates={resourceStates}
     />
   </div>

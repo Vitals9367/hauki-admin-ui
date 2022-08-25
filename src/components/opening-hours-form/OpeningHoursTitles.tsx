@@ -22,7 +22,7 @@ const OpeningHoursTitles = (): JSX.Element => {
         data-test="opening-period-title-sv"
         id="title-sv"
         label="Aukioloajan otsikko ruotsiksi"
-        placeholder="Till exempel (t.ex.) sommartid"
+        placeholder="T.ex. sommartid"
       />
       <TextInput
         {...register('name.en')}
@@ -30,7 +30,7 @@ const OpeningHoursTitles = (): JSX.Element => {
         id="title-en"
         name="name.en"
         label="Aukioloajan otsikko englanniksi"
-        placeholder="For example (e.g.) summertime"
+        placeholder="E.g. summertime"
       />
     </div>
   );

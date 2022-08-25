@@ -57,8 +57,7 @@ const formValuesToException = (
 ): ApiDatePeriod => {
   const data = datePeriodToApiDatePeriod(
     resourceIdToSave,
-    resolveWeekday(values),
-    values.id
+    resolveWeekday(values)
   );
 
   return {

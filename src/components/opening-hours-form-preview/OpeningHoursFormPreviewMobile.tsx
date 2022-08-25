@@ -1,8 +1,8 @@
 import { IconAngleDown, IconAngleUp, useAccordion } from 'hds-react';
 import React, { useRef } from 'react';
 import {
+  DatePeriod,
   Language,
-  OpeningHours,
   TranslatedApiChoice,
 } from '../../common/lib/types';
 import { SupplementaryButton } from '../button/Button';
@@ -12,13 +12,13 @@ import OpeningHoursFormPreview from './OpeningHoursFormPreview';
 import './OpeningHoursFormPreviewMobile.scss';
 
 type Props = {
+  datePeriod: DatePeriod;
   language: Language;
-  openingHours: OpeningHours[];
   resourceStates: TranslatedApiChoice[];
 };
 
 const OpeningHoursFormPreviewMobile = ({
-  openingHours,
+  datePeriod,
   resourceStates,
 }: Props): JSX.Element => {
   const { isOpen, buttonProps, closeAccordion } = useAccordion({
@@ -48,7 +48,7 @@ const OpeningHoursFormPreviewMobile = ({
         }`}>
         <OpeningHoursFormPreview
           className="opening-hours-preview-mobile-preview"
-          openingHours={openingHours}
+          datePeriod={datePeriod}
           resourceStates={resourceStates}
           tabIndex={isMobile && isOpen ? 0 : -1}
         />

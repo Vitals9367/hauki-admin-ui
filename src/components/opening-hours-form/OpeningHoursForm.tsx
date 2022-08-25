@@ -100,7 +100,7 @@ const OpeningHoursForm = ({
       throw new Error('Resource not found');
     }
     setSaving(true);
-    submitFn(datePeriodToApiDatePeriod(resource?.id, values, datePeriod?.id))
+    submitFn(datePeriodToApiDatePeriod(resource?.id, values))
       .then(() => {
         toast.success({
           dataTestId: 'opening-period-form-success',
@@ -183,15 +183,15 @@ const OpeningHoursForm = ({
     }
   };
 
+  const formValues = watch();
+
   const sortOpeningHours = () => {
     setDropInRow(undefined);
     reset({
       ...getValues(),
-      openingHours: [...openingHours].sort(byWeekdays),
+      openingHours: [...formValues.openingHours].sort(byWeekdays),
     });
   };
-
-  const { openingHours, name } = watch();
 
   return (
     (resource && datePeriodConfig && (
@@ -201,11 +201,11 @@ const OpeningHoursForm = ({
             <ResourceTitle
               language={language}
               resource={resource}
-              titleAddon={name[language] || undefined}>
+              titleAddon={formValues.name[language] || undefined}>
               <div className="mobile-preview-container">
                 <OpeningHoursFormPreviewMobile
+                  datePeriod={formValues}
                   language={language}
-                  openingHours={openingHours}
                   resourceStates={resourceStates}
                 />
               </div>
@@ -232,7 +232,7 @@ const OpeningHoursForm = ({
                 </section>
                 <aside className="opening-hours-form__aside">
                   <OpeningHoursFormPreview
-                    openingHours={openingHours}
+                    datePeriod={formValues}
                     resourceStates={resourceStates}
                     tabIndex={isMobile ? -1 : 0}
                   />

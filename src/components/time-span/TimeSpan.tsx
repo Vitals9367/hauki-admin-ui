@@ -43,6 +43,8 @@ const TimeSpan = ({
     ({ value }) => value !== 'undefined'
   );
 
+  const showTimeSpans = resourceState !== ResourceState.CLOSED || i !== 0;
+
   return (
     <div
       className={
@@ -52,60 +54,53 @@ const TimeSpan = ({
       }
       role="group"
       aria-label={groupLabel}>
-      <div
-        aria-hidden={resourceState === ResourceState.CLOSED}
-        className={`time-span__range ${
-          resourceState === ResourceState.CLOSED
-            ? 'time-span__range--hidden'
-            : ''
-        }`}>
-        <TimeInput
-          {...register(`${namePrefix}.start_time`)}
-          disabled={disabled || fullDay}
-          id={getUiId([namePrefix, 'start-time'])}
-          hoursLabel="tunnit"
-          minutesLabel="minuutit"
-          label="Alkaen klo"
-          required
-          value={item?.start_time || ''}
-        />
-        <div className="time-span__range-divider">-</div>
-        <TimeInput
-          {...register(`${namePrefix}.end_time`)}
-          disabled={disabled || fullDay}
-          id={getUiId([namePrefix, 'end-time'])}
-          hoursLabel="tunnit"
-          minutesLabel="minuutit"
-          label="Päättyen klo"
-          required
-          value={item?.end_time || ''}
-        />
-      </div>
-      <Controller
-        defaultValue={item?.full_day ?? false}
-        render={({ field }): JSX.Element => (
-          <div
-            className={`time-span__full-day-checkbox-container ${
-              resourceState === ResourceState.CLOSED
-                ? 'time-span__full-day-checkbox-container--hidden'
-                : ''
-            }`}>
-            <Checkbox
-              className="time-span__full-day-checkbox"
-              disabled={disabled}
-              id={getUiId([namePrefix, 'full-day'])}
-              name={`${namePrefix}.full_day`}
-              label="24 h"
-              onChange={(e): void => {
-                field.onChange(e.target.checked);
-              }}
-              checked={field.value}
+      {showTimeSpans && (
+        <>
+          <div aria-hidden={showTimeSpans} className="time-span__range">
+            <TimeInput
+              {...register(`${namePrefix}.start_time`)}
+              disabled={disabled || fullDay}
+              id={getUiId([namePrefix, 'start-time'])}
+              hoursLabel="tunnit"
+              minutesLabel="minuutit"
+              label="Alkaen klo"
+              required
+              value={item?.start_time || ''}
+            />
+            <div className="time-span__range-divider">-</div>
+            <TimeInput
+              {...register(`${namePrefix}.end_time`)}
+              disabled={disabled || fullDay}
+              id={getUiId([namePrefix, 'end-time'])}
+              hoursLabel="tunnit"
+              minutesLabel="minuutit"
+              label="Päättyen klo"
+              required
+              value={item?.end_time || ''}
             />
           </div>
-        )}
-        control={control}
-        name={`${namePrefix}.full_day`}
-      />
+          <Controller
+            defaultValue={item?.full_day ?? false}
+            render={({ field }): JSX.Element => (
+              <div className="time-span__full-day-checkbox-container">
+                <Checkbox
+                  className="time-span__full-day-checkbox"
+                  disabled={disabled}
+                  id={getUiId([namePrefix, 'full-day'])}
+                  name={`${namePrefix}.full_day`}
+                  label="24 h"
+                  onChange={(e): void => {
+                    field.onChange(e.target.checked);
+                  }}
+                  checked={field.value}
+                />
+              </div>
+            )}
+            control={control}
+            name={`${namePrefix}.full_day`}
+          />
+        </>
+      )}
       {resourceState === ResourceState.OTHER && (
         <div className="time-span__descriptions">
           <Controller

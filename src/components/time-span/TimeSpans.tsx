@@ -22,7 +22,7 @@ const TimeSpans = ({
   timeSpanGroupIdx: number;
 }): JSX.Element => {
   const namePrefix = `openingHours.${openingHoursIdx}.timeSpanGroups.${timeSpanGroupIdx}.timeSpans` as const;
-  const { control, watch } = useFormContext<DatePeriod>();
+  const { control, setValue, watch } = useFormContext<DatePeriod>();
   const { fields, append, remove } = useFieldArray({
     control,
     name: namePrefix,
@@ -33,17 +33,21 @@ const TimeSpans = ({
   );
 
   useEffect(() => {
-    if (
-      firstTimeSpanResourceState === ResourceState.CLOSED &&
-      fields.length > 1
-    ) {
-      fields.forEach((field, i) => {
-        if (i > 0) {
-          remove(i);
-        }
+    if (firstTimeSpanResourceState === ResourceState.CLOSED) {
+      setValue('openingHours.0.timeSpanGroups.0.timeSpans.0', {
+        ...defaultTimeSpan,
+        resource_state: ResourceState.CLOSED,
       });
+
+      if (fields.length > 1) {
+        fields.forEach((field, i) => {
+          if (i > 0) {
+            remove(i);
+          }
+        });
+      }
     }
-  }, [fields, firstTimeSpanResourceState, remove]);
+  }, [fields, firstTimeSpanResourceState, setValue, remove]);
 
   return (
     <div className="time-spans">
@@ -55,9 +59,7 @@ const TimeSpans = ({
           i={i}
           groupLabel={`Aukioloaika ${i + 1}`}
           item={field}
-          resourceStates={resourceStates.filter((resourceState) =>
-            i === 0 ? true : resourceState.value !== ResourceState.CLOSED
-          )}
+          resourceStates={resourceStates}
           onDelete={
             i === 0
               ? undefined

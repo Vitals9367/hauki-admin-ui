@@ -168,7 +168,7 @@ const apiDatePeriod = {
           id: 4,
           end_time_on_next_day: false,
           end_time: null,
-          full_day: true,
+          full_day: false,
           resource_state: ResourceState.CLOSED,
           start_time: null,
           weekdays: [6],

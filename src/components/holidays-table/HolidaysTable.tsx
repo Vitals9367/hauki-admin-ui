@@ -69,6 +69,7 @@ const HolidaysTable = ({
   resourceId: number;
 }): JSX.Element => (
   <OpeningPeriodAccordion
+    initiallyOpen
     id="holidays"
     periodName="Juhlapyhien aukioloajat"
     dateRange={
