@@ -3,7 +3,7 @@ import { Accordion, Notification } from 'hds-react';
 import { useAppContext } from '../App-context';
 import api from '../common/utils/api/api';
 import { Language, Resource } from '../common/lib/types';
-import storage from '../common/utils/storage/storage';
+import sessionStorage from '../common/utils/storage/sessionStorage';
 import Collapse from '../components/collapse/Collapse';
 import { displayLangVersionNotFound } from '../components/language-select/LanguageSelect';
 import { Link } from '../components/link/Link';
@@ -76,19 +76,19 @@ export default function ResourcePage({
         const targetResources = targetResourcesString.split(',');
         const newData = { mainResourceId, mainResourceName, targetResources };
         setTargetResourceData(newData);
-        storage.storeItem<TargetResourcesProps>({
+        sessionStorage.storeItem<TargetResourcesProps>({
           key: targetResourcesStorageKey,
           value: newData,
         });
       } else {
-        const oldData = storage.getItem<TargetResourcesProps>(
+        const oldData = sessionStorage.getItem<TargetResourcesProps>(
           targetResourcesStorageKey
         );
         if (oldData) {
           if (oldData.mainResourceId === resource?.id) {
             setTargetResourceData(oldData);
           } else {
-            storage.removeItem(targetResourcesStorageKey);
+            sessionStorage.removeItem(targetResourcesStorageKey);
           }
         }
       }
