@@ -135,7 +135,13 @@ const ExceptionOpeningHoursForm = ({
         <div>
           <ResourceTitle language={language} resource={resource} />
           <div className="exception-opening-hours-form">
-            <OpeningHoursTitles />
+            <OpeningHoursTitles
+              placeholders={{
+                fi: 'Esim. koulutuspäivä',
+                sv: 'T.ex. utbildningsdag',
+                en: 'E.g. training day',
+              }}
+            />
             <div className="card">
               <Controller
                 defaultValue={startDate ?? ''}

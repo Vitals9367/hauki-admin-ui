@@ -2,9 +2,13 @@ import React from 'react';
 import { TextInput } from 'hds-react';
 import { useFormContext } from 'react-hook-form';
 import './OpeningHoursTitles.scss';
-import { DatePeriod } from '../../common/lib/types';
+import { DatePeriod, LanguageStrings } from '../../common/lib/types';
 
-const OpeningHoursTitles = (): JSX.Element => {
+type Props = {
+  placeholders: LanguageStrings;
+};
+
+const OpeningHoursTitles = ({ placeholders }: Props): JSX.Element => {
   const { register } = useFormContext<DatePeriod>();
 
   return (
@@ -15,14 +19,14 @@ const OpeningHoursTitles = (): JSX.Element => {
         id="title-fi"
         dat-test="opening-period-title-fi"
         label="Aukioloajan otsikko suomeksi"
-        placeholder="Esim. kesäkausi"
+        placeholder={placeholders.fi ?? ''}
       />
       <TextInput
         {...register('name.sv')}
         data-test="opening-period-title-sv"
         id="title-sv"
         label="Aukioloajan otsikko ruotsiksi"
-        placeholder="T.ex. sommartid"
+        placeholder={placeholders.sv ?? ''}
       />
       <TextInput
         {...register('name.en')}
@@ -30,7 +34,7 @@ const OpeningHoursTitles = (): JSX.Element => {
         id="title-en"
         name="name.en"
         label="Aukioloajan otsikko englanniksi"
-        placeholder="E.g. summertime"
+        placeholder={placeholders.en ?? ''}
       />
     </div>
   );

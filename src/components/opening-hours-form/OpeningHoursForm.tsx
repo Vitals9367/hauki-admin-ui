@@ -214,7 +214,13 @@ const OpeningHoursForm = ({
               <Accordion card heading="Ohjeet">
                 WIP
               </Accordion>
-              <OpeningHoursTitles />
+              <OpeningHoursTitles
+                placeholders={{
+                  fi: 'Esim. kesäkausi',
+                  sv: 'T.ex. sommartid',
+                  en: 'E.g. summertime',
+                }}
+              />
               <OpeningHoursValidity />
               <div className="opening-hours-form__fields">
                 <section className="opening-hours-section">
