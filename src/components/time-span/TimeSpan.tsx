@@ -47,11 +47,7 @@ const TimeSpan = ({
 
   return (
     <div
-      className={
-        resourceState === ResourceState.OTHER
-          ? 'time-span--with-extra-fields'
-          : 'time-span'
-      }
+      className="time-span time-span--with-extra-fields"
       role="group"
       aria-label={groupLabel}>
       {showTimeSpans && (
@@ -101,47 +97,45 @@ const TimeSpan = ({
           />
         </>
       )}
-      {resourceState === ResourceState.OTHER && (
-        <div className="time-span__descriptions">
-          <Controller
-            defaultValue={item?.description.fi ?? ''}
-            name={`${namePrefix}.description.fi`}
-            render={({ field: { name, onChange, value } }): JSX.Element => (
-              <TextInput
-                id={getUiId([name])}
-                label="Kuvaus suomeksi"
-                onChange={onChange}
-                value={value || ''}
-              />
-            )}
-          />
-          <Controller
-            defaultValue={item?.description.sv ?? ''}
-            name={`${namePrefix}.description.sv`}
-            render={({ field: { name, onChange, value } }): JSX.Element => (
-              <TextInput
-                id={getUiId([name])}
-                label="Kuvaus ruotsiksi"
-                onChange={onChange}
-                value={value || ''}
-              />
-            )}
-          />
-          <Controller
-            defaultValue={item?.description.en ?? ''}
-            name={`${namePrefix}.description.en`}
-            render={({ field: { name, onChange, value } }): JSX.Element => (
-              <TextInput
-                id={getUiId([name])}
-                label="Kuvaus englanniksi"
-                name={`${namePrefix}.description.en`}
-                onChange={onChange}
-                value={value || ''}
-              />
-            )}
-          />
-        </div>
-      )}
+      <div className="time-span__descriptions">
+        <Controller
+          defaultValue={item?.description.fi ?? ''}
+          name={`${namePrefix}.description.fi`}
+          render={({ field: { name, onChange, value } }): JSX.Element => (
+            <TextInput
+              id={getUiId([name])}
+              label="Kuvaus suomeksi"
+              onChange={onChange}
+              value={value || ''}
+            />
+          )}
+        />
+        <Controller
+          defaultValue={item?.description.sv ?? ''}
+          name={`${namePrefix}.description.sv`}
+          render={({ field: { name, onChange, value } }): JSX.Element => (
+            <TextInput
+              id={getUiId([name])}
+              label="Kuvaus ruotsiksi"
+              onChange={onChange}
+              value={value || ''}
+            />
+          )}
+        />
+        <Controller
+          defaultValue={item?.description.en ?? ''}
+          name={`${namePrefix}.description.en`}
+          render={({ field: { name, onChange, value } }): JSX.Element => (
+            <TextInput
+              id={getUiId([name])}
+              label="Kuvaus englanniksi"
+              name={`${namePrefix}.description.en`}
+              onChange={onChange}
+              value={value || ''}
+            />
+          )}
+        />
+      </div>
       <Controller
         defaultValue={item?.resource_state ?? ResourceState.OPEN}
         name={`${namePrefix}.resource_state`}

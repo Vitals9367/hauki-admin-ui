@@ -31,11 +31,8 @@ const TimeSpanDescription = ({
 
   return (
     <>
-      {timeSpan.resource_state === ResourceState.OTHER
-        ? timeSpan.description?.fi ?? ''
-        : resourceStates.find(
-            (state) => state.value === timeSpan.resource_state
-          )?.label[language] ?? 'Tuntematon'}
+      {resourceStates.find((state) => state.value === timeSpan.resource_state)
+        ?.label[language] ?? 'Tuntematon'}
     </>
   );
 };
@@ -54,36 +51,36 @@ export const TimeSpan = ({
     return null;
   }
 
-  if (
+  const isClosed =
     !timeSpan.start_time &&
     !timeSpan.end_time &&
-    timeSpan.resource_state === ResourceState.CLOSED
-  ) {
-    return <>Suljettu</>;
-  }
+    timeSpan.resource_state === ResourceState.CLOSED;
 
   return (
     <span className="opening-hours-preview-time-span-container">
-      <span className="opening-hours-preview-time-span">
-        {timeSpan?.full_day ? (
-          '24h'
-        ) : (
-          <>
-            <span className="opening-hours-preview-time-span__time">
-              {timeSpan?.start_time?.substring(0, 5) || emptyHours}
-            </span>
-            <span>-</span>
-            <span className="opening-hours-preview-time-span__time">
-              {timeSpan?.end_time?.substring(0, 5) || emptyHours}
-            </span>
-          </>
-        )}
-      </span>
+      {!isClosed && (
+        <span className="opening-hours-preview-time-span">
+          {timeSpan?.full_day ? (
+            '24h'
+          ) : (
+            <>
+              <span className="opening-hours-preview-time-span__time">
+                {timeSpan?.start_time?.substring(0, 5) || emptyHours}
+              </span>
+              <span>-</span>
+              <span className="opening-hours-preview-time-span__time">
+                {timeSpan?.end_time?.substring(0, 5) || emptyHours}
+              </span>
+            </>
+          )}
+        </span>
+      )}
       <TimeSpanDescription
         language={language}
         resourceStates={resourceStates}
         timeSpan={timeSpan}
       />
+      <span>{timeSpan.description[language]}</span>
     </span>
   );
 };

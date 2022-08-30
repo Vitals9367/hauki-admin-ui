@@ -22,7 +22,7 @@ const TimeSpans = ({
   timeSpanGroupIdx: number;
 }): JSX.Element => {
   const namePrefix = `openingHours.${openingHoursIdx}.timeSpanGroups.${timeSpanGroupIdx}.timeSpans` as const;
-  const { control, setValue, watch } = useFormContext<DatePeriod>();
+  const { control, getValues, setValue, watch } = useFormContext<DatePeriod>();
   const { fields, append, remove } = useFieldArray({
     control,
     name: namePrefix,
@@ -34,8 +34,12 @@ const TimeSpans = ({
 
   useEffect(() => {
     if (firstTimeSpanResourceState === ResourceState.CLOSED) {
+      const description = getValues(
+        'openingHours.0.timeSpanGroups.0.timeSpans.0.description'
+      );
       setValue('openingHours.0.timeSpanGroups.0.timeSpans.0', {
         ...defaultTimeSpan,
+        description,
         resource_state: ResourceState.CLOSED,
       });
 
@@ -47,7 +51,7 @@ const TimeSpans = ({
         });
       }
     }
-  }, [fields, firstTimeSpanResourceState, setValue, remove]);
+  }, [fields, firstTimeSpanResourceState, getValues, setValue, remove]);
 
   return (
     <div className="time-spans">

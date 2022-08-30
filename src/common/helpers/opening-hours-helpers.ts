@@ -33,16 +33,10 @@ const toApiTimeSpan = (days: number[]) => (
   timeSpan: TimeSpan
 ): ApiTimeSpan => ({
   id: timeSpan.id,
-  description:
-    timeSpan.resource_state === ResourceState.OTHER
-      ? timeSpan.description
-      : { fi: null, sv: null, en: null },
+  description: timeSpan.description,
   end_time: timeSpan.end_time,
   full_day: timeSpan.full_day,
-  resource_state:
-    timeSpan.resource_state === ResourceState.OTHER
-      ? ResourceState.OPEN
-      : timeSpan.resource_state,
+  resource_state: timeSpan.resource_state,
   start_time: timeSpan.start_time,
   weekdays: days,
   end_time_on_next_day:
@@ -136,11 +130,6 @@ export const datePeriodToApiDatePeriod = (
 const weekDaysMatch = (weekdays1: Weekdays, weekdays2: Weekdays): boolean =>
   weekdays1.every((weekday) => weekdays2.includes(weekday));
 
-const resourceStateIsOther = (timeSpan: ApiTimeSpan): boolean =>
-  !!timeSpan.description.fi ||
-  !!timeSpan.description.sv ||
-  !!timeSpan.description.en;
-
 export const apiTimeSpanToTimeSpan = (timeSpan: ApiTimeSpan): TimeSpan => ({
   id: timeSpan.id,
   description: timeSpan.description,
@@ -149,9 +138,7 @@ export const apiTimeSpanToTimeSpan = (timeSpan: ApiTimeSpan): TimeSpan => ({
     timeSpan.resource_state === ResourceState.CLOSED
       ? false
       : timeSpan.full_day,
-  resource_state: resourceStateIsOther(timeSpan)
-    ? ResourceState.OTHER
-    : timeSpan.resource_state,
+  resource_state: timeSpan.resource_state,
   start_time: timeSpan.start_time ? timeSpan.start_time.substring(0, 5) : null,
 });
 

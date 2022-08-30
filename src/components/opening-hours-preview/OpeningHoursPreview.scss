@@ -81,6 +81,6 @@ td::first-letter {
 
 .opening-hours-preview-time-span-container {
   display: grid;
-  grid-template-columns: 120px 1fr;
+  grid-template-columns: 100px auto 1fr;
   gap: 5px;
 }

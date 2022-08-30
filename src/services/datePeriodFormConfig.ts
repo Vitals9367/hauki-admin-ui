@@ -1,4 +1,4 @@
-import { ResourceState, UiDatePeriodConfig } from '../common/lib/types';
+import { UiDatePeriodConfig } from '../common/lib/types';
 import api from '../common/utils/api/api';
 
 /**
@@ -9,16 +9,17 @@ import api from '../common/utils/api/api';
  */
 // eslint-disable-next-line import/prefer-default-export
 export const getDatePeriodFormConfig = (): Promise<UiDatePeriodConfig> =>
-  api.getDatePeriodFormConfig().then((result) => ({
-    ...result,
-    resourceState: {
-      ...result.resourceState,
-      options: [
-        ...result.resourceState.options,
-        {
-          value: ResourceState.OTHER,
-          label: { fi: 'Muu, mikä?', sv: 'Muu, mikä?', en: 'Muu, mikä?' },
-        },
-      ],
-    },
-  }));
+  api.getDatePeriodFormConfig();
+// .then((result) => ({
+//   ...result,
+//   resourceState: {
+//     ...result.resourceState,
+//     options: [
+//       ...result.resourceState.options,
+//       {
+//         value: ResourceState.OTHER,
+//         label: { fi: 'Muu, mikä?', sv: 'Muu, mikä?', en: 'Muu, mikä?' },
+//       },
+//     ],
+//   },
+// }));
