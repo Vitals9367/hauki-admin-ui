@@ -32,6 +32,7 @@ const ExceptionPeriodsList = ({
   parentId,
   resourceId,
   isLoading,
+  holidaysTableInitiallyOpen,
 }: {
   datePeriodConfig?: UiDatePeriodConfig;
   datePeriods: DatePeriod[];
@@ -40,6 +41,7 @@ const ExceptionPeriodsList = ({
   parentId?: number;
   resourceId: number;
   isLoading: boolean;
+  holidaysTableInitiallyOpen: boolean;
 }): JSX.Element => {
   const history = useHistory();
   const holidays = getHolidays();
@@ -78,6 +80,7 @@ const ExceptionPeriodsList = ({
               datePeriodConfig={datePeriodConfig}
               datePeriods={holidayDatePeriods}
               holidays={holidays}
+              initiallyOpen={holidaysTableInitiallyOpen}
               parentId={parentId}
               resourceId={resourceId}
             />
@@ -217,10 +220,12 @@ export default function ResourceOpeningHours({
   language,
   parentId,
   resource,
+  holidaysTableInitiallyOpen = false,
 }: {
   language: Language;
   parentId?: number;
   resource: Resource;
+  holidaysTableInitiallyOpen?: boolean;
 }): JSX.Element | null {
   const resourceId = resource.id;
   const [error, setError] = useState<Error | undefined>(undefined);
@@ -296,6 +301,7 @@ export default function ResourceOpeningHours({
         parentId={parentId}
         resourceId={resourceId}
         isLoading={isLoading}
+        holidaysTableInitiallyOpen={holidaysTableInitiallyOpen}
       />
     </>
   );

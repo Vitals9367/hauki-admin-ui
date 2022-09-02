@@ -97,6 +97,26 @@ const TimeSpan = ({
           />
         </>
       )}
+      <Controller
+        defaultValue={item?.resource_state ?? ResourceState.OPEN}
+        name={`${namePrefix}.resource_state`}
+        control={control}
+        render={({ field: { name, onChange, value } }): JSX.Element => (
+          <Select<InputOption>
+            disabled={disabled}
+            id={getUiId([name])}
+            label="Aukiolon tyyppi"
+            options={sanitizedResourceStateOptions}
+            className="time-span__resource-state-select"
+            onChange={(option: InputOption): void => onChange(option.value)}
+            placeholder="Valitse"
+            required
+            value={sanitizedResourceStateOptions.find(
+              (option) => option.value === value
+            )}
+          />
+        )}
+      />
       <div className="time-span__descriptions">
         <Controller
           defaultValue={item?.description.fi ?? ''}
@@ -136,26 +156,6 @@ const TimeSpan = ({
           )}
         />
       </div>
-      <Controller
-        defaultValue={item?.resource_state ?? ResourceState.OPEN}
-        name={`${namePrefix}.resource_state`}
-        control={control}
-        render={({ field: { name, onChange, value } }): JSX.Element => (
-          <Select<InputOption>
-            disabled={disabled}
-            id={getUiId([name])}
-            label="Aukiolon tyyppi"
-            options={sanitizedResourceStateOptions}
-            className="time-span__resource-state-select"
-            onChange={(option: InputOption): void => onChange(option.value)}
-            placeholder="Valitse"
-            required
-            value={sanitizedResourceStateOptions.find(
-              (option) => option.value === value
-            )}
-          />
-        )}
-      />
       <div className="remove-time-span-button">
         {onDelete && (
           <SupplementaryButton iconLeft={<IconTrash />} onClick={onDelete}>

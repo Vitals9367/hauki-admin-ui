@@ -179,22 +179,17 @@ export default function ResourcePage({
                   })
                 }
               />
-              <p
-                data-test={`parent-resource-description-${index}`}
-                className="resource-description-text related-resource-description-text">
-                {parentResource?.description[language] ||
-                  displayLangVersionNotFound({
-                    language,
-                    label: 'toimipisteen kuvaus',
-                  })}
-              </p>
             </div>
           ))}
         </ResourceDetailsSection>
       )}
       <ResourceSection id="resource-opening-hours">
         {resource && (
-          <ResourceOpeningHours language={language} resource={resource} />
+          <ResourceOpeningHours
+            language={language}
+            resource={resource}
+            holidaysTableInitiallyOpen={childResources.length === 0}
+          />
         )}
       </ResourceSection>
       {!hasTargetResources && childResources?.length > 0 && (

@@ -59,17 +59,19 @@ const HolidaysTable = ({
   datePeriodConfig,
   datePeriods,
   holidays,
+  initiallyOpen,
   parentId,
   resourceId,
 }: {
   datePeriodConfig?: UiDatePeriodConfig;
   datePeriods: DatePeriod[];
   holidays: Holiday[];
+  initiallyOpen: boolean;
   parentId?: number;
   resourceId: number;
 }): JSX.Element => (
   <OpeningPeriodAccordion
-    initiallyOpen
+    initiallyOpen={initiallyOpen}
     id="holidays"
     periodName="Juhlapyhien aukioloajat"
     dateRange={
