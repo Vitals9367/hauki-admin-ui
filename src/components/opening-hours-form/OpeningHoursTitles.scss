@@ -1,19 +1,34 @@
 @import 'node_modules/hds-design-tokens/lib/all.scss';
 
 .opening-hours-titles {
+  display: flex;
+  flex-direction: column-reverse;
+}
+
+@media screen and (min-width: $breakpoint-m) {
+  .opening-hours-titles {
+    flex-direction: column;
+  }
+}
+
+.opening-hours-titles-inputs {
   display: grid;
   gap: 1.5rem;
   grid-template-columns: 1fr;
 }
 
 @media screen and (min-width: $breakpoint-m) {
-  .opening-hours-titles {
+  .opening-hours-titles-inputs {
     grid-template-columns: 1fr 1fr;
   }
 }
 
 @media screen and (min-width: $breakpoint-l) {
-  .opening-hours-titles {
+  .opening-hours-titles-inputs {
     grid-template-columns: 1fr 1fr 1fr;
   }
+}
+
+.titles-helper-text {
+  color: $color-black-60;
 }
