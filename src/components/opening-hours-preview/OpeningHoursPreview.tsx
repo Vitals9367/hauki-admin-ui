@@ -1,5 +1,6 @@
 import React, { Fragment } from 'react';
 import { useAppContext } from '../../App-context';
+import { isClosed } from '../../common/helpers/opening-hours-helpers';
 import { openingHoursToPreviewRows } from '../../common/helpers/preview-helpers';
 import {
   Language,
@@ -51,14 +52,18 @@ export const TimeSpan = ({
     return null;
   }
 
-  const isClosed =
+  const closed =
     !timeSpan.start_time &&
     !timeSpan.end_time &&
-    timeSpan.resource_state === ResourceState.CLOSED;
+    timeSpan.resource_state &&
+    isClosed(timeSpan.resource_state);
 
   return (
-    <span className="opening-hours-preview-time-span-container">
-      {!isClosed && (
+    <span
+      className={`opening-hours-preview-time-span-container ${
+        closed ? 'opening-hours-preview-time-span-container--no-time-spans' : ''
+      }`}>
+      {!closed && (
         <span className="opening-hours-preview-time-span">
           {timeSpan?.full_day ? (
             '24h'

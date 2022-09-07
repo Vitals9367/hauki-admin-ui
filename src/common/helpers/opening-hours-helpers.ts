@@ -297,3 +297,11 @@ export const isHoliday = (
     new Date(transformDateToApiFormat(datePeriod.endDate)),
     new Date(transformDateToApiFormat(datePeriod.startDate))
   ) <= dayInMilliseconds;
+
+export const isClosed = (resourceState: ResourceState): boolean =>
+  [
+    ResourceState.CLOSED,
+    ResourceState.MAINTENANCE,
+    ResourceState.UNDEFINED,
+    ResourceState.NOT_IN_USE,
+  ].includes(resourceState);

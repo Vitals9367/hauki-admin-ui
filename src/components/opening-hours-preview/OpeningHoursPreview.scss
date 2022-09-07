@@ -23,7 +23,7 @@
 }
 
 .opening-hours-preview-table__day-column {
-  width: 60px;
+  width: 80px;
 }
 
 .opening-hours-preview-table__time-span-column {
@@ -83,4 +83,8 @@ td::first-letter {
   display: grid;
   grid-template-columns: 100px auto 1fr;
   gap: 5px;
+}
+
+.opening-hours-preview-time-span-container--no-time-spans {
+  grid-template-columns: auto 1fr;
 }
