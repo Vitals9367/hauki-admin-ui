@@ -19,7 +19,7 @@ const session = new Httpx();
 session.setBaseUrl(`${apiUrl}`);
 session.addHeader('Authorization', `haukisigned ${authParams}`);
 
-const { addNewDatePeriod, viewOffice } = commands(session);
+const { addNewDatePeriod, viewResource } = commands(session);
 
 export const options = {
   thresholds: {
@@ -29,7 +29,7 @@ export const options = {
     addOpeningHours: {
       executor: 'constant-vus',
       exec: 'addOpeningHours',
-      vus: 10,
+      vus: 5,
       duration: '1m',
     },
     requestOpeningHours: {
@@ -57,10 +57,10 @@ export function setup() {
 }
 
 export function addOpeningHours({ resourceId }) {
-  viewOffice(tprekResourceId, resourceId);
+  viewResource(tprekResourceId, resourceId);
   sleep(getRandomArbitrary(10, IDLE_TIME));
   addNewDatePeriod(resourceId);
-  viewOffice(tprekResourceId, resourceId);
+  viewResource(tprekResourceId, resourceId);
 }
 
 export function requestOpeningHours({ resources }) {
@@ -74,16 +74,32 @@ export function requestOpeningHours({ resources }) {
     const endDate = new Date();
     endDate.setDate(startDate.getDate() + 365);
 
-    check(
-      session.get(
-        `/resource/${resourceId}/opening_hours/?start_date=${formatDate(
-          startDate
-        )}&end_date=${formatDate(endDate)}`
-      ),
-      {
-        'Fetching opening hours returns 200': (r) => r.status === 200,
-      }
-    );
+    const url = `/resource/${resourceId}/opening_hours/?start_date=${formatDate(
+      startDate
+    )}&end_date=${formatDate(endDate)}`;
+
+    const start = new Date().toISOString();
+    const result = session.get(url);
+
+    if (result.status !== 200) {
+      console.log(
+        JSON.stringify(
+          {
+            url: `${apiUrl}/${url}`,
+            status: result.status,
+            start,
+            end: new Date().toISOString(),
+            body: JSON.stringify(result.body),
+          },
+          null,
+          2
+        )
+      );
+    }
+
+    check(result, {
+      'Fetching opening hours returns 200': (r) => r.status === 200,
+    });
   });
 }
 

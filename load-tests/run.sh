@@ -1,7 +1,7 @@
 cd $(dirname "$0")
 
 export HAUKI_USER='dev@hel.fi';
-export HAUKI_RESOURCE='tprek:41835';
+export HAUKI_RESOURCE='tprek:41683'; #40759 41835 41683
 export API_URL=https://hauki-api.test.hel.ninja/v1
 # export API_URL=http://localhost:8000/v1
 

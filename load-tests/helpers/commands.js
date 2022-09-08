@@ -3,7 +3,7 @@ import { createOpeningHour } from './mocks.js';
 import { getRandomArbitrary } from './utils.js';
 
 const commands = (session) => {
-  const viewOffice = (origId, resourceId) => {
+  const viewResource = (origId, resourceId) => {
     session.post(`/resource/${origId}/permission_check/`);
     session.request('OPTIONS', '/date_period/');
 
@@ -62,7 +62,7 @@ const commands = (session) => {
   return {
     addNewDatePeriod,
     viewDatePeriod,
-    viewOffice,
+    viewResource,
   };
 };
 
