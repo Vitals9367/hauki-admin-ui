@@ -212,7 +212,11 @@ const OpeningHoursForm = ({
             </ResourceTitle>
             <section className="opening-hours-form__content">
               <Accordion card heading="Ohjeet">
-                WIP
+                <a
+                  href="https://kaupunkialustana.hel.fi/aukiolosovellus-ohje/"
+                  target="_blank">
+                  Aukiolosovellus ohje
+                </a>
               </Accordion>
               <OpeningHoursTitles
                 placeholders={{
