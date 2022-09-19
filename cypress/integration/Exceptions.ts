@@ -27,7 +27,7 @@ describe('User adds a new exception date period', () => {
     cy.get('[data-test=exception-date]').click();
     cy.get('button[aria-label="Valitse päivämäärä"]').click();
 
-    cy.get(`[role="dialog"] button[data-date$="31"]`)
+    cy.get(`[role="dialog"] button[data-date$="15"]`)
       .filter(':visible')
       .click({ force: true });
 
