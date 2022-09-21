@@ -24,6 +24,10 @@ import { getHolidays } from '../../services/holidays';
 import OpeningPeriodAccordion from '../opening-period-accordion/OpeningPeriodAccordion';
 import ExceptionOpeningHours from '../exception-opening-hours/ExceptionOpeningHours';
 
+const OpeningPeriodsNotFound = ({ text }: { text: string }): JSX.Element => (
+  <p className="opening-periods-not-found">{text}</p>
+);
+
 const ExceptionPeriodsList = ({
   datePeriodConfig,
   datePeriods,
@@ -70,37 +74,43 @@ const ExceptionPeriodsList = ({
             Lisää poikkeava päivä +
           </PrimaryButton>
         </header>
-        {isLoading && exceptions.length === 0 ? (
+        {isLoading ? (
           <div className="loading-spinner-container">
             <LoadingSpinner loadingText="Haetaan aukioloja" small />
           </div>
         ) : (
           <ul className="opening-periods-list">
-            {exceptions.map((exception, i) => (
-              <li key={exception.id}>
-                <OpeningPeriodAccordion
-                  editUrl={
-                    parentId
-                      ? `/resource/${parentId}/child/${resourceId}/exception/${exception.id}`
-                      : `/resource/${resourceId}/exception/${exception.id}`
-                  }
-                  initiallyOpen={i <= 10}
-                  onDelete={() => {
-                    if (exception.id) {
-                      deletePeriod(exception.id);
-                    }
-                  }}
-                  periodName={exception.name[language]}
-                  dateRange={`${
-                    exception.startDate ?? ''
-                  } — poikkeavat aukiolot`}>
-                  <ExceptionOpeningHours
-                    datePeriod={exception}
-                    datePeriodConfig={datePeriodConfig}
-                  />
-                </OpeningPeriodAccordion>
+            {exceptions.length === 0 ? (
+              <li>
+                <OpeningPeriodsNotFound text="Ei poikkeavia päiviä. Voit lisätä poikkeavan päivän painamalla “Lisää poikkeava päivä“ -painiketta." />
               </li>
-            ))}
+            ) : (
+              exceptions.map((exception, i) => (
+                <li key={exception.id}>
+                  <OpeningPeriodAccordion
+                    editUrl={
+                      parentId
+                        ? `/resource/${parentId}/child/${resourceId}/exception/${exception.id}`
+                        : `/resource/${resourceId}/exception/${exception.id}`
+                    }
+                    initiallyOpen={i <= 10}
+                    onDelete={() => {
+                      if (exception.id) {
+                        deletePeriod(exception.id);
+                      }
+                    }}
+                    periodName={exception.name[language]}
+                    dateRange={`${
+                      exception.startDate ?? ''
+                    } — poikkeavat aukiolot`}>
+                    <ExceptionOpeningHours
+                      datePeriod={exception}
+                      datePeriodConfig={datePeriodConfig}
+                    />
+                  </OpeningPeriodAccordion>
+                </li>
+              ))
+            )}
           </ul>
         )}
       </section>
@@ -130,10 +140,6 @@ const ExceptionPeriodsList = ({
     </>
   );
 };
-
-const OpeningPeriodsNotFound = ({ text }: { text: string }): JSX.Element => (
-  <p className="opening-periods-not-found">{text}</p>
-);
 
 enum PeriodsListTheme {
   DEFAULT = 'DEFAULT',
