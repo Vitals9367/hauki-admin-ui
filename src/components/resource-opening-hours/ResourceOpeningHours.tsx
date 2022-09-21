@@ -51,66 +51,83 @@ const ExceptionPeriodsList = ({
   );
 
   return (
-    <section className="opening-periods-section">
-      <header className="exception-periods-header">
-        <h3 className="exception-periods-title">Poikkeavat päivät</h3>
-        <PrimaryButton
-          dataTest="add-new-exception-period-button"
-          onClick={() => {
-            if (parentId) {
-              history.push(
-                `/resource/${parentId}/child/${resourceId}/exception/new`
-              );
-            } else {
-              history.push(`/resource/${resourceId}/exception/new`);
-            }
-          }}
-          size="small">
-          + Lisää poikkeava päivä
-        </PrimaryButton>
-      </header>
-      <ul className="opening-periods-list">
-        {exceptions.map((exception, i) => (
-          <li key={exception.id}>
-            <OpeningPeriodAccordion
-              editUrl={
-                parentId
-                  ? `/resource/${parentId}/child/${resourceId}/exception/${exception.id}`
-                  : `/resource/${resourceId}/exception/${exception.id}`
+    <>
+      <section className="opening-periods-section">
+        <header className="exception-periods-header">
+          <h3 className="exception-periods-title">Poikkeavat päivät</h3>
+          <PrimaryButton
+            dataTest="add-new-exception-period-button"
+            onClick={() => {
+              if (parentId) {
+                history.push(
+                  `/resource/${parentId}/child/${resourceId}/exception/new`
+                );
+              } else {
+                history.push(`/resource/${resourceId}/exception/new`);
               }
-              initiallyOpen={i <= 10}
-              onDelete={() => {
-                if (exception.id) {
-                  deletePeriod(exception.id);
-                }
-              }}
-              periodName={exception.name[language]}
-              dateRange={`${exception.startDate ?? ''} — poikkeavat aukiolot`}>
-              <ExceptionOpeningHours
-                datePeriod={exception}
-                datePeriodConfig={datePeriodConfig}
-              />
-            </OpeningPeriodAccordion>
-          </li>
-        ))}
+            }}
+            size="small">
+            Lisää poikkeava päivä +
+          </PrimaryButton>
+        </header>
         {isLoading && exceptions.length === 0 ? (
           <div className="loading-spinner-container">
-            <LoadingSpinner loadingText="Haetaan aukiolojoja" small />
+            <LoadingSpinner loadingText="Haetaan aukioloja" small />
           </div>
         ) : (
-          <li>
-            <HolidaysTable
-              datePeriodConfig={datePeriodConfig}
-              datePeriods={holidayDatePeriods}
-              holidays={holidays}
-              initiallyOpen={holidaysTableInitiallyOpen}
-              parentId={parentId}
-              resourceId={resourceId}
-            />
-          </li>
+          <ul className="opening-periods-list">
+            {exceptions.map((exception, i) => (
+              <li key={exception.id}>
+                <OpeningPeriodAccordion
+                  editUrl={
+                    parentId
+                      ? `/resource/${parentId}/child/${resourceId}/exception/${exception.id}`
+                      : `/resource/${resourceId}/exception/${exception.id}`
+                  }
+                  initiallyOpen={i <= 10}
+                  onDelete={() => {
+                    if (exception.id) {
+                      deletePeriod(exception.id);
+                    }
+                  }}
+                  periodName={exception.name[language]}
+                  dateRange={`${
+                    exception.startDate ?? ''
+                  } — poikkeavat aukiolot`}>
+                  <ExceptionOpeningHours
+                    datePeriod={exception}
+                    datePeriodConfig={datePeriodConfig}
+                  />
+                </OpeningPeriodAccordion>
+              </li>
+            ))}
+          </ul>
         )}
-      </ul>
-    </section>
+      </section>
+      <section>
+        <header className="exception-periods-header">
+          <h3 className="exception-periods-title">Juhlapyhät</h3>
+        </header>
+        {isLoading && exceptions.length === 0 ? (
+          <div className="loading-spinner-container">
+            <LoadingSpinner loadingText="Haetaan aukioloja" small />
+          </div>
+        ) : (
+          <ul className="opening-periods-list">
+            <li>
+              <HolidaysTable
+                datePeriodConfig={datePeriodConfig}
+                datePeriods={holidayDatePeriods}
+                holidays={holidays}
+                initiallyOpen={holidaysTableInitiallyOpen}
+                parentId={parentId}
+                resourceId={resourceId}
+              />
+            </li>
+          </ul>
+        )}
+      </section>
+    </>
   );
 };
 

@@ -101,6 +101,8 @@
   @extend .opening-periods-header;
 
   background: $color-coat-of-arms-light;
+  min-height: 4.75rem;
+  box-sizing: border-box;
 }
 
 .exception-periods-title {
