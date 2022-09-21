@@ -117,6 +117,18 @@ const ExceptionPeriodsList = ({
       <section>
         <header className="exception-periods-header">
           <h3 className="exception-periods-title">Juhlapyhät</h3>
+          <PrimaryButton
+            dataTest="edit-holidays-button"
+            onClick={() =>
+              history.push(
+                `/resource/${
+                  parentId ? `${parentId}/child/${resourceId}` : resourceId
+                }/holidays`
+              )
+            }
+            size="small">
+            Muokkaa juhlapyhiä
+          </PrimaryButton>
         </header>
         {isLoading && exceptions.length === 0 ? (
           <div className="loading-spinner-container">
@@ -130,8 +142,6 @@ const ExceptionPeriodsList = ({
                 datePeriods={holidayDatePeriods}
                 holidays={holidays}
                 initiallyOpen={holidaysTableInitiallyOpen}
-                parentId={parentId}
-                resourceId={resourceId}
               />
             </li>
           </ul>

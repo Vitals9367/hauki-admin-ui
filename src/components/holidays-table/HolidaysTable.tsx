@@ -60,15 +60,11 @@ const HolidaysTable = ({
   datePeriods,
   holidays,
   initiallyOpen,
-  parentId,
-  resourceId,
 }: {
   datePeriodConfig?: UiDatePeriodConfig;
   datePeriods: DatePeriod[];
   holidays: Holiday[];
   initiallyOpen: boolean;
-  parentId?: number;
-  resourceId: number;
 }): JSX.Element => (
   <OpeningPeriodAccordion
     initiallyOpen={initiallyOpen}
@@ -80,10 +76,7 @@ const HolidaysTable = ({
         datePeriods={datePeriods}
         holiday={holidays[0]}
       />
-    }
-    editUrl={`/resource/${
-      parentId ? `${parentId}/child/${resourceId}` : resourceId
-    }/holidays`}>
+    }>
     <div className="holidays-container">
       <h4 id="holidays-title" className="holidays-title">
         Seuraavat juhlapyhät

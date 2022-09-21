@@ -9,7 +9,7 @@ describe('User adds a new holiday opening period', () => {
     cy.intercept('POST', '/v1/date_period/').as('saveHoliday');
 
     // Go to add new openings hours
-    cy.get('[data-test=openingPeriodEditLink-holidays]').click();
+    cy.get('[data-test=edit-holidays-button]').click();
 
     // Select holiday
     cy.get('[data-test=holiday-17-checkbox]').check();
