@@ -20,6 +20,12 @@
   margin-left: -25px;
 }
 
+@media screen and (min-width: $breakpoint-m) {
+  .remove-time-span-button {
+    margin-left: revert;
+  }
+}
+
 .time-span__descriptions {
   display: flex;
   flex-direction: column;
