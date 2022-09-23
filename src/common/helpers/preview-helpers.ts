@@ -1,18 +1,15 @@
 import { isEqual } from 'lodash';
 import { updateOrAdd } from '../utils/fp/list';
-import { byWeekdays } from './opening-hours-helpers';
+import { byRuleType, byWeekdays } from './opening-hours-helpers';
 import {
   OpeningHours,
   TimeSpan,
   PreviewOpeningHours,
   PreviewRow,
-  Rule,
 } from '../lib/types';
 
-const ruleOrder: Rule[] = ['week_every', 'week_even', 'week_odd'];
-
 const byRule = (a: PreviewRow, b: PreviewRow): number =>
-  ruleOrder.indexOf(a.rule) - ruleOrder.indexOf(b.rule);
+  byRuleType(a.rule, b.rule);
 
 const byStartTime = (a: TimeSpan, b: TimeSpan): number =>
   a.start_time ? a.start_time.localeCompare(b.start_time ?? '') : 1;
@@ -98,7 +95,7 @@ export const openingHoursToPreviewRows = (
         openingHour.timeSpanGroups.reduce(
           (timeSpanGroupPreviewRows: PreviewRow[], timeSpanGroup) =>
             updateOrAdd(
-              (previewRow) => previewRow.rule === timeSpanGroup.rule,
+              (previewRow) => previewRow.rule.type === timeSpanGroup.rule.type,
               (previewRow) => ({
                 ...previewRow,
                 openingHours: [
@@ -126,15 +123,15 @@ export const openingHoursToPreviewRows = (
     )
     // Merge rows with 'Joka viikko' days
     .map((previewRow, idx, arr) => {
-      if (previewRow.rule === 'week_every') {
+      if (previewRow.rule.type === 'week_every') {
         return previewRow;
       }
       return {
         ...previewRow,
         openingHours: [
           ...previewRow.openingHours,
-          ...(arr.find((elem) => elem.rule === 'week_every')?.openingHours ??
-            []),
+          ...(arr.find((elem) => elem.rule.type === 'week_every')
+            ?.openingHours ?? []),
         ],
       };
     })
@@ -145,7 +142,7 @@ export const openingHoursToPreviewRows = (
     }))
     // If user has selected some other rule than 'Joka viikko' it will be removed from the list
     .filter((previewRow, idx, arr) => {
-      if (arr.length > 1 && previewRow.rule === 'week_every') {
+      if (arr.length > 1 && previewRow.rule.type === 'week_every') {
         return false;
       }
       return true;

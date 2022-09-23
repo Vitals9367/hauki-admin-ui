@@ -11,7 +11,7 @@ export const datePeriod: DatePeriod = {
       weekdays: [1, 3],
       timeSpanGroups: [
         {
-          rule: 'week_every',
+          rule: { id: undefined, group: 1, type: 'week_every' },
           timeSpans: [
             {
               id: 9054,
@@ -29,7 +29,7 @@ export const datePeriod: DatePeriod = {
       weekdays: [2, 4],
       timeSpanGroups: [
         {
-          rule: 'week_every',
+          rule: { id: undefined, group: 1, type: 'week_every' },
           timeSpans: [
             {
               id: 14667,
@@ -47,7 +47,7 @@ export const datePeriod: DatePeriod = {
       weekdays: [6, 7],
       timeSpanGroups: [
         {
-          rule: 'week_every',
+          rule: { id: undefined, group: 1, type: 'week_every' },
           timeSpans: [
             {
               id: 14691,

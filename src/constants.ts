@@ -1,32 +1,26 @@
 import {
-  LanguageStrings,
   TimeSpan,
   ResourceState,
+  RuleType,
+  Language,
   Rule,
 } from './common/lib/types';
 
-export const uiFrequencyRules: { label: LanguageStrings; value: Rule }[] = [
-  {
-    value: 'week_every',
-    label: { fi: 'Joka viikko', sv: 'Joka viikko', en: 'Joka viikko' },
+export const uiRuleLabels: {
+  [key in RuleType]: { [x in Language]: string };
+} = {
+  week_every: { fi: 'Joka viikko', sv: 'Joka viikko', en: 'Joka viikko' },
+  week_even: {
+    fi: 'Parilliset viikot',
+    sv: 'Parilliset viikot',
+    en: 'Parilliset viikot',
   },
-  {
-    value: 'week_even',
-    label: {
-      fi: 'Parilliset viikot',
-      sv: 'Parilliset viikot',
-      en: 'Parilliset viikot',
-    },
+  week_odd: {
+    fi: 'Parittomat viikot',
+    sv: 'Parittomat viikot',
+    en: 'Parittomat viikot',
   },
-  {
-    value: 'week_odd',
-    label: {
-      fi: 'Parittomat viikot',
-      sv: 'Parittomat viikot',
-      en: 'Parittomat viikot',
-    },
-  },
-];
+};
 
 export const defaultTimeSpan: TimeSpan = {
   description: { fi: null, sv: null, en: null },
@@ -37,6 +31,12 @@ export const defaultTimeSpan: TimeSpan = {
 };
 
 export const defaultTimeSpanGroup = {
-  rule: 'week_every' as const,
+  rule: { id: undefined, type: 'week_every' as const },
   timeSpans: [defaultTimeSpan],
+};
+
+export const defaultRule: Rule = {
+  id: undefined,
+  group: undefined,
+  type: 'week_every' as const,
 };

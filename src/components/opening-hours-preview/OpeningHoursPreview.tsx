@@ -10,7 +10,7 @@ import {
   TimeSpan as TTimespan,
 } from '../../common/lib/types';
 import { createWeekdaysStringFromIndices } from '../../common/utils/date-time/format';
-import { uiFrequencyRules } from '../../constants';
+import { uiRuleLabels } from '../../constants';
 import './OpeningHoursPreview.scss';
 
 const TimeSpanDescription = ({
@@ -128,13 +128,9 @@ const OpeningHoursPreview = ({
           <table
             key={`preview-row-${previewRowIdx}`}
             className="opening-hours-preview-table">
-            {previewRow.rule === 'week_every' ? null : (
+            {previewRow.rule.type === 'week_every' ? null : (
               <caption className="opening-hours-preview-table__caption">
-                {
-                  uiFrequencyRules.find(
-                    (rule) => rule.value === previewRow.rule
-                  )?.label[language]
-                }
+                {uiRuleLabels[previewRow.rule.type][language]}
               </caption>
             )}
             <thead className="opening-hours-preview-table__header hiddenFromScreen">

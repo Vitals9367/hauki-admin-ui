@@ -9,6 +9,8 @@ import {
   ResourceState,
   UiDatePeriodConfig,
   DatePeriod,
+  Rule,
+  OpeningHours,
 } from '../../common/lib/types';
 import { SupplementaryButton } from '../button/Button';
 import OpeningHoursFormPreview from '../opening-hours-form-preview/OpeningHoursFormPreview';
@@ -17,6 +19,7 @@ import {
   apiDatePeriodToDatePeriod,
   byWeekdays,
   datePeriodToApiDatePeriod,
+  datePeriodToRules,
 } from '../../common/helpers/opening-hours-helpers';
 import toast from '../notification/Toast';
 import OpeningHoursWeekdays from '../opening-hours-weekdays/OpeningHoursWeekdays';
@@ -93,6 +96,7 @@ const OpeningHoursForm = ({
   const {
     resourceState: { options: resourceStates = [] },
   } = datePeriodConfig;
+  const rules = datePeriodToRules(defaultValues);
 
   const returnToResourcePage = useReturnToResourcePage();
   const onSubmit = (values: DatePeriod): void => {
@@ -236,6 +240,7 @@ const OpeningHoursForm = ({
                       i={i}
                       item={field}
                       resourceStates={resourceStates}
+                      rules={rules}
                       onDayChange={toggleWeekday(i)}
                     />
                   ))}

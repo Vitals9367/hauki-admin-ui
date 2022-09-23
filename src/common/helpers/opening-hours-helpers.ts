@@ -12,6 +12,7 @@ import {
   ApiTimeSpan,
   ApiTimeSpanGroup,
   Weekdays,
+  RuleType,
 } from '../lib/types';
 import {
   formatDate,
@@ -29,15 +30,16 @@ export const byWeekdays = (
   return day1 - day2;
 };
 
-const toApiTimeSpan = (days: number[]) => (
+const toApiTimeSpan = (group: number | undefined, days: number[]) => (
   timeSpan: TimeSpan
 ): ApiTimeSpan => ({
   id: timeSpan.id,
   description: timeSpan.description,
-  end_time: timeSpan.end_time,
+  end_time: timeSpan.end_time || null,
   full_day: timeSpan.full_day,
+  group,
   resource_state: timeSpan.resource_state,
-  start_time: timeSpan.start_time,
+  start_time: timeSpan.start_time || null,
   weekdays: days,
   end_time_on_next_day:
     (timeSpan.start_time &&
@@ -46,23 +48,25 @@ const toApiTimeSpan = (days: number[]) => (
     false,
 });
 
-const frequencyModifierMap: { [key in Rule]: string } = {
+const frequencyModifierMap: { [key in RuleType]: string } = {
   week_every: 'every',
   week_even: 'even',
   week_odd: 'odd',
 };
 
-const ruleToApiRule = (rule: Rule): GroupRule => ({
+const timeSpanGroupToApiRule = ({ rule }: TimeSpanGroup): GroupRule => ({
+  id: rule.id,
+  group: rule.group,
   context: 'year',
   subject: 'week',
   frequency_ordinal: null,
-  frequency_modifier: frequencyModifierMap[rule],
+  frequency_modifier: frequencyModifierMap[rule.type],
 });
 
-const toApiTimeSpanGroups = (
-  openingHours: OpeningHours[]
+export const toApiTimeSpanGroups = (
+  datePeriod: DatePeriod
 ): ApiTimeSpanGroup[] =>
-  openingHours.reduce(
+  datePeriod.openingHours.reduce(
     (result: ApiTimeSpanGroup[], openingHour: OpeningHours) =>
       openingHour.timeSpanGroups.reduce(
         (
@@ -70,28 +74,34 @@ const toApiTimeSpanGroups = (
           uiTimeSpanGroup: TimeSpanGroup
         ) =>
           updateOrAdd(
-            (apiTimeSpanGroup) =>
-              (apiTimeSpanGroup.rules.length === 0 &&
-                uiTimeSpanGroup.rule === 'week_every') ||
-              apiTimeSpanGroup.rules[0]?.frequency_modifier ===
-                ruleToApiRule(uiTimeSpanGroup.rule).frequency_modifier,
+            (apiTimeSpanGroup) => {
+              const rule = timeSpanGroupToApiRule(uiTimeSpanGroup);
+
+              return (
+                (apiTimeSpanGroup.rules.length === 0 &&
+                  rule.frequency_modifier === 'every') ||
+                apiTimeSpanGroup.rules[0]?.frequency_modifier ===
+                  rule.frequency_modifier
+              );
+            },
             (apiTimeSpanGroup) => ({
               ...apiTimeSpanGroup,
               time_spans: [
                 ...apiTimeSpanGroup.time_spans,
                 ...uiTimeSpanGroup.timeSpans.map(
-                  toApiTimeSpan(openingHour.weekdays)
+                  toApiTimeSpan(apiTimeSpanGroup.id, openingHour.weekdays)
                 ),
               ],
             }),
             {
-              id: uiTimeSpanGroup.id,
+              id: uiTimeSpanGroup.rule.group,
               rules:
-                uiTimeSpanGroup.rule === 'week_every'
+                uiTimeSpanGroup.rule.type === 'week_every'
                   ? []
-                  : [ruleToApiRule(uiTimeSpanGroup.rule)],
+                  : [timeSpanGroupToApiRule(uiTimeSpanGroup)],
+              period: datePeriod.id,
               time_spans: uiTimeSpanGroup.timeSpans.map(
-                toApiTimeSpan(openingHour.weekdays)
+                toApiTimeSpan(uiTimeSpanGroup.rule.group, openingHour.weekdays)
               ),
             },
             apiTimeSpanGroups
@@ -121,7 +131,7 @@ export const datePeriodToApiDatePeriod = (
   start_date: datePeriod.startDate
     ? transformDateToApiFormat(datePeriod.startDate)
     : null,
-  time_span_groups: toApiTimeSpanGroups(datePeriod.openingHours),
+  time_span_groups: toApiTimeSpanGroups(datePeriod),
   ...(datePeriod.resourceState
     ? { resource_state: datePeriod.resourceState }
     : {}),
@@ -142,8 +152,7 @@ export const apiTimeSpanToTimeSpan = (timeSpan: ApiTimeSpan): TimeSpan => ({
   start_time: timeSpan.start_time ? timeSpan.start_time.substring(0, 5) : null,
 });
 
-const apiRulesToRule = (apiRules: GroupRule[]): Rule => {
-  const apiRule = apiRules[0];
+const apiRuleToRuleType = (apiRule: GroupRule): RuleType => {
   if (apiRule && apiRule.context === 'year' && apiRule.subject === 'week') {
     switch (apiRule.frequency_modifier) {
       case 'even':
@@ -166,18 +175,33 @@ const apiRulesToRule = (apiRules: GroupRule[]): Rule => {
   return 'week_every';
 };
 
+const apiRulesToRule = (apiTimeSpanGroup: ApiTimeSpanGroup): Rule => {
+  const apiRule = apiTimeSpanGroup.rules[0];
+
+  if (!apiRule) {
+    return {
+      id: undefined,
+      group: apiTimeSpanGroup.id,
+      type: 'week_every',
+    };
+  }
+
+  return {
+    id: apiRule.id,
+    group: apiTimeSpanGroup.id,
+    type: apiRuleToRuleType(apiRule),
+  };
+};
+
 const apiTimeSpanGroupsToOpeningHours = (
   timeSpanGroups: ApiTimeSpanGroup[]
 ): OpeningHours[] =>
   // Go through time span groups to start mapping them to opening hours. We have to go deep to the time span level.
   timeSpanGroups
     .reduce(
-      (
-        allOpeningHours: OpeningHours[],
-        { id, rules, time_spans: timeSpans }: ApiTimeSpanGroup
-      ) =>
+      (allOpeningHours: OpeningHours[], apiTimeSpanGroup: ApiTimeSpanGroup) =>
         // Go thru time spans in time span group to find matching weekdays
-        timeSpans.reduce(
+        apiTimeSpanGroup.time_spans.reduce(
           (openingHours, timeSpan) =>
             updateOrAdd(
               // Match  openings hours with same weekdays
@@ -188,9 +212,9 @@ const apiTimeSpanGroupsToOpeningHours = (
                 ...openingHour,
                 timeSpanGroups: updateOrAdd(
                   // Match time span groups with same rule
-                  (timeSpanGroup) => {
-                    return apiRulesToRule(rules) === timeSpanGroup.rule;
-                  },
+                  (timeSpanGroup) =>
+                    apiRulesToRule(apiTimeSpanGroup).type ===
+                    timeSpanGroup.rule.type,
                   // Add time span to matching time span group
                   (timeSpanGroup) => ({
                     ...timeSpanGroup,
@@ -201,8 +225,7 @@ const apiTimeSpanGroupsToOpeningHours = (
                   }),
                   // If no matching time span group found add new item to arr.
                   {
-                    id,
-                    rule: apiRulesToRule(rules),
+                    rule: apiRulesToRule(apiTimeSpanGroup),
                     timeSpans: [apiTimeSpanToTimeSpan(timeSpan)],
                   },
                   openingHour.timeSpanGroups
@@ -213,8 +236,7 @@ const apiTimeSpanGroupsToOpeningHours = (
                 weekdays: timeSpan.weekdays ?? [],
                 timeSpanGroups: [
                   {
-                    id,
-                    rule: apiRulesToRule(rules),
+                    rule: apiRulesToRule(apiTimeSpanGroup),
                     timeSpans: [apiTimeSpanToTimeSpan(timeSpan)],
                   },
                 ],
@@ -305,3 +327,40 @@ export const isClosed = (resourceState: ResourceState): boolean =>
     ResourceState.UNDEFINED,
     ResourceState.NOT_IN_USE,
   ].includes(resourceState);
+
+const ruleTypeOrder: RuleType[] = ['week_every', 'week_even', 'week_odd'];
+
+export const byRuleType = (a: Rule, b: Rule): number =>
+  ruleTypeOrder.indexOf(a.type) - ruleTypeOrder.indexOf(b.type);
+
+export const datePeriodToRules = (datePeriod: DatePeriod): Rule[] => {
+  const result = datePeriod.openingHours
+    .reduce(
+      (rules: Rule[], openingHours: OpeningHours) =>
+        openingHours.timeSpanGroups.reduce(
+          (timeSpanGroupRules, timeSpanGroup) => {
+            if (
+              timeSpanGroupRules.some(
+                (rule) => rule.type === timeSpanGroup.rule.type
+              )
+            ) {
+              return timeSpanGroupRules;
+            }
+
+            return [...timeSpanGroupRules, timeSpanGroup.rule];
+          },
+          rules
+        ),
+      []
+    )
+    .sort(byRuleType);
+
+  return ruleTypeOrder.map(
+    (ruleType) =>
+      result.find((rule) => rule.type === ruleType) || {
+        id: undefined,
+        group: undefined,
+        type: ruleType,
+      }
+  );
+};

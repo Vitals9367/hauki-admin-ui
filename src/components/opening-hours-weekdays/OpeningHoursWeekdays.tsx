@@ -3,20 +3,25 @@ import { upperFirst } from 'lodash';
 import React, { Fragment, useEffect, useRef } from 'react';
 import { Controller, useFieldArray, useFormContext } from 'react-hook-form';
 import {
-  InputOption,
   Language,
   TranslatedApiChoice,
   OpeningHours as TOpeningHours,
   DatePeriod,
+  RuleType,
   Rule,
+  InputOption,
 } from '../../common/lib/types';
 import { getWeekdayLongNameByIndexAndLang } from '../../common/utils/date-time/format';
 import TimeSpans from '../time-span/TimeSpans';
 import DayCheckbox from './DayCheckbox';
 import './OpeningHoursWeekdays.scss';
-import { defaultTimeSpanGroup, uiFrequencyRules } from '../../constants';
+import {
+  defaultRule,
+  defaultTimeSpanGroup,
+  uiRuleLabels,
+} from '../../constants';
 import { useAppContext } from '../../App-context';
-import { choiceToOption, getUiId } from '../../common/utils/form/form';
+import { getUiId } from '../../common/utils/form/form';
 
 type InflectLabels = {
   [language in Language]: {
@@ -41,6 +46,7 @@ const OpeningHoursWeekdays = ({
   item,
   offsetTop = 0,
   resourceStates,
+  rules: ruleValues,
   onDayChange,
 }: {
   dropIn: boolean;
@@ -48,6 +54,7 @@ const OpeningHoursWeekdays = ({
   item: TOpeningHours;
   offsetTop?: number;
   resourceStates: TranslatedApiChoice[];
+  rules: Rule[];
   onDayChange: (day: number, checked: boolean, offsetTop: number) => void;
 }): JSX.Element => {
   const namePrefix = `openingHours.${openingHoursIdx}` as const;
@@ -61,7 +68,10 @@ const OpeningHoursWeekdays = ({
   const [isMoving, setIsMoving] = React.useState<boolean>(false);
   const ref = useRef<HTMLDivElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
-  const rules = uiFrequencyRules.map(choiceToOption(language));
+  const rules: InputOption<RuleType>[] = ruleValues.map((rule) => ({
+    label: uiRuleLabels[rule.type][language],
+    value: rule.type,
+  }));
 
   useEffect(() => {
     if (dropIn && ref.current) {
@@ -207,25 +217,29 @@ const OpeningHoursWeekdays = ({
           {fields.map((field, i) => (
             <Fragment key={field.id}>
               <Controller
-                defaultValue={field.rule || 'week_every'}
+                defaultValue={field.rule || defaultRule}
                 name={`${namePrefix}.timeSpanGroups.${i}.rule`}
                 control={control}
                 render={({ field: { onChange, value } }): JSX.Element => (
                   <>
-                    <Select<InputOption<Rule>>
+                    <Select<InputOption<RuleType>>
                       className="rule-select"
                       defaultValue={rules[0]}
                       label="Toistuvuus"
-                      onChange={(rule: InputOption<Rule>): void => {
-                        onChange(rule.value);
+                      onChange={(rule: InputOption<RuleType>): void => {
+                        const toValue = (ruleType: RuleType): Rule =>
+                          ruleValues.find((elem) => elem.type === ruleType) ||
+                          defaultRule;
 
-                        const counterparts: { [key in Rule]: Rule } = {
+                        onChange(toValue(rule.value));
+
+                        const counterparts: { [key in RuleType]: RuleType } = {
                           week_even: 'week_odd',
                           week_odd: 'week_even',
                           week_every: 'week_every',
                         };
 
-                        const pair: { idx: number; newValue: Rule } = {
+                        const pair: { idx: number; newValue: RuleType } = {
                           idx: i === 0 ? 1 : 0, // We allow only two rules to exists at a time
                           newValue: counterparts[rule.value],
                         };
@@ -233,30 +247,30 @@ const OpeningHoursWeekdays = ({
                         if (fields.length === 1) {
                           append({
                             ...defaultTimeSpanGroup,
-                            rule: pair.newValue,
+                            rule: toValue(pair.newValue),
                           });
                         } else if (rule.value === 'week_every') {
                           remove(pair.idx);
                         } else {
                           setValue(
                             `${namePrefix}.timeSpanGroups.${pair.idx}.rule`,
-                            pair.newValue
+                            toValue(pair.newValue)
                           );
                         }
                       }}
                       options={rules}
                       placeholder="Valitse"
                       required
-                      value={rules.find((rule) => rule.value === value)}
+                      value={rules.find((rule) => rule.value === value.type)}
                     />
                     <div
                       role="group"
                       aria-label={
                         weekdayGroup +
-                        (value === 'week_every'
+                        (value.type === 'week_every'
                           ? ''
                           : ` ${rules
-                              .find((rule) => rule.value === value)
+                              .find((rule) => rule.value === value.type)
                               ?.label.toLowerCase()}`)
                       }>
                       <TimeSpans

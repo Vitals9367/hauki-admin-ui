@@ -1,20 +1,20 @@
 /// <reference types="jest" />
 
-import { DatePeriod, ResourceState } from '../lib/types';
+import { DatePeriod, OpeningHours, ResourceState } from '../lib/types';
 import {
   apiDatePeriodToDatePeriod,
   datePeriodToApiDatePeriod,
+  datePeriodToRules,
   getActiveDatePeriod,
   isHoliday,
 } from './opening-hours-helpers';
 
-const openingHours = [
+const openingHours: OpeningHours[] = [
   {
     weekdays: [1, 2, 3, 4, 5],
     timeSpanGroups: [
       {
-        id: 1,
-        rule: 'week_every' as const,
+        rule: { id: undefined, group: 1, type: 'week_every' },
         timeSpans: [
           {
             id: 1,
@@ -40,8 +40,7 @@ const openingHours = [
     weekdays: [6],
     timeSpanGroups: [
       {
-        id: 2,
-        rule: 'week_even' as const,
+        rule: { id: 2, group: 2, type: 'week_even' },
         timeSpans: [
           {
             id: 3,
@@ -62,8 +61,7 @@ const openingHours = [
         ],
       },
       {
-        id: 3,
-        rule: 'week_odd' as const,
+        rule: { id: 3, group: 3, type: 'week_odd' },
         timeSpans: [
           {
             id: 5,
@@ -81,8 +79,7 @@ const openingHours = [
     weekdays: [7],
     timeSpanGroups: [
       {
-        id: 1,
-        rule: 'week_every' as const,
+        rule: { id: undefined, group: 1, type: 'week_every' },
         timeSpans: [
           {
             id: 6,
@@ -99,7 +96,7 @@ const openingHours = [
 ];
 
 const apiDatePeriod = {
-  id: undefined,
+  id: 1,
   end_date: '2022-12-31',
   name: { en: null, fi: 'Normaali aukiolo', sv: null },
   description: { en: null, fi: null, sv: null },
@@ -109,10 +106,12 @@ const apiDatePeriod = {
   time_span_groups: [
     {
       id: 1,
+      period: 1,
       rules: [],
       time_spans: [
         {
           id: 1,
+          group: 1,
           end_time: '16:00',
           full_day: false,
           resource_state: ResourceState.OPEN,
@@ -123,6 +122,7 @@ const apiDatePeriod = {
         },
         {
           id: 2,
+          group: 1,
           end_time: '17:00',
           full_day: false,
           resource_state: ResourceState.SELF_SERVICE,
@@ -133,6 +133,7 @@ const apiDatePeriod = {
         },
         {
           id: 6,
+          group: 1,
           end_time: null,
           full_day: false,
           resource_state: ResourceState.OPEN,
@@ -145,8 +146,11 @@ const apiDatePeriod = {
     },
     {
       id: 2,
+      period: 1,
       rules: [
         {
+          id: 2,
+          group: 2,
           context: 'year',
           subject: 'week',
           frequency_modifier: 'even',
@@ -156,6 +160,7 @@ const apiDatePeriod = {
       time_spans: [
         {
           id: 3,
+          group: 2,
           end_time: '16:00',
           full_day: false,
           resource_state: ResourceState.OPEN,
@@ -166,6 +171,7 @@ const apiDatePeriod = {
         },
         {
           id: 4,
+          group: 2,
           end_time_on_next_day: false,
           end_time: null,
           full_day: false,
@@ -178,8 +184,11 @@ const apiDatePeriod = {
     },
     {
       id: 3,
+      period: 1,
       rules: [
         {
+          id: 3,
+          group: 3,
           context: 'year',
           subject: 'week',
           frequency_modifier: 'odd',
@@ -189,6 +198,7 @@ const apiDatePeriod = {
       time_spans: [
         {
           id: 5,
+          group: 3,
           end_time: '16:00',
           full_day: false,
           resource_state: ResourceState.OPEN,
@@ -203,6 +213,7 @@ const apiDatePeriod = {
 };
 
 const datePeriod: DatePeriod = {
+  id: 1,
   name: { en: null, fi: 'Normaali aukiolo', sv: null },
   endDate: '31.12.2022',
   fixed: true,
@@ -212,7 +223,7 @@ const datePeriod: DatePeriod = {
       weekdays: [1, 2, 3, 4, 5],
       timeSpanGroups: [
         {
-          rule: 'week_every',
+          rule: { id: undefined, group: 1, type: 'week_every' },
           timeSpans: [
             {
               description: { en: null, fi: null, sv: null },
@@ -236,7 +247,7 @@ const datePeriod: DatePeriod = {
       weekdays: [6],
       timeSpanGroups: [
         {
-          rule: 'week_even',
+          rule: { id: 1, group: 2, type: 'week_even' },
           timeSpans: [
             {
               description: { en: null, fi: null, sv: null },
@@ -255,7 +266,7 @@ const datePeriod: DatePeriod = {
           ],
         },
         {
-          rule: 'week_odd',
+          rule: { id: 1, group: 3, type: 'week_odd' },
           timeSpans: [
             {
               description: { en: null, fi: null, sv: null },
@@ -272,7 +283,11 @@ const datePeriod: DatePeriod = {
       weekdays: [7],
       timeSpanGroups: [
         {
-          rule: 'week_every',
+          rule: {
+            id: undefined,
+            group: 1,
+            type: 'week_every',
+          },
           timeSpans: [
             {
               description: { en: null, fi: null, sv: null },
@@ -298,6 +313,7 @@ describe('opening-hours-helpers', () => {
           fixed: true,
           name: { fi: 'Normaali aukiolo', sv: null, en: null },
           openingHours,
+          id: 1,
           startDate: '06.06.2022',
         })
       ).toEqual(apiDatePeriod);
@@ -312,7 +328,7 @@ describe('opening-hours-helpers', () => {
         name: { fi: 'Normaali aukiolo', sv: null, en: null },
         openingHours,
         startDate: '06.06.2022',
-        id: undefined,
+        id: 1,
         override: false,
         resourceState: undefined,
       });
@@ -332,7 +348,7 @@ describe('opening-hours-helpers', () => {
               weekdays: [1, 2, 3, 4, 5],
               timeSpanGroups: [
                 {
-                  rule: 'week_every',
+                  rule: { type: 'week_every' },
                   timeSpans: [
                     {
                       id: 890209,
@@ -350,7 +366,7 @@ describe('opening-hours-helpers', () => {
               weekdays: [6, 7],
               timeSpanGroups: [
                 {
-                  rule: 'week_every',
+                  rule: { type: 'week_every' },
                   timeSpans: [
                     {
                       id: 890210,
@@ -379,7 +395,7 @@ describe('opening-hours-helpers', () => {
               weekdays: [1, 2, 3, 4, 5],
               timeSpanGroups: [
                 {
-                  rule: 'week_every',
+                  rule: { type: 'week_every' },
                   timeSpans: [
                     {
                       id: 890207,
@@ -397,7 +413,7 @@ describe('opening-hours-helpers', () => {
               weekdays: [6, 7],
               timeSpanGroups: [
                 {
-                  rule: 'week_every',
+                  rule: { type: 'week_every' },
                   timeSpans: [
                     {
                       id: 890208,
@@ -426,7 +442,7 @@ describe('opening-hours-helpers', () => {
               weekdays: [1, 2, 3, 4, 5],
               timeSpanGroups: [
                 {
-                  rule: 'week_every',
+                  rule: { type: 'week_every' },
                   timeSpans: [
                     {
                       id: 889998,
@@ -444,7 +460,7 @@ describe('opening-hours-helpers', () => {
               weekdays: [6, 7],
               timeSpanGroups: [
                 {
-                  rule: 'week_every',
+                  rule: { type: 'week_every' },
                   timeSpans: [
                     {
                       id: 889999,
@@ -473,7 +489,7 @@ describe('opening-hours-helpers', () => {
               weekdays: [1, 2, 3, 4, 5],
               timeSpanGroups: [
                 {
-                  rule: 'week_every',
+                  rule: { type: 'week_every' },
                   timeSpans: [
                     {
                       id: 889630,
@@ -491,7 +507,7 @@ describe('opening-hours-helpers', () => {
               weekdays: [6, 7],
               timeSpanGroups: [
                 {
-                  rule: 'week_every',
+                  rule: { type: 'week_every' },
                   timeSpans: [
                     {
                       id: 889631,
@@ -573,6 +589,30 @@ describe('opening-hours-helpers', () => {
           holidays
         )
       ).toBe(false);
+    });
+  });
+
+  describe('datePeriodToRules', () => {
+    it('should return correct rules ', () => {
+      expect(datePeriodToRules(datePeriod)).toMatchInlineSnapshot(`
+        Array [
+          Object {
+            "group": 1,
+            "id": undefined,
+            "type": "week_every",
+          },
+          Object {
+            "group": 2,
+            "id": 1,
+            "type": "week_even",
+          },
+          Object {
+            "group": 3,
+            "id": 1,
+            "type": "week_odd",
+          },
+        ]
+      `);
     });
   });
 });

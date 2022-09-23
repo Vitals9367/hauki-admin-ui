@@ -234,7 +234,6 @@ export type TimeSpan = {
 };
 
 export type TimeSpanGroup = {
-  id?: number;
   rule: Rule;
   timeSpans: TimeSpan[];
 };
@@ -265,7 +264,13 @@ export type PreviewRow = {
   openingHours: PreviewOpeningHours[];
 };
 
-export type Rule = 'week_every' | 'week_odd' | 'week_even';
+export type RuleType = 'week_every' | 'week_odd' | 'week_even';
+
+export type Rule = {
+  id?: number;
+  group?: number;
+  type: RuleType;
+};
 
 export type Choice<T> = {
   value: T;
