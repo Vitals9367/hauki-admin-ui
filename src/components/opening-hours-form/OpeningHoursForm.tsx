@@ -9,8 +9,6 @@ import {
   ResourceState,
   UiDatePeriodConfig,
   DatePeriod,
-  Rule,
-  OpeningHours,
 } from '../../common/lib/types';
 import { SupplementaryButton } from '../button/Button';
 import OpeningHoursFormPreview from '../opening-hours-form-preview/OpeningHoursFormPreview';
@@ -221,6 +219,9 @@ const OpeningHoursForm = ({
                   target="_blank">
                   Aukiolosovellus ohje
                 </a>
+                <p className="required-fields-text">
+                  Tähdellä (*) merkityt kohdat ovat pakollisia.
+                </p>
               </Accordion>
               <OpeningHoursTitles
                 placeholders={{

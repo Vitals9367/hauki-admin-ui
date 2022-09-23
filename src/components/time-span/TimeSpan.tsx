@@ -126,6 +126,7 @@ const TimeSpan = ({
               id={getUiId([name])}
               label="Kuvaus suomeksi"
               onChange={onChange}
+              placeholder="Esim. seniorit"
               value={value || ''}
             />
           )}
@@ -138,6 +139,7 @@ const TimeSpan = ({
               id={getUiId([name])}
               label="Kuvaus ruotsiksi"
               onChange={onChange}
+              placeholder="T.ex. seniorer"
               value={value || ''}
             />
           )}
@@ -151,6 +153,7 @@ const TimeSpan = ({
               label="Kuvaus englanniksi"
               name={`${namePrefix}.description.en`}
               onChange={onChange}
+              placeholder="E.g. seniors"
               value={value || ''}
             />
           )}
