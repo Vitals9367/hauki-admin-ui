@@ -7,3 +7,18 @@
 .navigation-user-name {
   margin-left: var(--spacing-xs);
 }
+
+.instructions-link {
+  align-items: center;
+  box-sizing: border-box;
+  color: var(--color-white);
+  display: flex;
+  gap: var(--spacing-xs);
+  justify-content: center;
+  padding: var(--spacing-xs);
+  text-decoration: none;
+}
+
+.instructions-link:hover {
+  box-shadow: 0 2px var(--color-white);
+}

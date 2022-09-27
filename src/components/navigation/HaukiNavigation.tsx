@@ -1,6 +1,11 @@
 import React from 'react';
 import { useHistory } from 'react-router-dom';
-import { IconCrossCircleFill, IconUser, Navigation } from 'hds-react';
+import {
+  IconCrossCircleFill,
+  IconQuestionCircle,
+  IconUser,
+  Navigation,
+} from 'hds-react';
 import api from '../../common/utils/api/api';
 import { useAppContext } from '../../App-context';
 import { AuthContextProps, TokenKeys, useAuth } from '../../auth/auth-context';
@@ -71,34 +76,43 @@ export default function HaukiNavigation(): JSX.Element {
       menuToggleAriaLabel="Menu"
       skipTo="#main"
       skipToContentLabel="Siirry pääsisältöön">
-      {isAuthenticated && (
-        <Navigation.Actions>
-          <Navigation.Item as="div">
-            <div className="navigation-user">
-              <IconUser aria-hidden />
-              <span className="navigation-user-name">
-                {authTokens && authTokens[TokenKeys.usernameKey]}
-              </span>
-            </div>
-          </Navigation.Item>
-          {language && setLanguage && (
-            <LanguageSelect
-              id="language-select"
-              label="Sivun kielivalinta"
-              selectedLanguage={language}
-              onSelect={setLanguage}
-            />
-          )}
-          <SecondaryButton
-            dataTest="close-app-button"
-            className="navigation-button"
-            iconRight={<IconCrossCircleFill aria-hidden />}
-            onClick={(): Promise<void> => onCloseButtonClick()}
-            light>
-            Sulje
-          </SecondaryButton>
-        </Navigation.Actions>
-      )}
+      <Navigation.Actions>
+        <a
+          className="instructions-link"
+          href="https://kaupunkialustana.hel.fi/aukiolosovellus-ohje/"
+          target="_blank"
+          rel="noreferrer">
+          <IconQuestionCircle /> Ohje
+        </a>
+        {isAuthenticated && (
+          <>
+            <Navigation.Item as="div">
+              <div className="navigation-user">
+                <IconUser aria-hidden />
+                <span className="navigation-user-name">
+                  {authTokens && authTokens[TokenKeys.usernameKey]}
+                </span>
+              </div>
+            </Navigation.Item>
+            {language && setLanguage && (
+              <LanguageSelect
+                id="language-select"
+                label="Sivun kielivalinta"
+                selectedLanguage={language}
+                onSelect={setLanguage}
+              />
+            )}
+            <SecondaryButton
+              dataTest="close-app-button"
+              className="navigation-button"
+              iconRight={<IconCrossCircleFill aria-hidden />}
+              onClick={(): Promise<void> => onCloseButtonClick()}
+              light>
+              Sulje
+            </SecondaryButton>
+          </>
+        )}
+      </Navigation.Actions>
     </Navigation>
   );
 }

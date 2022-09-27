@@ -213,16 +213,11 @@ const OpeningHoursForm = ({
               </div>
             </ResourceTitle>
             <section className="opening-hours-form__content">
-              <Accordion card heading="Ohjeet">
-                <a
-                  href="https://kaupunkialustana.hel.fi/aukiolosovellus-ohje/"
-                  target="_blank">
-                  Aukiolosovellus ohje
-                </a>
+              <div className="card">
                 <p className="required-fields-text">
                   Tähdellä (*) merkityt kohdat ovat pakollisia.
                 </p>
-              </Accordion>
+              </div>
               <OpeningHoursTitles
                 placeholders={{
                   fi: 'Esim. kesäkausi',
