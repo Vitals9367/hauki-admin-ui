@@ -200,8 +200,7 @@ export default function ResourcePage({
               data-test="child-resource-description"
               className="resource-description-text">
               Täällä voit määritellä toimipisteen alakohteiden aukioloaikoja.
-              Alakohteet voivat olla esimerkiksi toimipisteen eri tiloja. Voit
-              muokata alakohteiden muita tietoja tilapaikkarekisterissä.
+              Alakohteet luodaan toimipisterekisterissä.
             </p>
           </section>
           <section>
