@@ -535,13 +535,21 @@ describe('opening-hours-helpers', () => {
       {
         date: '2022-12-31',
         end_date: '2022-12-31',
-        name: 'Uudenvuodenaatto',
+        name: {
+          fi: 'Uudenvuodenaatto',
+          sv: 'Nyårsafton',
+          en: "New Year's Eve",
+        },
         start_date: '2022-12-31',
       },
       {
         date: '2023-01-01',
         end_date: '2023-01-01',
-        name: 'Uudenvuodenpäivä',
+        name: {
+          fi: 'Uudenvuodenpäiväs',
+          sv: 'Nyårsdagen',
+          en: "New Year's Day",
+        },
         start_date: '2022-12-31',
       },
     ];
@@ -553,7 +561,11 @@ describe('opening-hours-helpers', () => {
             ...datePeriod,
             startDate: '31.12.2022',
             endDate: '31.12.2022',
-            name: { fi: 'Uudenvuodenaatto', sv: '', en: '' },
+            name: {
+              fi: 'Uudenvuodenaatto',
+              sv: 'Nyårsafton',
+              en: "New Year's Eve",
+            },
             override: true,
           },
           holidays
@@ -568,7 +580,11 @@ describe('opening-hours-helpers', () => {
             ...datePeriod,
             startDate: '25.12.2022',
             endDate: '31.12.2022',
-            name: { fi: 'Uudenvuodenaatto', sv: '', en: '' },
+            name: {
+              fi: 'Uudenvuodenaatto',
+              sv: 'Nyårsafton',
+              en: "New Year's Eve",
+            },
             override: true,
           },
           holidays

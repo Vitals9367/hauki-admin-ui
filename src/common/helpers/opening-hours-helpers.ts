@@ -313,7 +313,7 @@ export const isHoliday = (
     (holiday) =>
       !!datePeriod.endDate &&
       holiday.date === transformDateToApiFormat(datePeriod.endDate) &&
-      holiday.name === datePeriod.name.fi
+      holiday.name.fi === datePeriod.name.fi
   ) &&
   differenceInMilliseconds(
     new Date(transformDateToApiFormat(datePeriod.endDate)),

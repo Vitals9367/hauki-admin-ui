@@ -9,6 +9,7 @@ import {
   Resource,
   ResourceState,
   UiDatePeriodConfig,
+  LanguageStrings,
 } from '../common/lib/types';
 import {
   apiDatePeriodToDatePeriod,
@@ -49,13 +50,13 @@ const getDefaultFormValues = ({
   name,
   holidayDate,
 }: {
-  name: string;
+  name: LanguageStrings;
   holidayDate: string;
 }): DatePeriod => ({
   startDate: formatDate(holidayDate),
   endDate: formatDate(holidayDate),
   fixed: true,
-  name: { fi: name, sv: '', en: '' },
+  name,
   override: true,
   resourceState: ResourceState.CLOSED,
   openingHours: [],
@@ -170,6 +171,7 @@ const HolidayListItem = ({
   datePeriodConfig: UiDatePeriodConfig;
   actions: FormActions;
 }): JSX.Element => {
+  const { language = Language.FI } = useAppContext();
   const [checked, setChecked] = useState<boolean>(!!value);
   const [willBeRemoved, setWillBeRemoved] = useState<boolean>(false);
   const { name, date } = holiday;
@@ -177,7 +179,7 @@ const HolidayListItem = ({
   const commonCheckBoxProps = {
     id: checkboxId,
     'data-test': checkboxId,
-    label: `${name}   ${formatDate(date)}`,
+    label: `${name[language]}   ${formatDate(date)}`,
     checked,
     style: {
       '--background-selected': 'var(--color-coat-of-arms)',
@@ -477,7 +479,7 @@ export default function EditHolidaysPage({
           {holidays.map((holiday, idx) => {
             const value: DatePeriod | undefined = holidayValues
               ? holidayValues.find(
-                  (holidayValue) => holidayValue.name.fi === holiday.name
+                  (holidayValue) => holidayValue.name.fi === holiday.name.fi
                 )
               : undefined;
 

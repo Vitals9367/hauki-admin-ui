@@ -1,10 +1,10 @@
-import Holidays from 'date-holidays';
-import { Holiday } from '../common/lib/types';
+import Holidays, { HolidaysTypes } from 'date-holidays';
+import { Holiday as THoliday } from '../common/lib/types';
 
 const formatDate = (date: Date): string => date.toISOString().split('T')[0];
 
 // eslint-disable-next-line import/prefer-default-export
-export const getHolidays = (): Holiday[] => {
+export const getHolidays = (): THoliday[] => {
   const now = new Date();
   const currentYear = now.getFullYear();
   const start = formatDate(now);
@@ -17,11 +17,38 @@ export const getHolidays = (): Holiday[] => {
   hd.init('FI');
 
   return [currentYear, currentYear + 1]
-    .map((year) => hd.getHolidays(year))
-    .flat()
-    .map((date) => ({
-      date: date.date.split(' ')[0],
-      name: date.name,
+    .map((year) => ({
+      fi: hd.getHolidays(year, 'fi'),
+      sv: hd.getHolidays(year, 'sv'),
+      en: hd.getHolidays(year, 'en'),
+    }))
+    .reduce(
+      (
+        acc: {
+          fi: HolidaysTypes.Holiday;
+          sv: HolidaysTypes.Holiday;
+          en: HolidaysTypes.Holiday;
+        }[],
+        elem
+      ) =>
+        [
+          ...acc,
+          elem.fi.map((date, i) => ({
+            fi: date,
+            sv: elem.sv[i],
+            en: elem.en[i],
+          })),
+        ].flat(),
+      []
+    )
+    .map(({ fi, sv, en }) => ({
+      date: fi.date.split(' ')[0],
+      name: {
+        fi: fi.name,
+        // There is a bug in the holidays lib
+        sv: fi.name === 'Isänpäivä' ? 'Fars dag' : sv.name,
+        en: en.name,
+      },
     }))
     .filter((date) => date.date >= start && date.date <= end);
 };

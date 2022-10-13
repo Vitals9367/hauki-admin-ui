@@ -279,5 +279,5 @@ export type Choice<T> = {
 
 export type Holiday = {
   date: string;
-  name: string;
+  name: LanguageStrings;
 };

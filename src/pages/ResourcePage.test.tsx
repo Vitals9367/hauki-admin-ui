@@ -134,7 +134,11 @@ describe(`<ResourcePage />`, () => {
 
     jest.spyOn(holidays, 'getHolidays').mockImplementation(() => [
       {
-        name: 'Juhannus',
+        name: {
+          fi: 'Juhannusaatto',
+          sv: 'Midsommarafton',
+          en: 'Midsummer Eve',
+        },
         date: '2022-06-24',
       },
     ]);
