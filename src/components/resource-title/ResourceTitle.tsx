@@ -20,6 +20,8 @@ const ResourceTitle = ({
   titleAddon,
 }: Props): JSX.Element => {
   const [titleIsOnTop, setTitleIsOnTop] = useState(false);
+  const [scrollHandlerDisabled, setDisableScroll] = useState(false);
+  const ref = useRef<HTMLHeadingElement>(null);
   const title = useRef<HTMLHeadingElement>(null);
   const name =
     resource?.name[language] ||
@@ -32,18 +34,34 @@ const ResourceTitle = ({
 
   useEffect(() => {
     const onScroll = (): void => {
-      if (title.current?.getBoundingClientRect().top === 0) {
+      if (
+        !scrollHandlerDisabled &&
+        title.current?.getBoundingClientRect().top === 0
+      ) {
         setTitleIsOnTop(true);
       }
       // TODO: Figure out some nicer way for this
-      if (titleIsOnTop && window.scrollY < 40) {
+      if (!scrollHandlerDisabled && titleIsOnTop && window.scrollY < 20) {
         setTitleIsOnTop(false);
       }
     };
 
     window.addEventListener('scroll', onScroll);
     return (): void => window.removeEventListener('scroll', onScroll);
-  }, [title, titleIsOnTop]);
+  }, [scrollHandlerDisabled, title, titleIsOnTop]);
+
+  useEffect(() => {
+    const doDisableScroll = () => setDisableScroll(true);
+    const doEnableScroll = () => setDisableScroll(false);
+    ref.current?.addEventListener('transitionstart', doDisableScroll);
+    ref.current?.addEventListener('transitionend', doEnableScroll);
+
+    const refCopy = ref.current;
+    return () => {
+      refCopy?.removeEventListener('transitionstart', doDisableScroll);
+      refCopy?.removeEventListener('transitionend', doEnableScroll);
+    };
+  }, [setDisableScroll]);
 
   return (
     <section
@@ -53,6 +71,7 @@ const ResourceTitle = ({
         titleIsOnTop ? 'resource-title--on-top' : ''
       }`}>
       <h1
+        ref={ref}
         id={resourceTitleId}
         data-test="resource-info"
         className={`resource-info-title ${
