@@ -52,7 +52,7 @@ const TimeSpan = ({
       aria-label={groupLabel}>
       {showTimeSpans && (
         <>
-          <div aria-hidden={showTimeSpans} className="time-span__range">
+          <div className="time-span__range">
             <TimeInput
               {...register(`${namePrefix}.start_time`)}
               disabled={disabled || fullDay}
