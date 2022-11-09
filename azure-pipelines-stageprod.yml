@@ -3,7 +3,7 @@
 trigger: none
 
 # By default, use self-hosted agents
-pool: Default
+pool: Production
 
 # Opting out of pull request validation
 pr: none
