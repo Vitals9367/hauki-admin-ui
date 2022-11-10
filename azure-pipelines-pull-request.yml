@@ -30,4 +30,4 @@ resources:
     name: hauki/hauki-pipelines
 
 extends:
-  template: azure-pipelines-hauki-ui-pull-request.yml@hauki-pipelines
+  template: azure-pipelines-hauki-admin-ui-pull-request.yml@hauki-pipelines
