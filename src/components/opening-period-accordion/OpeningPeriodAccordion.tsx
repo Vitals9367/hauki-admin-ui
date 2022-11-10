@@ -113,7 +113,7 @@ const OpeningPeriodAccordion = ({
             data-test={`openingPeriodAccordionButton${id ? `-${id}` : ''}`}
             type="button"
             {...buttonProps}>
-            <AccordionIcon />
+            <AccordionIcon aria-hidden="true" />
             <span className="hiddenFromScreen">{`Näytä aukioloajat jaksosta ${
               periodName || 'nimetön'
             } aukiolojakso`}</span>

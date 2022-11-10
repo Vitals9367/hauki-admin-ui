@@ -324,9 +324,11 @@ export const isClosed = (resourceState: ResourceState): boolean =>
   [
     ResourceState.CLOSED,
     ResourceState.MAINTENANCE,
-    ResourceState.UNDEFINED,
     ResourceState.NOT_IN_USE,
   ].includes(resourceState);
+
+export const isDescriptionAllowed = (resourceState: ResourceState): boolean =>
+  resourceState !== ResourceState.NO_OPENING_HOURS;
 
 const ruleTypeOrder: RuleType[] = ['week_every', 'week_even', 'week_odd'];
 

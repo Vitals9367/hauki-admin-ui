@@ -150,7 +150,17 @@ const OpeningHoursForm = ({
     const newIdx = currIndex + 1;
     const values = {
       weekdays: [day],
-      timeSpanGroups: [defaultTimeSpanGroup],
+      timeSpanGroups: [
+        {
+          ...defaultTimeSpanGroup,
+          timeSpans: [
+            {
+              ...defaultTimeSpan,
+              resource_state: ResourceState.NO_OPENING_HOURS,
+            },
+          ],
+        },
+      ],
     };
     insert(newIdx, values, { shouldFocus: false });
     // FIXME: For some reason the normal array won't get added in the insert

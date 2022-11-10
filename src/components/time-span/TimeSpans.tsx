@@ -1,9 +1,11 @@
 import { IconPlusCircle } from 'hds-react';
 import React, { useEffect, useRef } from 'react';
 import { useFieldArray, useFormContext } from 'react-hook-form';
+import { isDescriptionAllowed } from '../../common/helpers/opening-hours-helpers';
 import {
   DatePeriod,
   ResourceState,
+  TimeSpan as TTimeSpan,
   TranslatedApiChoice,
 } from '../../common/lib/types';
 import { getUiId } from '../../common/utils/form/form';
@@ -11,6 +13,21 @@ import { defaultTimeSpan } from '../../constants';
 import { SupplementaryButton } from '../button/Button';
 import TimeSpan from './TimeSpan';
 import './TimeSpans.scss';
+
+const shouldHideTimeSpan = (resourceState: ResourceState): boolean =>
+  [ResourceState.CLOSED, ResourceState.NO_OPENING_HOURS].includes(
+    resourceState
+  );
+
+const resetTimeSpan = (timeSpan: TTimeSpan): TTimeSpan => ({
+  ...defaultTimeSpan,
+  id: timeSpan.id,
+  description:
+    timeSpan.resource_state && isDescriptionAllowed(timeSpan.resource_state)
+      ? timeSpan.description
+      : defaultTimeSpan.description,
+  resource_state: timeSpan.resource_state,
+});
 
 const TimeSpans = ({
   openingHoursIdx,
@@ -28,20 +45,23 @@ const TimeSpans = ({
     name: namePrefix,
   });
   const ref = useRef<HTMLButtonElement>(null);
+
+  // Without this for some reason the key inference breaks :(
+  const first = 0 as number;
+  const firstTimeSpanKey = `${namePrefix}.${first}` as const;
   const firstTimeSpanResourceState = watch(
-    'openingHours.0.timeSpanGroups.0.timeSpans.0.resource_state'
+    `${firstTimeSpanKey}.resource_state`
   );
+  const hideAddTimeSpan =
+    !!firstTimeSpanResourceState &&
+    shouldHideTimeSpan(firstTimeSpanResourceState);
 
   useEffect(() => {
-    if (firstTimeSpanResourceState === ResourceState.CLOSED) {
-      const description = getValues(
-        'openingHours.0.timeSpanGroups.0.timeSpans.0.description'
+    if (hideAddTimeSpan) {
+      setValue(
+        firstTimeSpanKey,
+        resetTimeSpan(getValues(`${firstTimeSpanKey}`))
       );
-      setValue('openingHours.0.timeSpanGroups.0.timeSpans.0', {
-        ...defaultTimeSpan,
-        description,
-        resource_state: ResourceState.CLOSED,
-      });
 
       if (fields.length > 1) {
         fields.forEach((field, i) => {
@@ -51,7 +71,15 @@ const TimeSpans = ({
         });
       }
     }
-  }, [fields, firstTimeSpanResourceState, getValues, setValue, remove]);
+  }, [
+    fields,
+    firstTimeSpanResourceState,
+    firstTimeSpanKey,
+    hideAddTimeSpan,
+    getValues,
+    setValue,
+    remove,
+  ]);
 
   return (
     <div className="time-spans">
@@ -75,7 +103,7 @@ const TimeSpans = ({
           }
         />
       ))}
-      {firstTimeSpanResourceState !== ResourceState.CLOSED && (
+      {!hideAddTimeSpan && (
         <div>
           <SupplementaryButton
             dataTest={getUiId([namePrefix, 'add-time-span-button'])}

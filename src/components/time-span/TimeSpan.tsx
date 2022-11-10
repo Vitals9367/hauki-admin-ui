@@ -13,6 +13,7 @@ import { SupplementaryButton } from '../button/Button';
 import './TimeSpan.scss';
 import { useAppContext } from '../../App-context';
 import { choiceToOption, getUiId } from '../../common/utils/form/form';
+import { isDescriptionAllowed } from '../../common/helpers/opening-hours-helpers';
 
 const TimeSpan = ({
   disabled = false,
@@ -38,12 +39,23 @@ const TimeSpan = ({
   const { control, register, watch } = useFormContext<DatePeriod>();
   const fullDay = watch(`${namePrefix}.full_day`);
   const resourceState = watch(`${namePrefix}.resource_state`);
-  const resourceStateOptions = resourceStates.map(choiceToOption(language));
-  const sanitizedResourceStateOptions: InputOption[] = resourceStateOptions.filter(
-    ({ value }) => value !== 'undefined'
-  );
+  const sanitizedResourceStateOptions = resourceStates
+    .filter((elem) => {
+      if (elem.value === ResourceState.UNDEFINED) {
+        return false;
+      }
 
-  const showTimeSpans = resourceState !== ResourceState.CLOSED || i !== 0;
+      if (i > 0 && elem.value === ResourceState.NO_OPENING_HOURS) {
+        return false;
+      }
+      return true;
+    })
+    .map(choiceToOption(language));
+
+  const showTimeSpans =
+    (resourceState !== ResourceState.NO_OPENING_HOURS &&
+      resourceState !== ResourceState.CLOSED) ||
+    i !== 0;
 
   return (
     <div
@@ -117,48 +129,53 @@ const TimeSpan = ({
           />
         )}
       />
-      <div className="time-span__descriptions">
-        <Controller
-          defaultValue={item?.description.fi ?? ''}
-          name={`${namePrefix}.description.fi`}
-          render={({ field: { name, onChange, value } }): JSX.Element => (
-            <TextInput
-              id={getUiId([name])}
-              label="Kuvaus suomeksi"
-              onChange={onChange}
-              placeholder="Esim. seniorit"
-              value={value || ''}
-            />
-          )}
-        />
-        <Controller
-          defaultValue={item?.description.sv ?? ''}
-          name={`${namePrefix}.description.sv`}
-          render={({ field: { name, onChange, value } }): JSX.Element => (
-            <TextInput
-              id={getUiId([name])}
-              label="Kuvaus ruotsiksi"
-              onChange={onChange}
-              placeholder="T.ex. seniorer"
-              value={value || ''}
-            />
-          )}
-        />
-        <Controller
-          defaultValue={item?.description.en ?? ''}
-          name={`${namePrefix}.description.en`}
-          render={({ field: { name, onChange, value } }): JSX.Element => (
-            <TextInput
-              id={getUiId([name])}
-              label="Kuvaus englanniksi"
-              name={`${namePrefix}.description.en`}
-              onChange={onChange}
-              placeholder="E.g. seniors"
-              value={value || ''}
-            />
-          )}
-        />
-      </div>
+      {!resourceState ||
+        (isDescriptionAllowed(resourceState) && (
+          <>
+            <div className="time-span__descriptions">
+              <Controller
+                defaultValue={item?.description.fi ?? ''}
+                name={`${namePrefix}.description.fi`}
+                render={({ field: { name, onChange, value } }): JSX.Element => (
+                  <TextInput
+                    id={getUiId([name])}
+                    label="Kuvaus suomeksi"
+                    onChange={onChange}
+                    placeholder="Esim. seniorit"
+                    value={value || ''}
+                  />
+                )}
+              />
+              <Controller
+                defaultValue={item?.description.sv ?? ''}
+                name={`${namePrefix}.description.sv`}
+                render={({ field: { name, onChange, value } }): JSX.Element => (
+                  <TextInput
+                    id={getUiId([name])}
+                    label="Kuvaus ruotsiksi"
+                    onChange={onChange}
+                    placeholder="T.ex. seniorer"
+                    value={value || ''}
+                  />
+                )}
+              />
+              <Controller
+                defaultValue={item?.description.en ?? ''}
+                name={`${namePrefix}.description.en`}
+                render={({ field: { name, onChange, value } }): JSX.Element => (
+                  <TextInput
+                    id={getUiId([name])}
+                    label="Kuvaus englanniksi"
+                    name={`${namePrefix}.description.en`}
+                    onChange={onChange}
+                    placeholder="E.g. seniors"
+                    value={value || ''}
+                  />
+                )}
+              />
+            </div>
+          </>
+        ))}
       <div className="remove-time-span-button">
         {onDelete && (
           <SupplementaryButton iconLeft={<IconTrash />} onClick={onDelete}>

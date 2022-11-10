@@ -82,7 +82,7 @@ export default function HaukiNavigation(): JSX.Element {
           href="https://kaupunkialustana.hel.fi/aukiolosovellus-ohje/"
           target="_blank"
           rel="noreferrer">
-          <IconQuestionCircle /> Ohje
+          <IconQuestionCircle aria-hidden="true" /> Ohje
         </a>
         {isAuthenticated && (
           <>

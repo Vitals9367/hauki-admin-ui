@@ -21,6 +21,7 @@ export enum ResourceState {
   UNDEFINED = 'undefined',
   MAINTENANCE = 'maintenance',
   NOT_IN_USE = 'not_in_use',
+  NO_OPENING_HOURS = 'no_opening_hours',
 }
 
 export enum WeekdayTypes {
